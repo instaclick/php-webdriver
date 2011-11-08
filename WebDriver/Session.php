@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-final class WebDriverSession extends WebDriverContainer {
+final class WebDriver_Session extends WebDriver_Container {
   protected function methods() {
     return array(
       'url' => 'GET', // for POST, use open($url)
@@ -82,7 +82,7 @@ final class WebDriverSession extends WebDriverContainer {
   }
 
   public function timeouts() {
-    $item = new WebDriverSimpleItem($this->url . '/timeouts');
+    $item = new WebDriver_SimpleItem($this->url . '/timeouts');
     return $item->setMethods(array(
       'async_script' => 'POST',
       'implicit_wait' => 'POST',
@@ -90,7 +90,7 @@ final class WebDriverSession extends WebDriverContainer {
   }
 
   public function ime() {
-    $item = new WebDriverSimpleItem($this->url . '/ime');
+    $item = new WebDriver_SimpleItem($this->url . '/ime');
     return $item->setMethods(array(
       'available_engines' => 'GET',
       'active_engine' => 'GET',
@@ -101,7 +101,7 @@ final class WebDriverSession extends WebDriverContainer {
   }
 
   public function touch() {
-    $item = new WebDriverSimpleItem($this->url . '/touch');
+    $item = new WebDriver_SimpleItem($this->url . '/touch');
     return $item->setMethods(array(
       'click' => 'POST',
       'down' => 'POST',

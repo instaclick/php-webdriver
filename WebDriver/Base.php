@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-abstract class WebDriverBase {
+abstract class WebDriver_Base {
 
   public static function throwException($status_code, $message) {
     switch ($status_code) {
@@ -21,69 +21,69 @@ abstract class WebDriverBase {
         // Success
         break;
       case 1:
-        throw new IndexOutOfBoundsWebDriverError($message);
+        throw new WebDriver_Exception_IndexOutOfBounds($message);
       case 2:
-        throw new NoCollectionWebDriverError($message);
+        throw new WebDriver_Exception_NoCollection($message);
       case 3:
-        throw new NoStringWebDriverError($message);
+        throw new WebDriver_Exception_NoString($message);
       case 4:
-        throw new NoStringLengthWebDriverError($message);
+        throw new WebDriver_Exception_NoStringLength($message);
       case 5:
-        throw new NoStringWrapperWebDriverError($message);
+        throw new WebDriver_Exception_NoStringWrapper($message);
       case 6:
-        throw new NoSuchDriverWebDriverError($message);
+        throw new WebDriver_Exception_NoSuchDriver($message);
       case 7:
-        throw new NoSuchElementWebDriverError($message);
+        throw new WebDriver_Exception_NoSuchElement($message);
       case 8:
-        throw new NoSuchFrameWebDriverError($message);
+        throw new WebDriver_Exception_NoSuchFrame($message);
       case 9:
-        throw new UnknownCommandWebDriverError($message);
+        throw new WebDriver_Exception_UnknownCommand($message);
       case 10:
-        throw new ObsoleteElementWebDriverError($message);
+        throw new WebDriver_Exception_ObsoleteElement($message);
       case 11:
-        throw new ElementNotDisplayedWebDriverError($message);
+        throw new WebDriver_Exception_ElementNotDisplayed($message);
       case 12:
-        throw new InvalidElementStateWebDriverError($message);
+        throw new WebDriver_Exception_InvalidElementState($message);
       case 13:
-        throw new UnhandledWebDriverError($message);
+        throw new WebDriver_Exception_Unhandled($message);
       case 14:
-        throw new ExpectedWebDriverError($message);
+        throw new WebDriver_Exception_Expected($message);
       case 15:
-        throw new ElementNotSelectableWebDriverError($message);
+        throw new WebDriver_Exception_ElementNotSelectable($message);
       case 16:
-        throw new NoSuchDocumentWebDriverError($message);
+        throw new WebDriver_Exception_NoSuchDocument($message);
       case 17:
-        throw new UnexpectedJavascriptWebDriverError($message);
+        throw new WebDriver_Exception_UnexpectedJavascript($message);
       case 18:
-        throw new NoScriptResultWebDriverError($message);
+        throw new WebDriver_Exception_NoScriptResult($message);
       case 19:
-        throw new XPathLookupWebDriverError($message);
+        throw new WebDriver_Exception_XPathLookup($message);
       case 20:
-        throw new NoSuchCollectionWebDriverError($message);
+        throw new WebDriver_Exception_NoSuchCollection($message);
       case 21:
-        throw new TimeOutWebDriverError($message);
+        throw new WebDriver_Exception_TimeOut($message);
       case 22:
-        throw new NullPointerWebDriverError($message);
+        throw new WebDriver_Exception_NullPointer($message);
       case 23:
-        throw new NoSuchWindowWebDriverError($message);
+        throw new WebDriver_Exception_NoSuchWindow($message);
       case 24:
-        throw new InvalidCookieDomainWebDriverError($message);
+        throw new WebDriver_Exception_InvalidCookieDomain($message);
       case 25:
-        throw new UnableToSetCookieWebDriverError($message);
+        throw new WebDriver_Exception_UnableToSetCookie($message);
       case 26:
-        throw new UnexpectedAlertOpenWebDriverError($message);
+        throw new WebDriver_Exception_UnexpectedAlertOpen($message);
       case 27:
-        throw new NoAlertOpenWebDriverError($message);
+        throw new WebDriver_Exception_NoAlertOpen($message);
       case 28:
-        throw new ScriptTimeoutWebDriverError($message);
+        throw new WebDriver_Exception_ScriptTimeout($message);
       case 29:
-        throw new InvalidElementCoordinatesWebDriverError($message);
+        throw new WebDriver_Exception_InvalidElementCoordinates($message);
       case 30:
-        throw new IMENotAvailableWebDriverError($message);
+        throw new WebDriver_Exception_IMENotAvailable($message);
       case 31:
-        throw new IMEEngineActivationFailedWebDriverError($message);
+        throw new WebDriver_Exception_IMEEngineActivationFailed($message);
       case 32:
-        throw new InvalidSelectorWebDriverError($message);
+        throw new WebDriver_Exception_InvalidSelector($message);
     }
   }
 
@@ -147,7 +147,7 @@ abstract class WebDriverBase {
       curl_setopt($curl, $option, $value);
     }
 
-    $raw_results = trim(WebDriverEnvironment::CurlExec($curl));
+    $raw_results = trim(WebDriver_Environment::CurlExec($curl));
     $info = curl_getinfo($curl);
 
     if ($error = curl_error($curl)) {
@@ -158,7 +158,7 @@ abstract class WebDriverBase {
       if ($params && is_array($params)) {
         $msg .= sprintf(' with params: %s', json_encode($params));
       }
-      throw new WebDriverCurlException($msg . "\n\n" . $error);
+      throw new WebDriver_Exception_Curl($msg . "\n\n" . $error);
     }
     curl_close($curl);
 

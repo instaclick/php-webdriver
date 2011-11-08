@@ -13,25 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-final class WebDriver extends WebDriver_Base {
+final class WebDriver_SimpleItem extends WebDriver_Base {
+  private $_methods = array();
   protected function methods() {
-    return array(
-      'status' => 'GET',
-    );
+    return $this->_methods;
   }
 
-  public function session($browser = 'firefox',
-                          $additional_capabilities = array()) {
-    $desired_capabilities = array_merge(
-      $additional_capabilities,
-      array('browserName' => $browser));
-
-    $results = $this->curl(
-      'POST',
-      '/session',
-      array('desiredCapabilities' => $desired_capabilities),
-      array(CURLOPT_FOLLOWLOCATION => true));
-
-    return new WebDriver_Session($results['info']['url']);
+  public function setMethods($methods) {
+    $this->_methods = $methods;
+    return $this;
   }
 }

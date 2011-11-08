@@ -18,7 +18,7 @@
 // Modify these as necessary for your enviroment, and then .gitignore this file
 // so you can still easily git pull other changes from the main github repo.
 
-final class WebDriverEnvironment {
+final class WebDriver_Environment {
   public static function CurlExec($ch) {
     return curl_exec($ch);
   }

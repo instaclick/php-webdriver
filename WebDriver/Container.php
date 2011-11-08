@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-abstract class WebDriverContainer extends WebDriverBase {
+abstract class WebDriver_Container extends WebDriver_Base {
   public function element($using, $value) {
     try {
       $results = $this->curl(
@@ -22,8 +22,8 @@ abstract class WebDriverContainer extends WebDriverBase {
         array(
           'using' => $using,
           'value' => $value));
-    } catch (NoSuchElementWebDriverError $e) {
-      throw new NoSuchElementWebDriverError(
+    } catch (WebDriver_Exception_NoSuchElement $e) {
+      throw new WebDriver_Exception_NoSuchElement(
         sprintf(
           'Element not found with %s, %s',
           $using,
@@ -48,7 +48,7 @@ abstract class WebDriverContainer extends WebDriverBase {
 
   private function webDriverElement($value) {
     return (array_key_exists('ELEMENT', (array) $value)) ?
-      new WebDriverElement(
+      new WebDriver_Element(
         $this->getElementPath($value['ELEMENT']),
         $value['ELEMENT']) :
       null;
