@@ -32,6 +32,13 @@ final class WebDriver_Element extends WebDriver_Container {
       'location_in_view' => 'GET',
       'size' => 'GET',
       'css' => 'GET',
+
+      // obsolete/deprecated
+      'value' => 'GET',
+      'selected' => 'POST',
+      'toggle' => 'POST',
+      'hover' => 'POST',
+      'drag' => 'POST',
     );
   }
 

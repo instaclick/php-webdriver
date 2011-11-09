@@ -13,4 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-class WebDriver_Exception_NoAlertOpen extends WebDriver_Exception {} // 27
+final class WebDriver_Window extends WebDriver_SimpleItem {
+  private $handle;
+
+  public function getHandle() {
+    return $this->handle;
+  }
+
+  public function __construct($url, $window_handle) {
+    $this->handle = $window_handle;
+
+    parent::__construct($url . '/' . $window_handle);
+
+    $this->setMethods(array(
+      'size' => array('GET', 'POST'),
+      'position' => array('GET', 'POST'),
+    ));
+  }
+}

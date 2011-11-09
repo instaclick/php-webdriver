@@ -22,12 +22,18 @@ abstract class WebDriver_Container extends WebDriver_Base {
         array(
           'using' => $using,
           'value' => $value));
-    } catch (WebDriver_Exception_NoSuchElement $e) {
-      throw new WebDriver_Exception_NoSuchElement(
+    } catch (WebDriver_Exception_Curl $e) {
+      throw $e;
+    } catch (WebDriver_Exception $e) {
+      if ($e->getCode() == WebDriver_Exception::NoSuchElement) {
+        throw new WebDriver_Exception(
         sprintf(
           'Element not found with %s, %s',
           $using,
-          $value) . "\n\n" . $e->getMessage());
+          $value) . "\n\n" . $e->getMessage(), WebDriver_Exception::NoSuchElement);
+      } else {
+        throw $e;
+      }
     }
 
     return $this->webDriverElement($results['value']);
@@ -53,7 +59,6 @@ abstract class WebDriver_Container extends WebDriver_Base {
         $value['ELEMENT']) :
       null;
   }
-
 
   abstract protected function getElementPath($element_id);
 }

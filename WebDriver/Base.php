@@ -20,70 +20,9 @@ abstract class WebDriver_Base {
       case 0:
         // Success
         break;
-      case 1:
-        throw new WebDriver_Exception_IndexOutOfBounds($message);
-      case 2:
-        throw new WebDriver_Exception_NoCollection($message);
-      case 3:
-        throw new WebDriver_Exception_NoString($message);
-      case 4:
-        throw new WebDriver_Exception_NoStringLength($message);
-      case 5:
-        throw new WebDriver_Exception_NoStringWrapper($message);
-      case 6:
-        throw new WebDriver_Exception_NoSuchDriver($message);
-      case 7:
-        throw new WebDriver_Exception_NoSuchElement($message);
-      case 8:
-        throw new WebDriver_Exception_NoSuchFrame($message);
-      case 9:
-        throw new WebDriver_Exception_UnknownCommand($message);
-      case 10:
-        throw new WebDriver_Exception_ObsoleteElement($message);
-      case 11:
-        throw new WebDriver_Exception_ElementNotDisplayed($message);
-      case 12:
-        throw new WebDriver_Exception_InvalidElementState($message);
-      case 13:
-        throw new WebDriver_Exception_Unhandled($message);
-      case 14:
-        throw new WebDriver_Exception_Expected($message);
-      case 15:
-        throw new WebDriver_Exception_ElementNotSelectable($message);
-      case 16:
-        throw new WebDriver_Exception_NoSuchDocument($message);
-      case 17:
-        throw new WebDriver_Exception_UnexpectedJavascript($message);
-      case 18:
-        throw new WebDriver_Exception_NoScriptResult($message);
-      case 19:
-        throw new WebDriver_Exception_XPathLookup($message);
-      case 20:
-        throw new WebDriver_Exception_NoSuchCollection($message);
-      case 21:
-        throw new WebDriver_Exception_TimeOut($message);
-      case 22:
-        throw new WebDriver_Exception_NullPointer($message);
-      case 23:
-        throw new WebDriver_Exception_NoSuchWindow($message);
-      case 24:
-        throw new WebDriver_Exception_InvalidCookieDomain($message);
-      case 25:
-        throw new WebDriver_Exception_UnableToSetCookie($message);
-      case 26:
-        throw new WebDriver_Exception_UnexpectedAlertOpen($message);
-      case 27:
-        throw new WebDriver_Exception_NoAlertOpen($message);
-      case 28:
-        throw new WebDriver_Exception_ScriptTimeout($message);
-      case 29:
-        throw new WebDriver_Exception_InvalidElementCoordinates($message);
-      case 30:
-        throw new WebDriver_Exception_IMENotAvailable($message);
-      case 31:
-        throw new WebDriver_Exception_IMEEngineActivationFailed($message);
-      case 32:
-        throw new WebDriver_Exception_InvalidSelector($message);
+      default:
+        // @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Response_Status_Codes
+        throw new WebDriver_Exception($message, $status_code);
     }
   }
 

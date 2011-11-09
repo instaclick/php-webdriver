@@ -38,6 +38,10 @@ final class WebDriver_Session extends WebDriver_Container {
       'buttondown' => 'POST',
       'buttonup' => 'POST',
       'doubleclick' => 'POST',
+
+      // obsolete/deprecated
+      'modifier' => 'POST',
+      'speed' => array('GET, 'POST'),
     );
   }
 
@@ -80,24 +84,24 @@ final class WebDriver_Session extends WebDriver_Container {
     return $this;
   }
 
-  // /session/:sessionId/window (POST)
-  public function focusWindow($name_json) {
-    $this->curl('POST', '/window/', array('name' => $name_json));
-    return $this;
-  }
+  // /session/:sessionId/window (POST, DELETE)
+  public function window() {
+    // close current window
+    if (func_num_args() == 0)
+    {
+      $this->curl('DELETE', '/window');
+      return $this;
+    }
 
-  // /session/:sessionId/window (DELETE)
-  public function closeWindow() {
-    $this->curl('DELETE', '/window');
-    return $this;
-  }
+    // set focus
+    $arg = func_get_arg(0); // window handle or name attribute
+    if (is_array($arg)) {
+      $this->curl('POST', '/window', $arg);
+      return $this;
+    }
 
-  public function window($window_handle) {
-    $item = new WebDriver_SimpleItem($this->url . '/window/' . $window_handle);
-    return $item->setMethods(array(
-      'size' => array('GET', 'POST'),
-      'position' => array('GET', 'POST'),
-    ));
+    // chaining
+    return new WebDriver_Window($this->url . '/window', $arg);
   }
 
   public function timeouts() {
