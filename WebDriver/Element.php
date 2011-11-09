@@ -20,7 +20,7 @@ final class WebDriver_Element extends WebDriver_Container {
       'click' => 'POST',
       'submit' => 'POST',
       'text' => 'GET',
-      'value' => 'POST',
+      'value' => array('POST', 'GET'), // GET is obsolete/deprecated
       'name' => 'GET',
       'clear' => 'POST',
       'selected' => 'GET',
@@ -34,7 +34,6 @@ final class WebDriver_Element extends WebDriver_Container {
       'css' => 'GET',
 
       // obsolete/deprecated
-      'value' => 'GET',
       'selected' => 'POST',
       'toggle' => 'POST',
       'hover' => 'POST',

@@ -16,7 +16,7 @@
 final class WebDriver_Session extends WebDriver_Container {
   protected function methods() {
     return array(
-      'url' => 'GET', // for POST, use open($url)
+      'url' => array('GET', 'POST'), // alternate for POST, use open($url)
       'forward' => 'POST',
       'back' => 'POST',
       'refresh' => 'POST',
@@ -25,6 +25,7 @@ final class WebDriver_Session extends WebDriver_Container {
       'screenshot' => 'GET',
       'window_handle' => 'GET',
       'window_handles' => 'GET',
+      'cookie' => array('GET', 'POST'), // for DELETE, use deleteAllCookies()
       'frame' => 'POST',
       'source' => 'GET',
       'title' => 'GET',
@@ -41,13 +42,13 @@ final class WebDriver_Session extends WebDriver_Container {
 
       // obsolete/deprecated
       'modifier' => 'POST',
-      'speed' => array('GET, 'POST'),
+      'speed' => array('GET', 'POST'),
     );
   }
 
   // /session/:sessionId/url (POST)
   public function open($url) {
-    $this->curl('POST', '/url', array('url' => $url));
+    $this->curl('POST', '/url', is_array($url) ? $url : array('url' => $url));
     return $this;
   }
 
@@ -68,7 +69,7 @@ final class WebDriver_Session extends WebDriver_Container {
 
   // /session/:sessionId/cookie (POST)
   public function setCookie($cookie_json) {
-    $this->curl('POST', '/cookie', array('cookie' => $cookie_json));
+    $this->curl('POST', '/cookie', is_array($cookie_json) ? $cookie_json : array('cookie' => $cookie_json));
     return $this;
   }
 

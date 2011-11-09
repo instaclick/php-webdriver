@@ -14,7 +14,9 @@
 // limitations under the License.
 
 abstract class WebDriver_Container extends WebDriver_Base {
-  public function element($using, $value) {
+  public function element() {
+    $this->parseArgs('element', func_get_args(), $using, $having);
+
     try {
       $results = $this->curl(
         'POST',
@@ -39,7 +41,9 @@ abstract class WebDriver_Container extends WebDriver_Base {
     return $this->webDriverElement($results['value']);
   }
 
-  public function elements($using, $value) {
+  public function elements() {
+    $this->parseArgs('elements', func_get_args(), $using, $having);
+
     $results = $this->curl(
       'POST',
       '/elements',
@@ -50,6 +54,28 @@ abstract class WebDriver_Container extends WebDriver_Base {
 
     return array_filter(array_map(
       array($this, 'webDriverElement'), $results['value']));
+  }
+
+  private function parseArgs($method, $argv, &$using, &$having) {
+    $argc = count($argv);
+
+    switch ($argc) {
+      case 2:
+        $using = $argv[0];
+        $having = $argv[1];
+        break;
+
+      case 1:
+        $arg = $argv[0];
+        if (is_array($arg)) {
+          $using = $arg['using'];
+          $having = $arg['having'];
+          break;
+        }
+
+      default:
+        throw new Exception("Invalid arguments to $method method: " . print_r($argv, true));
+    }
   }
 
   private function webDriverElement($value) {
