@@ -26,10 +26,9 @@ final class WebDriver_Session extends WebDriver_Container {
       'window_handle' => 'GET',
       'window_handles' => 'GET',
       'frame' => 'POST',
-      'window' => array('POST', 'DELETE'),
       'source' => 'GET',
       'title' => 'GET',
-      'modifier' => 'POST',
+      'keys' => 'POST',
       'orientation' => array('GET', 'POST'),
       'alert_text' => array('GET', 'POST'),
       'accept_alert' => 'POST',
@@ -79,6 +78,26 @@ final class WebDriver_Session extends WebDriver_Container {
   public function deleteCookie($cookie_name) {
     $this->curl('DELETE', '/cookie/' . $cookie_name);
     return $this;
+  }
+
+  // /session/:sessionId/window/:name (POST)
+  public function focusWindow($name) {
+    $this->curl('POST', '/window/' . $name);
+    return $this;
+  }
+
+  // /session/:sessionId/window/:name (DELETE)
+  public function closeWindow($name) {
+    $this->curl('DELETE', '/window/' . $name);
+    return $this;
+  }
+
+  public function window($window_handle) {
+    $item = new WebDriver_SimpleItem($this->url . '/window/' . $window_handle);
+    return $item->setMethods(array(
+      'size' => array('GET', 'POST'),
+      'position' => array('GET', 'POST'),
+    ));
   }
 
   public function timeouts() {
