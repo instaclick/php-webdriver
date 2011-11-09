@@ -80,15 +80,15 @@ final class WebDriver_Session extends WebDriver_Container {
     return $this;
   }
 
-  // /session/:sessionId/window/:name (POST)
-  public function focusWindow($name) {
-    $this->curl('POST', '/window/' . $name);
+  // /session/:sessionId/window (POST)
+  public function focusWindow($name_json) {
+    $this->curl('POST', '/window/', array('name' => $name_json));
     return $this;
   }
 
-  // /session/:sessionId/window/:name (DELETE)
-  public function closeWindow($name) {
-    $this->curl('DELETE', '/window/' . $name);
+  // /session/:sessionId/window (DELETE)
+  public function closeWindow() {
+    $this->curl('DELETE', '/window');
     return $this;
   }
 
