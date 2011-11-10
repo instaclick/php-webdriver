@@ -23,18 +23,6 @@
  * @package WebDriver
  */
 abstract class WebDriver_Base {
-
-  public static function throwException($status_code, $message) {
-    switch ($status_code) {
-      case 0:
-        // Success
-        break;
-      default:
-        // @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Response_Status_Codes
-        throw new WebDriver_Exception($message, $status_code);
-    }
-  }
-
   /**
    * Return array of supported method names and corresponding HTTP request types
    *
@@ -80,13 +68,14 @@ abstract class WebDriver_Base {
    *                             If a number or string, "/$params" is appended to url
    * @param array  $extra_opts   key=>value pairs of curl options to pass to curl_setopt()
    * @return array               array('value' => ..., 'info' => ...)
+   * @throws WebDriver_Exception if error
    */
   protected function curl($http_method,
                           $command,
                           $params = null,
                           $extra_opts = array()) {
     if ($params && is_array($params) && $http_method !== 'POST') {
-      throw new Exception(sprintf(
+      throw WebDriver_Exception::factory(WebDriver_Exception::NoParametersExpected, sprintf(
         'The http method called for %s is %s but it has to be POST' .
         ' if you want to pass the JSON params %s',
         $command,
@@ -129,7 +118,7 @@ abstract class WebDriver_Base {
       if ($params && is_array($params)) {
         $msg .= sprintf(' with params: %s', json_encode($params));
       }
-      throw new WebDriver_Exception_Curl($msg . "\n\n" . $error);
+      throw WebDriver_Exception::factory(WebDriver_Exception::CurlExec, $msg . "\n\n" . $error);
     }
     curl_close($curl);
 
@@ -145,7 +134,10 @@ abstract class WebDriver_Base {
       $message = $value['message'];
     }
 
-    self::throwException($results['status'], $message);
+    // if not success, throw exception
+    if ($results['status'] != 0) {
+      throw WebDriver_Exception::factory($results['status'], $message);
+    }
 
     return array('value' => $value, 'info' => $info);
   }
@@ -159,7 +151,7 @@ abstract class WebDriver_Base {
    */
   public function __call($name, $arguments) {
     if (count($arguments) > 1) {
-      throw new Exception(
+      throw WebDriver_Exception::factory(WebDriver_Exception::JsonParameterExpected,
         'Commands should have at most only one parameter,' .
         ' which should be the JSON Parameter object');
     }
@@ -169,7 +161,7 @@ abstract class WebDriver_Base {
       $webdriver_command = strtolower(substr($name, strlen($http_method)));
       $default_http_method = $this->getHTTPMethod($webdriver_command);
       if ($http_method === $default_http_method) {
-        throw new Exception(sprintf(
+        throw WebDriver_Exception::factory(WebDriver_Exception::DefaultRequest, sprintf(
           '%s is the default http method for %s.  Please just call %s().',
           $http_method,
           $webdriver_command,
@@ -177,7 +169,7 @@ abstract class WebDriver_Base {
       }
       $methods = $this->methods();
       if (!in_array($http_method, $methods[$webdriver_command])) {
-        throw new Exception(sprintf(
+        throw WebDriver_Exception::factory(WebDriver_Exception::InvalidRequest, sprintf(
           '%s is not an available http method for the command %s.',
           $http_method,
           $webdriver_command));
@@ -204,9 +196,10 @@ abstract class WebDriver_Base {
    */
   private function getHTTPMethod($webdriver_command) {
     if (!array_key_exists($webdriver_command, $this->methods())) {
-      throw new Exception(sprintf(
-        '%s is not a valid webdriver command.',
-        $webdriver_command));
+      throw WebDriver_Exception::factory(WebDriver_Exception::UnknownCommand,
+        sprintf(
+          '%s is not a valid webdriver command.',
+          $webdriver_command));
     }
 
     $methods = $this->methods();

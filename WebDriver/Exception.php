@@ -23,36 +23,33 @@
  * @package WebDriver
  */
 class WebDriver_Exception extends Exception {
-  const Success = 0;
-  const Curl = -1;
-  const Obsolete = -2;
-
   /**
    * Response status codes
    *
    * @link http://code.google.com/p/selenium/wiki/JsonWireProtocol#Response_Status_Codes
    */
-  const NoSuchElement = 7;              // An element could not be located on the page using the given search parameters.
-  const NoSuchFrame = 8;                // A request to switch to a frame could not be satisfied because the frame could not be found.
-  const UnknownCommand = 9;             // The requested resource could not be found, or a request was received using an HTTP method that is not supported by the mapped resource.
-  const StaleElementReference = 10;     // An element command failed because the referenced element is no longer attached to the DOM.
-  const ElementNotVisible = 11;         // An element command could not be completed because the element is not visible on the page.
-  const InvalidElementState = 12;       // An element command could not be completed because the element is in an invalid state (e.g. attempting to click a disabled element).
-  const UnknownError = 13;              // An unknown server-side error occurred while processing the command.
-  const ElementIsNotSelectable = 15;    // An attempt was made to select an element that cannot be selected.
-  const JavaScriptError = 17;           // An error occurred while executing user supplied JavaScript.
-  const XPathLookupError = 19;          // An error occurred while searching for an element by XPath.
-  const Timeout = 21;                   // An operation did not complete before its timeout expired.
-  const NoSuchWindow = 23;              // A request to switch to a different window could not be satisfied because the window could not be found.
-  const InvalidCookieDomain = 24;       // An illegal attempt was made to set a cookie under a different domain than the current page.
-  const UnableToSetCookie = 25;         // A request to set a cookie's value could not be satisfied.
-  const UnexpectedAlertOpen = 26;       // A modal dialog was open, blocking this operation
-  const NoAlertOpenError = 27;          // An attempt was made to operate on a modal dialog when one was not open.
-  const ScriptTimeout = 28;             // A script did not complete before its timeout expired.
-  const InvalidElementCoordinates = 29; // The coordinates provided to an interactions operation are invalid.
-  const IMENotAvailable = 30;           // IME was not available.
-  const IMEEngineActivationFailed = 31; // An IME engine could not be started.
-  const InvalidSelector = 32;           // Argument was an invalid selector (e.g. XPath/CSS).
+  const Success = 0;
+  const NoSuchElement = 7;
+  const NoSuchFrame = 8;
+  const UnknownCommand = 9;
+  const StaleElementReference = 10;
+  const ElementNotVisible = 11;
+  const InvalidElementState = 12;
+  const UnknownError = 13;
+  const ElementIsNotSelectable = 15;
+  const JavaScriptError = 17;
+  const XPathLookupError = 19;
+  const Timeout = 21;
+  const NoSuchWindow = 23;
+  const InvalidCookieDomain = 24;
+  const UnableToSetCookie = 25;
+  const UnexpectedAlertOpen = 26;
+  const NoAlertOpenError = 27;
+  const ScriptTimeout = 28;
+  const InvalidElementCoordinates = 29;
+  const IMENotAvailable = 30;
+  const IMEEngineActivationFailed = 31;
+  const InvalidSelector = 32;
 
   // obsolete
   const IndexOutOfBounds = 1;
@@ -73,14 +70,79 @@ class WebDriver_Exception extends Exception {
   const NullPointer = 22;
   const NoModalDialogOpenError = 27;
 
+  // user-defined
+  const CurlExec = -1;
+  const ObsoleteCommand = -2;
+  const NoParametersExpected = -3;
+  const JsonParameterExpected = -4;
+  const DefaultRequest = -5;
+  const InvalidRequest = -6;
+
+  private static $errs = array(
+//  self::Success => array('Success', 'This should never be thrown!'),
+
+    self::NoSuchElement => array('NoSuchElement', 'An element could not be located on the page using the given search parameters.'),
+    self::NoSuchFrame => array('NoSuchFrame', 'A request to switch to a frame could not be satisfied because the frame could not be found.'),
+    self::UnknownCommand => array('UnknownCommand', 'The requested resource could not be found, or a request was received using an HTTP method that is not supported by the mapped resource.'),
+    self::StaleElementReference => array('StaleElementReference', 'An element command failed because the referenced element is no longer attached to the DOM.'),
+    self::ElementNotVisible => array('ElementNotVisible', 'An element command could not be completed because the element is not visible on the page.'),
+    self::InvalidElementState => array('InvalidElementState', 'An element command could not be completed because the element is in an invalid state (e.g. attempting to click a disabled element).'),
+    self::UnknownError => array('UnknownError', 'An unknown server-side error occurred while processing the command.'),
+    self::ElementIsNotSelectable => array('ElementIsNotSelectable', 'An attempt was made to select an element that cannot be selected.'),
+    self::JavaScriptError => array('JavaScriptError', 'An error occurred while executing user supplied JavaScript.'),
+    self::XPathLookupError => array('XPathLookupError', 'An error occurred while searching for an element by XPath.'),
+    self::Timeout => array('Timeout', 'An operation did not complete before its timeout expired.'),
+    self::NoSuchWindow => array('NoSuchWindow', 'A request to switch to a different window could not be satisfied because the window could not be found.'),
+    self::InvalidCookieDomain => array('InvalidCookieDomain', 'An illegal attempt was made to set a cookie under a different domain than the current page.'),
+    self::UnableToSetCookie => array('UnableToSetCookie', 'A request to set a cookie\'s value could not be satisfied.'),
+    self::UnexpectedAlertOpen => array('UnexpectedAlertOpen', 'A modal dialog was open, blocking this operation'),
+    self::NoAlertOpenError => array('NoAlertOpenError', 'An attempt was made to operate on a modal dialog when one was not open.'),
+    self::ScriptTimeout => array('ScriptTimeout', 'A script did not complete before its timeout expired.'),
+    self::InvalidElementCoordinates => array('InvalidElementCoordinates', 'The coordinates provided to an interactions operation are invalid.'),
+    self::IMENotAvailable => array('IMENotAvailable', 'IME was not available.'),
+    self::IMEEngineActivationFailed => array('IMEEngineActivationFailed', 'An IME engine could not be started.'),
+    self::InvalidSelector => array('InvalidSelector', 'Argument was an invalid selector (e.g. XPath/CSS).'),
+
+    self::CurlExec => array('CurlExec', 'curl_exec() error.'),
+    self::ObsoleteCommand => array('ObsoleteCommand', 'This webdriver command is obsolete.'),
+    self::NoParametersExpected => array('NoParametersExpected', 'This HTTP request method expects no parameters.'),
+    self::JsonParameterExpected => array('JsonParameterExpected', 'This POST request expects a JSON parameter (array).'),
+    self::DefaultRequest => array('DefaultRequest', 'This command has a default HTTP request method. The request method prefix is unnecessary.'),
+    self::InvalidRequest => array('InvalidRequest', 'This command does not support this HTTP request method.'),
+  );
+
   /**
    * Factory method to create WebDriver_Exception objects
    *
    * @param int $code
    * @param string $message
+   * @param Exception $previous_exception
    * @return WebDriver_Exception
    */
-  static function factory($code, $message) {
-    return new WebDriver_Exception($message, $code);
+  static function factory($code, $message = null, $previous_exception = null) {
+    // unknown error
+    if (!isset(self::$errs[$code])) {
+      if (trim($message) == '') {
+        $message = 'Unknown Error';
+      }
+
+      return new WebDriver_Exception($message, $code, $previous_exception);
+    }
+
+    $error_definition = self::$errs[$code];
+
+    // dynamically define custom exception classes
+    $class_name = __CLASS__ . '_' . $error_definition[0];
+    if (!class_exists($class_name, false)) {
+      eval(
+        'final class '.$class_name.' extends WebDriver_Exception {}'
+      );
+    }
+
+    if (trim($message) == '') {
+      $message = $error_definition[1];
+    }
+
+    return new $class_name($message, $code, $previous_exception);
   }
 }

@@ -41,18 +41,12 @@ abstract class WebDriver_Container extends WebDriver_Base {
         array(
           'using' => $using,
           'value' => $value));
-    } catch (WebDriver_Exception_Curl $e) {
-      throw $e;
-    } catch (WebDriver_Exception $e) {
-      if ($e->getCode() == WebDriver_Exception::NoSuchElement) {
-        throw new WebDriver_Exception(
+    } catch (WebDriver_Exception_NoSuchElement $e) {
+      throw WebDriver_Exception::factory(WebDriver_Exception::NoSuchElement,
         sprintf(
           'Element not found with %s, %s',
           $using,
-          $value) . "\n\n" . $e->getMessage(), WebDriver_Exception::NoSuchElement);
-      } else {
-        throw $e;
-      }
+          $value) . "\n\n" . $e->getMessage(), $e);
     }
 
     return $this->webDriverElement($results['value']);
@@ -109,7 +103,8 @@ abstract class WebDriver_Container extends WebDriver_Base {
         }
 
       default:
-        throw new Exception("Invalid arguments to $method method: " . print_r($argv, true));
+        throw WebDriver_Exception::factory(WebDriver_Exception::JsonParameterExpected,
+          sprintf('Invalid arguments to %s method: %s', $method, print_r($argv, true)));
     }
   }
 

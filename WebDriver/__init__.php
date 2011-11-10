@@ -27,6 +27,5 @@ require_once(dirname(__FILE__) . '/Session.php');
 require_once(dirname(__FILE__) . '/Element.php');
 require_once(dirname(__FILE__) . '/Environment.php');
 require_once(dirname(__FILE__) . '/Exception.php');
-require_once(dirname(__FILE__) . '/Exception/Curl.php');
 require_once(dirname(__FILE__) . '/SimpleItem.php');
 require_once(dirname(__FILE__) . '/Window.php');
