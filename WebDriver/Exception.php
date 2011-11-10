@@ -1,20 +1,37 @@
 <?php
-// Copyright 2004-present Facebook. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * Copyright 2004-present Facebook. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @package WebDriver
+ */
 
+/**
+ * WebDriver_Exception class
+ *
+ * @package WebDriver
+ */
 class WebDriver_Exception extends Exception {
-  // @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Response_Status_Codes
+  const Success = 0;
+  const Curl = -1;
+  const Obsolete = -2;
+
+  /**
+   * Response status codes
+   *
+   * @link http://code.google.com/p/selenium/wiki/JsonWireProtocol#Response_Status_Codes
+   */
   const NoSuchElement = 7;              // An element could not be located on the page using the given search parameters.
   const NoSuchFrame = 8;                // A request to switch to a frame could not be satisfied because the frame could not be found.
   const UnknownCommand = 9;             // The requested resource could not be found, or a request was received using an HTTP method that is not supported by the mapped resource.
@@ -55,4 +72,15 @@ class WebDriver_Exception extends Exception {
   const NoSuchCollection = 20;
   const NullPointer = 22;
   const NoModalDialogOpenError = 27;
+
+  /**
+   * Factory method to create WebDriver_Exception objects
+   *
+   * @param int $code
+   * @param string $message
+   * @return WebDriver_Exception
+   */
+  static function factory($code, $message) {
+    return new WebDriver_Exception($message, $code);
+  }
 }

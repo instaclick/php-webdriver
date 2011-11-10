@@ -1,18 +1,27 @@
 <?php
-// Copyright 2004-present Facebook. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/**
+ * Copyright 2004-present Facebook. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @package WebDriver
+ */
 
+/**
+ * Abstract WebDriver_Base class
+ *
+ * @package WebDriver
+ */
 abstract class WebDriver_Base {
 
   public static function throwException($status_code, $message) {
@@ -26,16 +35,38 @@ abstract class WebDriver_Base {
     }
   }
 
+  /**
+   * Return array of supported method names and corresponding HTTP request types
+   *
+   * @return array
+   */
   abstract protected function methods();
 
   protected $url;
+
+  /**
+   * Constructor
+   *
+   * @param string $url URL to Selenium server
+   */
   public function __construct($url = 'http://localhost:4444/wd/hub') {
     $this->url = $url;
   }
+
+  /**
+   * Magic method which returns URL to Selenium server
+   *
+   * @return string
+   */
   public function __toString() {
     return $this->url;
   }
 
+  /**
+   * Returns URL to Selenium server
+   *
+   * @return string
+   */
   public function getURL() {
     return $this->url;
   }
@@ -43,11 +74,12 @@ abstract class WebDriver_Base {
   /**
    * Curl request to webdriver server.
    *
-   * $http_method  'GET', 'POST', or 'DELETE'
-   * $command      If not defined in methods() this function will throw.
-   * $params       If an array(), they will be posted as JSON parameters
-   *               If a number or string, "/$params" is appended to url
-   * $extra_opts   key=>value pairs of curl options to pass to curl_setopt()
+   * @param string $http_method  'GET', 'POST', or 'DELETE'
+   * @param string $command      If not defined in methods() this function will throw.
+   * @param array  $params       If an array(), they will be posted as JSON parameters
+   *                             If a number or string, "/$params" is appended to url
+   * @param array  $extra_opts   key=>value pairs of curl options to pass to curl_setopt()
+   * @return array               array('value' => ..., 'info' => ...)
    */
   protected function curl($http_method,
                           $command,
@@ -118,6 +150,13 @@ abstract class WebDriver_Base {
     return array('value' => $value, 'info' => $info);
   }
 
+  /**
+   * Magic method that maps calls to class methods to execute WebDriver commands
+   *
+   * @param string $name
+   * @param array $arguments
+   * @return mixed
+   */
   public function __call($name, $arguments) {
     if (count($arguments) > 1) {
       throw new Exception(
@@ -156,6 +195,13 @@ abstract class WebDriver_Base {
     return $results['value'];
   }
 
+  /**
+   * Get default HTTP method for a given WebDriver command
+   *
+   * @param string $webdriver_command
+   * @return string
+   * @throws Exception if invalid WebDriver command
+   */
   private function getHTTPMethod($webdriver_command) {
     if (!array_key_exists($webdriver_command, $this->methods())) {
       throw new Exception(sprintf(
