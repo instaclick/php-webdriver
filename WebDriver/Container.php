@@ -24,6 +24,20 @@
  */
 abstract class WebDriver_Container extends WebDriver_Base {
   /**
+   * Locator strategies
+   */
+  private static $strategies = array(
+    'class name',
+    'css selector',
+    'id',
+    'name',
+    'link text',
+    'partial link text',
+    'tag name',
+    'xpath',
+  );
+
+  /**
    * Search for element on page, starting from the document root.
    *
    * @param string $using the locator strategy to use
@@ -32,21 +46,20 @@ abstract class WebDriver_Container extends WebDriver_Base {
    * @throws WebDriver_Exception if element not found, or invalid XPath
    */
   public function element() {
-    $this->parseArgs('element', func_get_args(), $using, $value);
+    $locator_json = $this->parseArgs('element', func_get_args());
 
     try {
       $results = $this->curl(
         'POST',
         '/element',
-        array(
-          'using' => $using,
-          'value' => $value));
+        $locator_json
+      );
     } catch (WebDriver_Exception_NoSuchElement $e) {
       throw WebDriver_Exception::factory(WebDriver_Exception::NoSuchElement,
         sprintf(
           'Element not found with %s, %s',
-          $using,
-          $value) . "\n\n" . $e->getMessage(), $e);
+          $locator_json['using'],
+          $locator_json['value']) . "\n\n" . $e->getMessage(), $e);
     }
 
     return $this->webDriverElement($results['value']);
@@ -61,15 +74,13 @@ abstract class WebDriver_Container extends WebDriver_Base {
    * @throws WebDriver_Exception if invalid XPath
    */
   public function elements() {
-    $this->parseArgs('elements', func_get_args(), $using, $value);
+    $locator_json = $this->parseArgs('elements', func_get_args());
 
     $results = $this->curl(
       'POST',
       '/elements',
-      array(
-        'using' => $using,
-        'value' => $value
-      ));
+      $locator_json
+    );
 
     return array_filter(array_map(
       array($this, 'webDriverElement'), $results['value']));
@@ -81,11 +92,10 @@ abstract class WebDriver_Container extends WebDriver_Base {
    *
    * @param string $method method name
    * @param array $argv arguments
-   * @param string &$using
-   * @param string &$value
+   * @return array
    * @throws Exception if invalid number of arguments to the called method
    */
-  private function parseArgs($method, $argv, &$using, &$value) {
+  private function parseArgs($method, $argv) {
     $argc = count($argv);
 
     switch ($argc) {
@@ -106,6 +116,27 @@ abstract class WebDriver_Container extends WebDriver_Base {
         throw WebDriver_Exception::factory(WebDriver_Exception::JsonParameterExpected,
           sprintf('Invalid arguments to %s method: %s', $method, print_r($argv, true)));
     }
+
+    return $this->by($using, $value);
+  }
+
+  /**
+   * Return JSON parameter for element / elements command
+   *
+   * @param string $using locator strategy
+   * @param string $value search target
+   * @return array
+   */
+  public function by($using, $value) {
+    if (!isset(self::$strategies[$using])) {
+      throw WebDriver_Exception::factory(WebDriver_Exception::UnknownLocatorStrategy,
+        sprintf('Invalid locator strategy %s', $using));
+    }
+
+    return array(
+      'using' => $using,
+      'value' => $value,
+    );
   }
 
   /**
@@ -120,6 +151,22 @@ abstract class WebDriver_Container extends WebDriver_Base {
         $this->getElementPath($value['ELEMENT']),
         $value['ELEMENT']) :
       null;
+  }
+
+  /**
+   * Magic method that maps calls to class methods to element locator strategies
+   *
+   * @param string $name
+   * @param array $arguments
+   * @return mixed
+   */
+  function __call($name, $arguments) {
+    if (count($arguments) == 1 && in_array(str_replace('_', ' ', $name), self::$strategies)) {
+      return $this->by($name, $arguments[0]);
+    }
+
+    // fallback to executing WebDriver commands
+    return parent::__call($name, $arguments);
   }
 
   /**
