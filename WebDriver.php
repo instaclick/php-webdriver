@@ -31,6 +31,7 @@ final class WebDriver extends WebDriver_Base {
   protected function methods() {
     return array(
       'status' => 'GET',
+      'sessions' => 'POST',
     );
   }
 
