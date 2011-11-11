@@ -104,7 +104,7 @@ class WebDriver_Exception extends Exception {
     self::InvalidSelector => array('InvalidSelector', 'Argument was an invalid selector (e.g. XPath/CSS).'),
 
     self::CurlExec => array('CurlExec', 'curl_exec() error.'),
-    self::ObsoleteCommand => array('ObsoleteCommand', 'This webdriver command is obsolete.'),
+    self::ObsoleteCommand => array('ObsoleteCommand', 'This WebDriver command is obsolete.'),
     self::NoParametersExpected => array('NoParametersExpected', 'This HTTP request method expects no parameters.'),
     self::JsonParameterExpected => array('JsonParameterExpected', 'This POST request expects a JSON parameter (array).'),
     self::DefaultRequest => array('DefaultRequest', 'This command has a default HTTP request method. The request method prefix is unnecessary.'),

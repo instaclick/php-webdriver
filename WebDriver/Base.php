@@ -211,10 +211,10 @@ abstract class WebDriver_Base {
     if (!array_key_exists($webdriver_command, $this->methods())) {
       if (array_key_exists($webdriver_command, $this->obsolete_methods())) {
         throw WebDriver_Exception::factory(WebDriver_Exception::ObsoleteCommand,
-          sprintf('%s is an obsolete webdriver command.', $webdriver_command));
+          sprintf('%s is an obsolete WebDriver command.', $webdriver_command));
       } else {
         throw WebDriver_Exception::factory(WebDriver_Exception::UnknownCommand,
-          sprintf('%s is not a valid webdriver command.', $webdriver_command));
+          sprintf('%s is not a valid WebDriver command.', $webdriver_command));
       }
     }
 
