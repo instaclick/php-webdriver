@@ -34,7 +34,7 @@ final class WebDriver_Element extends WebDriver_Container {
       'click' => 'POST',
       'submit' => 'POST',
       'text' => 'GET',
-      'value' => array('POST', 'GET'), // GET is obsolete/deprecated
+      'value' => 'POST',
       'name' => 'GET',
       'clear' => 'POST',
       'selected' => 'GET',
@@ -46,8 +46,17 @@ final class WebDriver_Element extends WebDriver_Container {
       'location_in_view' => 'GET',
       'size' => 'GET',
       'css' => 'GET',
+    );
+  }
 
-      // obsolete/deprecated
+  /**
+   * Return array of obsolete method names and corresponding HTTP request types
+   *
+   * @return array
+   */
+  protected function obsolete_methods() {
+    return array(
+      'value' => 'GET',
       'selected' => 'POST',
       'toggle' => 'POST',
       'hover' => 'POST',
@@ -55,6 +64,7 @@ final class WebDriver_Element extends WebDriver_Container {
     );
   }
 
+  protected $url;
   private $id;
 
   /**

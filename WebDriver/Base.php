@@ -30,6 +30,15 @@ abstract class WebDriver_Base {
    */
   abstract protected function methods();
 
+  /**
+   * Return array of obsolete method names and corresponding HTTP request types
+   *
+   * @return array
+   */
+  protected function obsolete_methods() {
+    return array();
+  }
+
   protected $url;
 
   /**
@@ -167,16 +176,20 @@ abstract class WebDriver_Base {
           $webdriver_command,
           $webdriver_command));
       }
-      $methods = $this->methods();
-      if (!in_array($http_method, $methods[$webdriver_command])) {
-        throw WebDriver_Exception::factory(WebDriver_Exception::InvalidRequest, sprintf(
-          '%s is not an available http method for the command %s.',
-          $http_method,
-          $webdriver_command));
-      }
+    } else if (count($arguments) > 0) {
+      $webdriver_command = $name;
+      $http_method = 'POST';
     } else {
       $webdriver_command = $name;
       $http_method = $this->getHTTPMethod($webdriver_command);
+    }
+
+    $methods = $this->methods();
+    if (!in_array($http_method, $methods[$webdriver_command])) {
+      throw WebDriver_Exception::factory(WebDriver_Exception::InvalidRequest, sprintf(
+        '%s is not an available http method for the command %s.',
+        $http_method,
+        $webdriver_command));
     }
 
     $results = $this->curl(
@@ -196,10 +209,13 @@ abstract class WebDriver_Base {
    */
   private function getHTTPMethod($webdriver_command) {
     if (!array_key_exists($webdriver_command, $this->methods())) {
-      throw WebDriver_Exception::factory(WebDriver_Exception::UnknownCommand,
-        sprintf(
-          '%s is not a valid webdriver command.',
-          $webdriver_command));
+      if (array_key_exists($webdriver_command, $this->obsolete_methods())) {
+        throw WebDriver_Exception::factory(WebDriver_Exception::ObsoleteCommand,
+          sprintf('%s is an obsolete webdriver command.', $webdriver_command));
+      } else {
+        throw WebDriver_Exception::factory(WebDriver_Exception::UnknownCommand,
+          sprintf('%s is not a valid webdriver command.', $webdriver_command));
+      }
     }
 
     $methods = $this->methods();

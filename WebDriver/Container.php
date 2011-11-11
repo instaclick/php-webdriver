@@ -160,7 +160,7 @@ abstract class WebDriver_Container extends WebDriver_Base {
    * @param array $arguments
    * @return mixed
    */
-  function __call($name, $arguments) {
+  public function __call($name, $arguments) {
     if (count($arguments) == 1 && in_array(str_replace('_', ' ', $name), self::$strategies)) {
       return $this->by($name, $arguments[0]);
     }

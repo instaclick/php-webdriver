@@ -53,8 +53,16 @@ final class WebDriver_Session extends WebDriver_Container {
       'buttondown' => 'POST',
       'buttonup' => 'POST',
       'doubleclick' => 'POST',
+    );
+  }
 
-      // obsolete/deprecated
+  /**
+   * Return array of obsolete method names and corresponding HTTP request types
+   *
+   * @return array
+   */
+  protected function obsolete_methods() {
+    return array(
       'modifier' => 'POST',
       'speed' => array('GET', 'POST'),
     );
