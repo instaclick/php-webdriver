@@ -178,6 +178,7 @@ abstract class WebDriver_Base {
       }
     } else if (count($arguments) > 0) {
       $webdriver_command = $name;
+      $this->getHTTPMethod($webdriver_command);
       $http_method = 'POST';
     } else {
       $webdriver_command = $name;
@@ -185,7 +186,7 @@ abstract class WebDriver_Base {
     }
 
     $methods = $this->methods();
-    if (!in_array($http_method, $methods[$webdriver_command])) {
+    if (!in_array($http_method, (array) $methods[$webdriver_command])) {
       throw WebDriver_Exception::factory(WebDriver_Exception::InvalidRequest, sprintf(
         '%s is not an available http method for the command %s.',
         $http_method,

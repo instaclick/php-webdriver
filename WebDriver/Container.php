@@ -128,7 +128,7 @@ abstract class WebDriver_Container extends WebDriver_Base {
    * @return array
    */
   public function by($using, $value) {
-    if (!isset(self::$strategies[$using])) {
+    if (!in_array($using, self::$strategies)) {
       throw WebDriver_Exception::factory(WebDriver_Exception::UnknownLocatorStrategy,
         sprintf('Invalid locator strategy %s', $using));
     }

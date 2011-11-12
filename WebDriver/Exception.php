@@ -77,6 +77,7 @@ class WebDriver_Exception extends Exception {
   const JsonParameterExpected = -4;
   const DefaultRequest = -5;
   const InvalidRequest = -6;
+  const UnknownLocatorStrategy = -7;
 
   private static $errs = array(
 //  self::Success => array('Success', 'This should never be thrown!'),
@@ -109,6 +110,7 @@ class WebDriver_Exception extends Exception {
     self::JsonParameterExpected => array('JsonParameterExpected', 'This POST request expects a JSON parameter (array).'),
     self::DefaultRequest => array('DefaultRequest', 'This command has a default HTTP request method. The request method prefix is unnecessary.'),
     self::InvalidRequest => array('InvalidRequest', 'This command does not support this HTTP request method.'),
+    self::UnknownLocatorStrategy => array('UnknownLocatorStrategy', 'This locator strategy is not supported.'),
   );
 
   /**
