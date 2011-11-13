@@ -78,6 +78,7 @@ class WebDriver_Exception extends Exception {
   const DefaultRequest = -5;
   const InvalidRequest = -6;
   const UnknownLocatorStrategy = -7;
+  const WebTestAssertion = -8;
 
   private static $errs = array(
 //  self::Success => array('Success', 'This should never be thrown!'),
@@ -111,6 +112,7 @@ class WebDriver_Exception extends Exception {
     self::DefaultRequest => array('DefaultRequest', 'This command has a default HTTP request method. The request method prefix is unnecessary.'),
     self::InvalidRequest => array('InvalidRequest', 'This command does not support this HTTP request method.'),
     self::UnknownLocatorStrategy => array('UnknownLocatorStrategy', 'This locator strategy is not supported.'),
+    self::WebTestAssertion => array('WebTestAssertion', 'WebTest assertion failed.'),
   );
 
   /**
