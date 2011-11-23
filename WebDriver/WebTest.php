@@ -29,6 +29,7 @@
 abstract class WebDriver_WebTest_Script
 {
 	protected $session;
+	protected $assert_stats;
 
 	/**
 	 * Constructor
@@ -38,6 +39,55 @@ abstract class WebDriver_WebTest_Script
 	public function __construct($session)
 	{
 		$this->session = $session;
+		$this->assert_stats = array(
+			'pass' => 0,
+			'failure' => 0,
+			'total' => 0,
+		);
+	}
+
+	/**
+	 * Assert (expect) value
+	 *
+	 * @param mixed $expression
+	 * @param mixed $expected
+	 * @param string $message
+	 * @throw WebDriver_Exception_WebTestAssertion if $expression is not equal to $expected
+	 */
+	protected function assert($expression, $expected, $message)
+	{
+		$this->assert_stats['total']++;
+
+		if ($expression !== $expected)
+		{
+			$this->assert_stats['failure']++;
+			throw WebDriver_Exception::factory(WebDriver_Exception::WebTestAssertion, $message);
+		}
+
+		$this->assert_stats['pass']++;
+	}
+
+	/**
+	 * Assert (expect) exception
+	 *
+	 * @param mixed $expression
+	 * @param string $message
+	 * @throw WebDriver_Exception_WebTestAssertion if not exception is thrown
+	 */
+	protected function assert_exception($callback, $message)
+	{
+		$this->assert_stats['total']++;
+
+		try {
+			$callback();
+
+			$this->assert_stats['failure']++;
+			throw WebDriver_Exception::factory(WebDriver_Exception::WebTestAssertion, $message);
+		} catch (Exception $e) {
+			// expected exception
+		}
+
+		$this->assert_stats['pass']++;
 	}
 }
 
@@ -173,6 +223,28 @@ class WebDriver_WebTest
 	}
 
 	/**
+	 * Is this a testable method?
+	 *
+	 * @param string $className
+	 * @param RefelectionMethod $reflectionMethod
+	 * @return bool False if method should not be counted
+	 */
+	protected function isTestableMethod($className, $reflectionMethod)
+	{
+		$method = $reflectionMethod->getName();
+		$modifiers = $reflectionMethod->getModifiers();
+
+		if ($method === $className
+			|| $modifiers !== ReflectionMethod::IS_PUBLIC
+			|| in_array($method, self::$magicMethods))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Run tests
 	 *
 	 * @param string $file
@@ -187,6 +259,9 @@ class WebDriver_WebTest
 
 		$classes = $this->getClasses($file);
 
+		/*
+		 * count the number of testable methods
+		 */
 		$totalMethods = 0;
 		foreach ($classes as $class)
 		{
@@ -195,10 +270,13 @@ class WebDriver_WebTest
 			{
 				$reflectionClass = new ReflectionClass($class);
 				$reflectionMethods = $reflectionClass->getMethods();
-				$totalMethods += count($reflectionMethods);
-
-				$comment = $reflectionClass->getDocComment();
-				$this->dumpComment($comment);
+				foreach ($reflectionMethods as $reflectionMethod)
+				{
+					if ($this->isTestableMethod($class, $reflectionMethod))
+					{
+						$totalMethods++;
+					}
+				}
 			}
 		}
 
@@ -215,12 +293,14 @@ class WebDriver_WebTest
 					$objectUnderTest = new $class($session);
 
 					$reflectionClass = new ReflectionClass($class);
+
+					$comment = $reflectionClass->getDocComment();
+					$this->dumpComment($comment);
+
 					$reflectionMethods = $reflectionClass->getMethods();
 					foreach ($reflectionMethods as $reflectionMethod)
 					{
-						$method = $reflectionMethod->getName();
-						if ($method === $class
-							|| in_array($method, self::$magicMethods))
+						if (!$this->isTestableMethod($class, $reflectionMethod))
 						{
 							continue;
 						}
@@ -275,6 +355,8 @@ class WebDriver_WebTest
 
 						$this->dumpDiagnostic($diagnostic);
 					}
+
+					unset($objectUnderTest);
 				}
 			}
 		}
@@ -301,9 +383,44 @@ class WebDriver_WebTest
 	static public function main($argc, $argv)
 	{
 		set_error_handler(array('WebDriver_WebTest', 'exception_error_handler'));
+
 		assert_options(ASSERT_ACTIVE, 1);
 		assert_options(ASSERT_WARNING, 0);
 		assert_options(ASSERT_CALLBACK, array('WebDriver_WebTest', 'assert_handler'));
+
+		/*
+		 * parse command line options
+		 */
+		for ($i = 0; $i < $argc; $i++)
+		{
+			$opt = $argv[$i];
+			$optValue = '';
+
+			if (preg_match('~([-]+[^=]+)=(.+)~', $opt, $matches))
+			{
+				$opt = $matches[1];
+				$optValue = $matches[2];
+			}
+
+			switch ($opt)
+			{
+				case '-h':
+				case '--help':
+					echo $argv[0] . " [-d directory] [--tap] [--xml] [--disable-screenshot] test.php\n";
+					exit(1);
+
+				case '-d':
+				case '--output-directory':
+
+				case '--format':
+				case '--tap':
+				case '--xml':
+
+				case '--disable-screenshot':
+
+				default:
+			}
+		}
 
 		echo "TAP version 13\n";
 
