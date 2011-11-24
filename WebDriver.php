@@ -23,37 +23,38 @@
  * @package WebDriver
  */
 final class WebDriver extends WebDriver_Base {
-  /**
-   * Return array of supported method names and corresponding HTTP request types
-   *
-   * @return array
-   */
-  protected function methods() {
-    return array(
-      'status' => 'GET',
-      'sessions' => 'POST',
-    );
-  }
+	/**
+	 * Return array of supported method names and corresponding HTTP request types
+	 *
+	 * @return array
+	 */
+	protected function methods() {
+		return array(
+			'status' => 'GET',
+			'sessions' => 'POST',
+		);
+	}
 
-  /**
-   * Get session object for chaining
-   *
-   * @param string $browser
-   * @param array $additional_capabilities
-   * @return WebDriver_Session
-   */
-  public function session($browser = 'firefox',
-                          $additional_capabilities = array()) {
-    $desired_capabilities = array_merge(
-      $additional_capabilities,
-      array('browserName' => $browser));
+	/**
+	 * Get session object for chaining
+	 *
+	 * @param string $browser
+	 * @param array $additional_capabilities
+	 * @return WebDriver_Session
+	 */
+	public function session($browser = 'firefox', $additional_capabilities = array()) {
+		$desired_capabilities = array_merge(
+			$additional_capabilities,
+			array('browserName' => $browser)
+		);
 
-    $results = $this->curl(
-      'POST',
-      '/session',
-      array('desiredCapabilities' => $desired_capabilities),
-      array(CURLOPT_FOLLOWLOCATION => true));
+		$results = $this->curl(
+			'POST',
+			'/session',
+			array('desiredCapabilities' => $desired_capabilities),
+			array(CURLOPT_FOLLOWLOCATION => true)
+		);
 
-    return new WebDriver_Session($results['info']['url']);
-  }
+		return new WebDriver_Session($results['info']['url']);
+	}
 }

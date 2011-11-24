@@ -23,38 +23,38 @@
  * @package WebDriver
  */
 final class WebDriver_Window extends WebDriver_Base {
-  /**
-   * Return array of supported method names and corresponding HTTP request types
-   *
-   * @return array
-   */
-  protected function methods() {
-    return array(
-      'size' => array('GET', 'POST'),
-      'position' => array('GET', 'POST'),
-    );
-  }
+	/**
+	 * Return array of supported method names and corresponding HTTP request types
+	 *
+	 * @return array
+	 */
+	protected function methods() {
+		return array(
+			'size' => array('GET', 'POST'),
+			'position' => array('GET', 'POST'),
+		);
+	}
 
-  private $handle;
+	private $handle;
 
-  /**
-   * Get window handle
-   *
-   * @return string
-   */
-  public function getHandle() {
-    return $this->handle;
-  }
+	/**
+	 * Get window handle
+	 *
+	 * @return string
+	 */
+	public function getHandle() {
+		return $this->handle;
+	}
 
-  /**
-   * Constructor
-   *
-   * @param string $url
-   * @param string $window_handle
-   */
-  public function __construct($url, $window_handle) {
-    $this->handle = $window_handle;
+	/**
+	 * Constructor
+	 *
+	 * @param string $url
+	 * @param string $window_handle
+	 */
+	public function __construct($url, $window_handle) {
+		$this->handle = $window_handle;
 
-    parent::__construct($url . '/' . $window_handle);
-  }
+		parent::__construct($url . '/' . $window_handle);
+	}
 }

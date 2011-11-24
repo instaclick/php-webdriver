@@ -28,12 +28,12 @@
  * @package WebDriver
  */
 final class WebDriver_Environment {
-  /**
-   * Proxy method for curl_exec
-   *
-   * @param resource $ch curl handle
-   */
-  public static function CurlExec($ch) {
-    return curl_exec($ch);
-  }
+	/**
+	 * Proxy method for curl_exec
+	 *
+	 * @param resource $ch curl handle
+	 */
+	public static function CurlExec($ch) {
+		return curl_exec($ch);
+	}
 }

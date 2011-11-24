@@ -23,24 +23,24 @@
  * @package WebDriver
  */
 final class WebDriver_SimpleItem extends WebDriver_Base {
-  private $_methods = array();
+	private $_methods = array();
 
-  /**
-   * Return array of supported method names and corresponding HTTP request types
-   *
-   * @return array
-   */
-  protected function methods() {
-    return $this->_methods;
-  }
+	/**
+	 * Return array of supported method names and corresponding HTTP request types
+	 *
+	 * @return array
+	 */
+	protected function methods() {
+		return $this->_methods;
+	}
 
-  /**
-   * Set array of supported method names and corresponding HTTP request types
-   *
-   * @param array $methods
-   */
-  public function setMethods($methods) {
-    $this->_methods = $methods;
-    return $this;
-  }
+	/**
+	 * Set array of supported method names and corresponding HTTP request types
+	 *
+	 * @param array $methods
+	 */
+	public function setMethods($methods) {
+		$this->_methods = $methods;
+		return $this;
+	}
 }
