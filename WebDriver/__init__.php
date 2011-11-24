@@ -29,3 +29,4 @@ require_once(dirname(__FILE__) . '/Environment.php');
 require_once(dirname(__FILE__) . '/Exception.php');
 require_once(dirname(__FILE__) . '/SimpleItem.php');
 require_once(dirname(__FILE__) . '/Window.php');
+require_once(dirname(__FILE__) . '/Keys.php');
