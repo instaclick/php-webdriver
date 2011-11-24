@@ -21,6 +21,9 @@
  * WebDriver class
  *
  * @package WebDriver
+ *
+ * @method status
+ * @method sessions
  */
 final class WebDriver extends WebDriver_Base {
 	/**

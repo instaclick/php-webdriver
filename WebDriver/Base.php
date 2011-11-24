@@ -166,6 +166,7 @@ abstract class WebDriver_Base {
 		if (preg_match('/^(get|post|delete)/', $name, $matches)) {
 			$http_method = strtoupper($matches[0]);
 			$webdriver_command = strtolower(substr($name, strlen($http_method)));
+			/*
 			$default_http_method = $this->getHTTPMethod($webdriver_command);
 			if ($http_method === $default_http_method) {
 				throw WebDriver_Exception::factory(WebDriver_Exception::DefaultRequest, sprintf(
@@ -175,6 +176,7 @@ abstract class WebDriver_Base {
 					$webdriver_command
 				));
 			}
+			*/
 		} else if (count($arguments) > 0) {
 			$webdriver_command = $name;
 			$this->getHTTPMethod($webdriver_command);

@@ -21,6 +21,23 @@
  * WebDriver_Element class
  *
  * @package WebDriver
+ *
+ * @method active
+ * @method click
+ * @method submit
+ * @method text
+ * @method value
+ * @method name
+ * @method clear
+ * @method selected
+ * @method enabled
+ * @method attribute
+ * @method equals
+ * @method displayed
+ * @method location
+ * @method location_in_view
+ * @method size
+ * @method css
  */
 final class WebDriver_Element extends WebDriver_Container {
 	/**
