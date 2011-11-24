@@ -173,6 +173,27 @@ final class WebDriver_Session extends WebDriver_Container {
   }
 
   /**
+   * Delete window: /session/:sessionId/window (DELETE)
+   *
+   * @return WebDriver_Base
+   */
+  public function deleteWindow() {
+    $this->curl('DELETE', '/window');
+    return $this;
+  }
+
+  /**
+   * Set focus to window: /session/:sessionId/window (POST)
+   *
+   * @param mixed $name window handlr or name attribute
+   * @return WebDriver_Base
+   */
+  public function focusWindow($name) {
+    $this->curl('POST', '/window', array('name' => $name));
+    return $this;
+  }
+
+  /**
    * timeouts method chaining, e.g.,
    * - $session->timeouts()->method()
    *
