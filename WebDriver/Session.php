@@ -21,6 +21,30 @@
  * WebDriver_Session class
  *
  * @package WebDriver
+ *
+ * @method url
+ * @method forward
+ * @method back
+ * @method refresh
+ * @method execute
+ * @method execute_async
+ * @method screenshot
+ * @method window_handle
+ * @method window_handles
+ * @method cookie
+ * @method frame
+ * @method source
+ * @method title
+ * @method keys
+ * @method orientation
+ * @method alert_text
+ * @method accept_alert
+ * @method dismiss_alert
+ * @method moveto
+ * @method click
+ * @method buttondown
+ * @method buttonup
+ * @method doubleclick
  */
 final class WebDriver_Session extends WebDriver_Container {
 	/**
