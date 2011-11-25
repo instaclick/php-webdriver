@@ -24,14 +24,14 @@
  */
 abstract class WebDriver_Container extends WebDriver_Base {
 
-	CONST BY_CLASSNAME = 'class name';
-	CONST BY_CSS = 'css selector';
-	CONST BY_ID = 'id';
-	CONST BY_NAME = 'name';
-	CONST BY_LINKTEXT = 'link text';
-	CONST BY_PARTIALLINKTEXT = 'partial link text';
-	CONST BY_TAG = 'tag name';
-	CONST BY_XPATH = 'xpath';
+	const BY_CLASSNAME = 'class name';
+	const BY_CSS = 'css selector';
+	const BY_ID = 'id';
+	const BY_NAME = 'name';
+	const BY_LINKTEXT = 'link text';
+	const BY_PARTIALLINKTEXT = 'partial link text';
+	const BY_TAG = 'tag name';
+	const BY_XPATH = 'xpath';
 
 	/**
 	 * Locator strategies
