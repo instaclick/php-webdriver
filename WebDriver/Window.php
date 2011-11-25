@@ -21,6 +21,9 @@
  * WebDriver_Window class
  *
  * @package WebDriver
+ *
+ * @method size
+ * @method position
  */
 final class WebDriver_Window extends WebDriver_Base {
 	/**

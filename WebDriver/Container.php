@@ -23,18 +23,28 @@
  * @package WebDriver
  */
 abstract class WebDriver_Container extends WebDriver_Base {
+
+	CONST BY_CLASSNAME = 'class name';
+	CONST BY_CSS = 'css selector';
+	CONST BY_ID = 'id';
+	CONST BY_NAME = 'name';
+	CONST BY_LINKTEXT = 'link text';
+	CONST BY_PARTIALLINKTEXT = 'partial link text';
+	CONST BY_TAG = 'tag name';
+	CONST BY_XPATH = 'xpath';
+
 	/**
 	 * Locator strategies
 	 */
 	private static $strategies = array(
-		'class name',
-		'css selector',
-		'id',
-		'name',
-		'link text',
-		'partial link text',
-		'tag name',
-		'xpath',
+		self::BY_CLASSNAME,
+		self::BY_CSS,
+		self::BY_ID,
+		self::BY_NAME,
+		self::BY_LINKTEXT,
+		self::BY_PARTIALLINKTEXT,
+		self::BY_NAME,
+		self::BY_XPATH,
 	);
 
 	/**
