@@ -45,10 +45,10 @@ final class WebDriver extends WebDriver_Base {
 	 * @param array $additional_capabilities
 	 * @return WebDriver_Session
 	 */
-	public function session($browser = 'firefox', $additional_capabilities = array()) {
+	public function session($browser = WebDriver_BrowserName::FIREFOX, $additional_capabilities = array()) {
 		$desired_capabilities = array_merge(
 			$additional_capabilities,
-			array('browserName' => $browser)
+			array(WebDriver_CapabilityType::BROWSER_NAME => $browser)
 		);
 
 		$results = $this->curl(
