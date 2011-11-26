@@ -41,20 +41,14 @@ final class WebDriver extends WebDriver_Base {
 	/**
 	 * Get session object for chaining
 	 *
-	 * Capability constants (org.openqa.selenium.remote.CapabilityType)
-	 * @see http://selenium.googlecode.com/svn/trunk/docs/api/java/constant-values.html#org.openqa.selenium.remote.CapabilityType.BROWSER_NAME
-	 *
-	 * Browsers (org.openqa.selenium.remote.BrowserType)
-	 * @see http://selenium.googlecode.com/svn/trunk/docs/api/java/constant-values.html#org.openqa.selenium.remote.BrowserType.CHROME
-	 *
 	 * @param string $browser
 	 * @param array $additional_capabilities
 	 * @return WebDriver_Session
 	 */
-	public function session($browser = 'firefox', $additional_capabilities = array()) {
+	public function session($browser = WebDriver_BrowserName::FIREFOX, $additional_capabilities = array()) {
 		$desired_capabilities = array_merge(
 			$additional_capabilities,
-			array('browserName' => $browser)
+			array(WebDriver_CapabilityType::BROWSER_NAME => $browser)
 		);
 
 		$results = $this->curl(
