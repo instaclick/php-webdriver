@@ -28,29 +28,29 @@ final class WebDriver_CapabilityType {
 	 * @see http://code.google.com/p/selenium/source/browse/trunk/java/client/src/org/openqa/selenium/remote/CapabilityType.java
 	 * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Capabilities_JSON_Object
 	 */
-	const BROWSER_NAME                      = "browserName";
-	const PLATFORM                          = "platform";
-	const SUPPORTS_JAVASCRIPT               = "javascriptEnabled";
-	const TAKES_SCREENSHOT                  = "takesScreenshot";
-	const VERSION                           = "version";
-	const SUPPORTS_ALERTS                   = "handlesAlerts";
-	const SUPPORTS_SQL_DATABASE             = "databaseEnabled";
-	const SUPPORTS_LOCATION_CONTEXT         = "locationContextEnabled";
-	const SUPPORTS_APPLICATION_CACHE        = "applicationCacheEnabled";
-	const SUPPORTS_BROWSER_CONNECTION       = "browserConnectionEnabled";
-	const SUPPORTS_FINDING_BY_CSS           = "cssSelectorsEnabled";
-	const PROXY                             = "proxy";
-	const SUPPORTS_WEB_STORAGE              = "webStorageEnabled";
-	const ROTATABLE                         = "rotatable";
-	# Enable this capability to accept all SSL certs by defaults.
-	const ACCEPT_SSL_CERTS                  = "acceptSslCerts";
-	const HAS_NATIVE_EVENTS                 = "nativeEvents";
+	const BROWSER_NAME                      = 'browserName';
+	const PLATFORM                          = 'platform';
+	const SUPPORTS_JAVASCRIPT               = 'javascriptEnabled';
+	const TAKES_SCREENSHOT                  = 'takesScreenshot';
+	const VERSION                           = 'version';
+	const SUPPORTS_ALERTS                   = 'handlesAlerts';
+	const SUPPORTS_SQL_DATABASE             = 'databaseEnabled';
+	const SUPPORTS_LOCATION_CONTEXT         = 'locationContextEnabled';
+	const SUPPORTS_APPLICATION_CACHE        = 'applicationCacheEnabled';
+	const SUPPORTS_BROWSER_CONNECTION       = 'browserConnectionEnabled';
+	const SUPPORTS_FINDING_BY_CSS           = 'cssSelectorsEnabled';
+	const PROXY                             = 'proxy';
+	const SUPPORTS_WEB_STORAGE              = 'webStorageEnabled';
+	const ROTATABLE                         = 'rotatable';
 
-	# ForSeleniumServer
-	const AVOIDING_PROXY                    = "avoidProxy";
-	const ONLY_PROXYING_SELENIUM_TRAFFIC    = "onlyProxySeleniumTraffic";
-	const PROXYING_EVERYTHING               = "proxyEverything";
-	const PROXY_PAC                         = "proxy_pac";
-	const ENSURING_CLEAN_SESSION            = "ensureCleanSession";
+	// Enable this capability to accept all SSL certs by defaults.
+	const ACCEPT_SSL_CERTS                  = 'acceptSslCerts';
+	const HAS_NATIVE_EVENTS                 = 'nativeEvents';
 
+	// For Selenium Server
+	const AVOIDING_PROXY                    = 'avoidProxy';
+	const ONLY_PROXYING_SELENIUM_TRAFFIC    = 'onlyProxySeleniumTraffic';
+	const PROXYING_EVERYTHING               = 'proxyEverything';
+	const PROXY_PAC                         = 'proxy_pac';
+	const ENSURING_CLEAN_SESSION            = 'ensureCleanSession';
 }

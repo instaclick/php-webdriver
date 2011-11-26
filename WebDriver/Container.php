@@ -24,27 +24,27 @@
  */
 abstract class WebDriver_Container extends WebDriver_Base {
 
-	const BY_CLASSNAME = 'class name';
-	const BY_CSS = 'css selector';
-	const BY_ID = 'id';
-	const BY_NAME = 'name';
-	const BY_LINKTEXT = 'link text';
-	const BY_PARTIALLINKTEXT = 'partial link text';
-	const BY_TAG = 'tag name';
-	const BY_XPATH = 'xpath';
+	const CLASS_NAME = 'class name';
+	const CSS_SELECTOR = 'css selector';
+	const ID = 'id';
+	const NAME = 'name';
+	const LINK_TEXT = 'link text';
+	const PARTIAL_LINK_TEXT = 'partial link text';
+	const TAG_NAME = 'tag name';
+	const XPATH = 'xpath';
 
 	/**
 	 * Locator strategies
 	 */
 	private static $strategies = array(
-		self::BY_CLASSNAME,
-		self::BY_CSS,
-		self::BY_ID,
-		self::BY_NAME,
-		self::BY_LINKTEXT,
-		self::BY_PARTIALLINKTEXT,
-		self::BY_NAME,
-		self::BY_XPATH,
+		self::CLASS_NAME,
+		self::CSS_SELECTOR,
+		self::ID,
+		self::NAME,
+		self::LINK_TEXT,
+		self::PARTIAL_LINK_TEXT,
+		self::TAG_NAME,
+		self::XPATH,
 	);
 
 	/**
