@@ -41,12 +41,6 @@ final class WebDriver extends WebDriver_Base {
 	/**
 	 * Get session object for chaining
 	 *
-	 * Capability constants (org.openqa.selenium.remote.CapabilityType)
-	 * @see http://selenium.googlecode.com/svn/trunk/docs/api/java/constant-values.html#org.openqa.selenium.remote.CapabilityType.BROWSER_NAME
-	 *
-	 * Browsers (org.openqa.selenium.remote.BrowserType)
-	 * @see http://selenium.googlecode.com/svn/trunk/docs/api/java/constant-values.html#org.openqa.selenium.remote.BrowserType.CHROME
-	 *
 	 * @param string $browser
 	 * @param array $additional_capabilities
 	 * @return WebDriver_Session
