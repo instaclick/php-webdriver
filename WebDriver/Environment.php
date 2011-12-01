@@ -29,6 +29,18 @@
  */
 final class WebDriver_Environment {
 	/**
+	 * Proxy method for curl_init
+	 *
+	 * @param string $http_method GET, POST, etc
+	 * @param string $url
+	 * @param array $params
+	 * @return resource curl handle
+	 */
+	public static function CurlInit($http_method, $url, $params) {
+		return curl_init($url);
+	}
+
+	/**
 	 * Proxy method for curl_exec
 	 *
 	 * @param resource $ch curl handle

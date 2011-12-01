@@ -95,7 +95,7 @@ abstract class WebDriver_Base {
 			$url .= '/' . $params;
 		}
 
-		$curl = curl_init($url);
+		$curl = WebDriver_Environment::CurlInit($http_method, $url, $params);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_HTTPHEADER, array('application/json;charset=UTF-8'));
 
