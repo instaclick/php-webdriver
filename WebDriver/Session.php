@@ -110,7 +110,8 @@ final class WebDriver_Session extends WebDriver_Container {
 	 * @return mixed
 	 */
 	public function capabilities() {
-		return $this->curl('GET', '');
+		$result = $this->curl('GET', '');
+		return $result['value'];
 	}
 
 	/**
@@ -119,7 +120,8 @@ final class WebDriver_Session extends WebDriver_Container {
 	 * @return mixed
 	 */
 	public function close() {
-		return $this->curl('DELETE', '');
+		$result = $this->curl('DELETE', '');
+		return $result['value'];
 	}
 
 	// There's a limit to our ability to exploit the dynamic nature of PHP when it
@@ -133,7 +135,8 @@ final class WebDriver_Session extends WebDriver_Container {
 	 * @return mixed
 	 */
 	public function getAllCookies() {
-		return $this->curl('GET', '/cookie');
+		$result = $this->curl('GET', '/cookie');
+		return $result['value'];
 	}
 
 	/**

@@ -23,7 +23,6 @@
  * @package WebDriver
  *
  * @method status
- * @method sessions
  */
 final class WebDriver extends WebDriver_Base {
 	/**
@@ -34,7 +33,6 @@ final class WebDriver extends WebDriver_Base {
 	protected function methods() {
 		return array(
 			'status' => 'GET',
-			'sessions' => 'POST',
 		);
 	}
 
@@ -59,5 +57,20 @@ final class WebDriver extends WebDriver_Base {
 		);
 
 		return new WebDriver_Session($results['info']['url']);
+	}
+
+	/**
+	 * Get list of currently active sessions
+	 *
+	 * @return array an of WebDriver_Session objects
+	 */
+	public function sessions() {
+		$result = $this->curl('GET', '/sessions');
+		$sessions = array();
+		foreach ($result['value'] as $session) {
+			$sessions[] = new WebDriverSession(
+				$this->url . '/session/' . $session['id']);
+		}
+		return $sessions;
 	}
 }
