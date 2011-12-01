@@ -227,11 +227,7 @@ final class WebDriver_Session extends WebDriver_Container {
 	 * @return WebDriver_Base
 	 */
 	public function timeouts() {
-		$item = new WebDriver_SimpleItem($this->url . '/timeouts');
-		return $item->setMethods(array(
-			'async_script' => 'POST',
-			'implicit_wait' => 'POST',
-		));
+		return new WebDriver_Timeouts($this->url . /timeouts');
 	}
 
 	/**
