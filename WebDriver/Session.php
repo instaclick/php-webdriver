@@ -48,6 +48,36 @@
  */
 final class WebDriver_Session extends WebDriver_Container {
 	/**
+	 * @see http://code.google.com/p/selenium/source/browse/trunk/java/client/src/org/openqa/selenium/remote/CapabilityType.java
+	 * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Capabilities_JSON_Object
+	 */
+	const BROWSER_NAME                      = 'browserName';
+	const PLATFORM                          = 'platform';
+	const SUPPORTS_JAVASCRIPT               = 'javascriptEnabled';
+	const TAKES_SCREENSHOT                  = 'takesScreenshot';
+	const VERSION                           = 'version';
+	const SUPPORTS_ALERTS                   = 'handlesAlerts';
+	const SUPPORTS_SQL_DATABASE             = 'databaseEnabled';
+	const SUPPORTS_LOCATION_CONTEXT         = 'locationContextEnabled';
+	const SUPPORTS_APPLICATION_CACHE        = 'applicationCacheEnabled';
+	const SUPPORTS_BROWSER_CONNECTION       = 'browserConnectionEnabled';
+	const SUPPORTS_FINDING_BY_CSS           = 'cssSelectorsEnabled';
+	const PROXY                             = 'proxy';
+	const SUPPORTS_WEB_STORAGE              = 'webStorageEnabled';
+	const ROTATABLE                         = 'rotatable';
+
+	// Enable this capability to accept all SSL certs by defaults.
+	const ACCEPT_SSL_CERTS                  = 'acceptSslCerts';
+	const HAS_NATIVE_EVENTS                 = 'nativeEvents';
+
+	// For Selenium Server
+	const AVOIDING_PROXY                    = 'avoidProxy';
+	const ONLY_PROXYING_SELENIUM_TRAFFIC    = 'onlyProxySeleniumTraffic';
+	const PROXYING_EVERYTHING               = 'proxyEverything';
+	const PROXY_PAC                         = 'proxy_pac';
+	const ENSURING_CLEAN_SESSION            = 'ensureCleanSession';
+
+	/**
 	 * Return array of supported method names and corresponding HTTP request types
 	 *
 	 * @return array
@@ -227,7 +257,7 @@ final class WebDriver_Session extends WebDriver_Container {
 	 * @return WebDriver_Base
 	 */
 	public function timeouts() {
-		return new WebDriver_Timeouts($this->url . /timeouts');
+		return new WebDriver_Timeouts($this->url . '/timeouts');
 	}
 
 	/**

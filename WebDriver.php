@@ -26,6 +26,24 @@
  */
 final class WebDriver extends WebDriver_Base {
 	/**
+	 * Check browser names used in static functions in the selenium source:
+	 * @see http://code.google.com/p/selenium/source/browse/trunk/java/client/src/org/openqa/selenium/remote/DesiredCapabilities.java
+	 *
+	 * Note: Capability array takes these browserNames and not the "browserTypes"
+	 *
+	 * Also check
+	 * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Capabilities_JSON_Object
+	 */
+	const ANDROID           = 'android';
+	const CHROME            = 'chrome';
+	const FIREFOX           = 'firefox';
+	const HTMLUNIT          = 'htmlunit';
+	const INTERNET_EXPLORER = 'internet explorer';
+	const IPHONE            = 'iPhone';
+	const IPAD              = 'iPad';
+	const OPERA             = 'opera';
+
+	/**
 	 * Return array of supported method names and corresponding HTTP request types
 	 *
 	 * @return array
