@@ -130,7 +130,7 @@ abstract class WebDriver_Container extends WebDriver_Base {
 				);
 		}
 
-		return $this->by($using, $value);
+		return $this->locate_by($using, $value);
 	}
 
 	/**
@@ -140,7 +140,7 @@ abstract class WebDriver_Container extends WebDriver_Base {
 	 * @param string $value search target
 	 * @return array
 	 */
-	public function by($using, $value) {
+	public function locate_by($using, $value) {
 		if (!in_array($using, self::$strategies)) {
 			throw WebDriver_Exception::factory(WebDriver_Exception::UnknownLocatorStrategy,
 				sprintf('Invalid locator strategy %s', $using)
@@ -174,7 +174,7 @@ abstract class WebDriver_Container extends WebDriver_Base {
 	 */
 	public function __call($name, $arguments) {
 		if (count($arguments) == 1 && in_array(str_replace('_', ' ', $name), self::$strategies)) {
-			return $this->by($name, $arguments[0]);
+			return $this->locate_by($name, $arguments[0]);
 		}
 
 		// fallback to executing WebDriver commands
