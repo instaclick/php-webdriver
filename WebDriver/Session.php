@@ -267,14 +267,7 @@ final class WebDriver_Session extends WebDriver_Container {
 	 * @return WebDriver_Base
 	 */
 	public function ime() {
-		$item = new WebDriver_SimpleItem($this->url . '/ime');
-		return $item->setMethods(array(
-			'available_engines' => 'GET',
-			'active_engine' => 'GET',
-			'activated' => 'GET',
-			'deactivate' => 'POST',
-			'activate' => 'POST',
-		));
+		return new WebDriver_Ime($this->url . '/ime');
 	}
 
 	/**
@@ -295,17 +288,7 @@ final class WebDriver_Session extends WebDriver_Container {
 	 * @return WebDriver_Base
 	 */
 	public function touch() {
-		$item = new WebDriver_SimpleItem($this->url . '/touch');
-		return $item->setMethods(array(
-			'click' => 'POST',
-			'down' => 'POST',
-			'up' => 'POST',
-			'move' => 'POST',
-			'scroll' => 'POST',
-			'doubleclick' => 'POST',
-			'longclick' => 'POST',
-			'flick' => 'POST',
-		));
+		return new WebDriver_Touch($this->url . '/touch');
 	}
 
 	/**
