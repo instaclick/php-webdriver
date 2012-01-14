@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2004-present Facebook. All Rights Reserved.
+ * Copyright 2011 Anthon Pang. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,29 +18,35 @@
  */
 
 /**
- * WebDriver_SimpleItem class
+ * WebDriver_Touch class
  *
  * @package WebDriver
+ *
+ * @method click
+ * @method down
+ * @method up
+ * @method move
+ * @method scroll
+ * @method doubleclick
+ * @method longclick
+ * @method flick
  */
-final class WebDriver_SimpleItem extends WebDriver_Base {
-	private $_methods = array();
-
+final class WebDriver_Touch extends WebDriver_Base {
 	/**
 	 * Return array of supported method names and corresponding HTTP request types
 	 *
 	 * @return array
 	 */
 	protected function methods() {
-		return $this->_methods;
-	}
-
-	/**
-	 * Set array of supported method names and corresponding HTTP request types
-	 *
-	 * @param array $methods
-	 */
-	public function setMethods($methods) {
-		$this->_methods = $methods;
-		return $this;
+		return array(
+			'click' => 'POST',
+			'down' => 'POST',
+			'up' => 'POST',
+			'move' => 'POST',
+			'scroll' => 'POST',
+			'doubleclick' => 'POST',
+			'longclick' => 'POST',
+			'flick' => 'POST',
+		);
 	}
 }
