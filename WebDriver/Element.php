@@ -22,7 +22,6 @@
  *
  * @package WebDriver
  *
- * @method active
  * @method click
  * @method submit
  * @method text
@@ -111,7 +110,6 @@ final class WebDriver_Element extends WebDriver_Container {
 	 */
 	protected function methods() {
 		return array(
-			'active' => 'POST',
 			'click' => 'POST',
 			'submit' => 'POST',
 			'text' => 'GET',

@@ -159,9 +159,10 @@ abstract class WebDriver_Container extends WebDriver_Base {
 	 * @param mixed $value
 	 * @return WebDriver_Element|null
 	 */
-	private function webDriverElement($value) {
-		return (array_key_exists('ELEMENT', (array) $value))
-			? new WebDriver_Element( $this->getElementPath($value['ELEMENT']), $value['ELEMENT'])
+	protected function webDriverElement($value) {
+		return array_key_exists('ELEMENT', (array) $value)
+			? new WebDriver_Element( $this->getElementPath($value['ELEMENT']), // url
+			$value['ELEMENT']) // id
 			: null;
 	}
 

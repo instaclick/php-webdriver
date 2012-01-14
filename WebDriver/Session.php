@@ -278,6 +278,17 @@ final class WebDriver_Session extends WebDriver_Container {
 	}
 
 	/**
+	 * Get active element (i.e., has focus): /session/:sessionId/element/active (POST)
+	 * - $session->activeElement()
+	 *
+	 * @return mixed
+	 */
+	public function activeElement() {
+		$results = $this->curl('POST', '/element/active');
+		return $this->WebDriver_Element($results['value']);
+	}
+
+	/**
 	 * touch method chaining, e.g.,
 	 * - $session->touch()->method()
 	 *
