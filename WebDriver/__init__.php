@@ -31,3 +31,4 @@ require_once(dirname(__FILE__) . '/Ime.php');
 require_once(dirname(__FILE__) . '/Timeouts.php');
 require_once(dirname(__FILE__) . '/Touch.php');
 require_once(dirname(__FILE__) . '/Window.php');
+require_once(dirname(__FILE__) . '/Storage.php');

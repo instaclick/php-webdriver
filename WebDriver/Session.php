@@ -313,6 +313,26 @@ final class WebDriver_Session extends WebDriver_Container {
 	}
 
 	/**
+	 * local_storage method chaining, e.g.,
+	 * - $session->local_storage()->method()
+	 *
+	 * @return WebDriver_Base
+	 */
+	public function local_storage() {
+		return new WebDriver_Storage_Local($this->url . '/local_storage');
+	}
+
+	/**
+	 * session_storage method chaining, e.g.,
+	 * - $session->session_storage()->method()
+	 *
+	 * @return WebDriver_Base
+	 */
+	public function session_storage() {
+		return new WebDriver_Storage_Session($this->url . '/session_storage');
+	}
+
+	/**
 	 * Get wire protocol URL for an element
 	 *
 	 * @param string $element_id
