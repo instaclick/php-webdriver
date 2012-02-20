@@ -45,6 +45,7 @@
  * @method buttondown
  * @method buttonup
  * @method doubleclick
+ * @method location
  */
 final class WebDriver_Session extends WebDriver_Container {
 	/**
@@ -52,25 +53,24 @@ final class WebDriver_Session extends WebDriver_Container {
 	 * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Capabilities_JSON_Object
 	 */
 	const BROWSER_NAME                      = 'browserName';
+	const VERSION                           = 'version';
 	const PLATFORM                          = 'platform';
 	const SUPPORTS_JAVASCRIPT               = 'javascriptEnabled';
 	const TAKES_SCREENSHOT                  = 'takesScreenshot';
-	const VERSION                           = 'version';
 	const SUPPORTS_ALERTS                   = 'handlesAlerts';
 	const SUPPORTS_SQL_DATABASE             = 'databaseEnabled';
 	const SUPPORTS_LOCATION_CONTEXT         = 'locationContextEnabled';
 	const SUPPORTS_APPLICATION_CACHE        = 'applicationCacheEnabled';
 	const SUPPORTS_BROWSER_CONNECTION       = 'browserConnectionEnabled';
 	const SUPPORTS_FINDING_BY_CSS           = 'cssSelectorsEnabled';
-	const PROXY                             = 'proxy';
 	const SUPPORTS_WEB_STORAGE              = 'webStorageEnabled';
 	const ROTATABLE                         = 'rotatable';
-
-	// Enable this capability to accept all SSL certs by defaults.
 	const ACCEPT_SSL_CERTS                  = 'acceptSslCerts';
 	const HAS_NATIVE_EVENTS                 = 'nativeEvents';
+	const PROXY                             = 'proxy';
 
 	// For Selenium Server
+	// @todo where does this come from?
 	const AVOIDING_PROXY                    = 'avoidProxy';
 	const ONLY_PROXYING_SELENIUM_TRAFFIC    = 'onlyProxySeleniumTraffic';
 	const PROXYING_EVERYTHING               = 'proxyEverything';
@@ -107,6 +107,7 @@ final class WebDriver_Session extends WebDriver_Container {
 			'buttondown' => 'POST',
 			'buttonup' => 'POST',
 			'doubleclick' => 'POST',
+			'location' => array('GET', 'POST'),
 		);
 	}
 
