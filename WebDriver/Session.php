@@ -252,12 +252,32 @@ final class WebDriver_Session extends WebDriver_Container {
 	}
 
 	/**
-	 * timeouts method chaining, e.g.,
-	 * - $session->timeouts()->method()
+	 * timeouts methods: /session/:sessionId/timeouts (POST)
+	 * - $session->timesouts($json) - set timeout for an operation
+	 * - $session->timeouts()->method() - chaining
 	 *
 	 * @return WebDriver_Base
 	 */
 	public function timeouts() {
+		// set timeouts
+		if (func_num_args() == 1)
+		{
+			$arg = func_get_arg(0); // json
+			$this->curl('POST', '/timeouts', $arg);
+			return $this;
+		}
+
+		if (func_num_args() == 2)
+		{
+			$arg = array(
+				'type' => func_get_arg(0), // 'script' or 'implicit'
+				'ms' => func_get_arg(1),   // timeout in milliseconds
+			);
+			$this->curl('POST', '/timeouts', $arg);
+			return $this;
+		}
+
+		// chaining
 		return new WebDriver_Timeouts($this->url . '/timeouts');
 	}
 
