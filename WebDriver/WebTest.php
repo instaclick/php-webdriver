@@ -391,7 +391,13 @@ class WebDriver_WebTest
 		/*
 		 * parse command line options
 		 */
-		for ($i = 0; $i < $argc; $i++)
+		if ($argc == 1)
+		{
+			$argc++;
+			array_push($argv, '-h');
+		}
+
+		for ($i = 1; $i < $argc; $i++)
 		{
 			$opt = $argv[$i];
 			$optValue = '';
