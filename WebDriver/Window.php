@@ -35,6 +35,8 @@ final class WebDriver_Window extends WebDriver_Base {
 		return array(
 			'size' => array('GET', 'POST'),
 			'position' => array('GET', 'POST'),
+			'maximize' => array('POST'),
+			'restore' => array('POST'),
 		);
 	}
 
