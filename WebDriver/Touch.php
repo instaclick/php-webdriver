@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2011 Anthon Pang. All Rights Reserved.
+ * Copyright 2011-2012 Anthon Pang. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  * @package WebDriver
+ *
+ * @author Anthon Pang <anthonp@nationalfibre.net>
  */
 
 /**
@@ -31,22 +33,24 @@
  * @method longclick
  * @method flick
  */
-final class WebDriver_Touch extends WebDriver_Base {
-	/**
-	 * Return array of supported method names and corresponding HTTP request types
-	 *
-	 * @return array
-	 */
-	protected function methods() {
-		return array(
-			'click' => 'POST',
-			'down' => 'POST',
-			'up' => 'POST',
-			'move' => 'POST',
-			'scroll' => 'POST',
-			'doubleclick' => 'POST',
-			'longclick' => 'POST',
-			'flick' => 'POST',
-		);
-	}
+final class WebDriver_Touch extends WebDriver_Base
+{
+    /**
+     * Return array of supported method names and corresponding HTTP request types
+     *
+     * @return array
+     */
+    protected function methods()
+    {
+        return array(
+            'click' => array('POST'),
+            'down' => array('POST'),
+            'up' => array('POST'),
+            'move' => array('POST'),
+            'scroll' => array('POST'),
+            'doubleclick' => array('POST'),
+            'longclick' => array('POST'),
+            'flick' => array('POST'),
+        );
+    }
 }

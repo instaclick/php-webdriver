@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2004-present Facebook. All Rights Reserved.
+ * Copyright 2004-2012 Facebook. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  * limitations under the License.
  *
  * @package WebDriver
+ *
+ * @author Justin Bishop <jubishop@gmail.com>
+ * @author Anthon Pang <anthonp@nationalfibre.net>
  */
 
 /**
@@ -22,129 +25,134 @@
  *
  * @package WebDriver
  */
-class WebDriver_Exception extends Exception {
-	/**
-	 * Response status codes
-	 *
-	 * @link http://code.google.com/p/selenium/wiki/JsonWireProtocol#Response_Status_Codes
-	 */
-	const Success = 0;
-	const NoSuchElement = 7;
-	const NoSuchFrame = 8;
-	const UnknownCommand = 9;
-	const StaleElementReference = 10;
-	const ElementNotVisible = 11;
-	const InvalidElementState = 12;
-	const UnknownError = 13;
-	const ElementIsNotSelectable = 15;
-	const JavaScriptError = 17;
-	const XPathLookupError = 19;
-	const Timeout = 21;
-	const NoSuchWindow = 23;
-	const InvalidCookieDomain = 24;
-	const UnableToSetCookie = 25;
-	const UnexpectedAlertOpen = 26;
-	const NoAlertOpenError = 27;
-	const ScriptTimeout = 28;
-	const InvalidElementCoordinates = 29;
-	const IMENotAvailable = 30;
-	const IMEEngineActivationFailed = 31;
-	const InvalidSelector = 32;
+class WebDriver_Exception extends Exception
+{
+    /**
+     * Response status codes
+     *
+     * @link http://code.google.com/p/selenium/wiki/JsonWireProtocol#Response_Status_Codes
+     */
+    const SUCCESS = 0;
+    const NO_SUCH_ELEMENT = 7;
+    const NO_SUCH_FRAME = 8;
+    const UNKNOWN_COMMAND = 9;
+    const STALE_ELEMENT_REFERENCE = 10;
+    const ELEMENT_NOT_VISIBLE = 11;
+    const INVALID_ELEMENT_STATE = 12;
+    const UNKNOWN_ERROR = 13;
+    const ELEMENT_IS_NOT_SELECTABLE = 15;
+    const JAVASCRIPT_ERROR = 17;
+    const XPATH_LOOKUP_ERROR = 19;
+    const TIMEOUT = 21;
+    const NO_SUCH_WINDOW = 23;
+    const INVALID_COOKIE_DOMAIN = 24;
+    const UNABLE_TO_SET_COOKIE = 25;
+    const UNEXPECTED_ALERT_OPEN = 26;
+    const NO_ALERT_OPEN_ERROR = 27;
+    const SCRIPT_TIMEOUT = 28;
+    const INVALID_ELEMENT_COORDINATES = 29;
+    const IME_NOT_AVAILABLE = 30;
+    const IME_ENGINE_ACTIVATION_FAILED = 31;
+    const INVALID_SELECTOR = 32;
 
-	// obsolete
-	const IndexOutOfBounds = 1;
-	const NoCollection = 2;
-	const NoString = 3;
-	const NoStringLength = 4;
-	const NoStringWrapper = 5;
-	const NoSuchDriver = 6;
-	const ObsoleteElement = 10;
-	const ElementNotDisplayed = 11;
-	const Unhandled = 13;
-	const Expected = 14;
-	const ElementNotSelectable = 15;
-	const NoSuchDocument = 16;
-	const UnexpectedJavaScript = 17;
-	const NoScriptResult = 18;
-	const NoSuchCollection = 20;
-	const NullPointer = 22;
-	const NoModalDialogOpenError = 27;
+    // obsolete
+    const INDEX_OUT_OF_BOUNDS = 1;
+    const NO_COLLECTION = 2;
+    const NO_STRING = 3;
+    const NO_STRING_LENGTH = 4;
+    const NO_STRING_WRAPPER = 5;
+    const NO_SUCH_DRIVER = 6;
+    const OBSOLETE_ELEMENT = 10;
+    const ELEMENT_NOT_DISPLAYED = 11;
+    const UNHANDLED = 13;
+    const EXPECTED = 14;
+    const ELEMENT_NOT_SELECTABLE = 15;
+    const NO_SUCH_DOCUMENT = 16;
+    const UNEXPECTED_JAVASCRIPT = 17;
+    const NO_SCRIPT_RESULT = 18;
+    const NO_SUCH_COLLECTION = 20;
+    const NULL_POINTER = 22;
+    const NO_MODAL_DIALOG_OPEN_ERROR = 27;
 
-	// user-defined
-	const CurlExec = -1;
-	const ObsoleteCommand = -2;
-	const NoParametersExpected = -3;
-	const JsonParameterExpected = -4;
-	const InvalidRequest = -5;
-	const UnknownLocatorStrategy = -6;
-	const WebTestAssertion = -7;
+    // user-defined
+    const CURL_EXEC = -1;
+    const OBSOLETE_COMMAND = -2;
+    const NO_PARAMETERS_EXPECTED = -3;
+    const JSON_PARAMETERS_EXPECTED = -4;
+    const UNEXPECTED_PARAMETERS = -5;
+    const INVALID_REQUEST = -6;
+    const UNKNOWN_LOCATOR_STRATEGY = -7;
+    const WEBTEST_ASSERTION = -8;
 
-	private static $errs = array(
-//	self::Success => array('Success', 'This should never be thrown!'),
+    private static $errs = array(
+//    self::SUCCESS => array('Success', 'This should never be thrown!'),
 
-		self::NoSuchElement => array('NoSuchElement', 'An element could not be located on the page using the given search parameters.'),
-		self::NoSuchFrame => array('NoSuchFrame', 'A request to switch to a frame could not be satisfied because the frame could not be found.'),
-		self::UnknownCommand => array('UnknownCommand', 'The requested resource could not be found, or a request was received using an HTTP method that is not supported by the mapped resource.'),
-		self::StaleElementReference => array('StaleElementReference', 'An element command failed because the referenced element is no longer attached to the DOM.'),
-		self::ElementNotVisible => array('ElementNotVisible', 'An element command could not be completed because the element is not visible on the page.'),
-		self::InvalidElementState => array('InvalidElementState', 'An element command could not be completed because the element is in an invalid state (e.g. attempting to click a disabled element).'),
-		self::UnknownError => array('UnknownError', 'An unknown server-side error occurred while processing the command.'),
-		self::ElementIsNotSelectable => array('ElementIsNotSelectable', 'An attempt was made to select an element that cannot be selected.'),
-		self::JavaScriptError => array('JavaScriptError', 'An error occurred while executing user supplied JavaScript.'),
-		self::XPathLookupError => array('XPathLookupError', 'An error occurred while searching for an element by XPath.'),
-		self::Timeout => array('Timeout', 'An operation did not complete before its timeout expired.'),
-		self::NoSuchWindow => array('NoSuchWindow', 'A request to switch to a different window could not be satisfied because the window could not be found.'),
-		self::InvalidCookieDomain => array('InvalidCookieDomain', 'An illegal attempt was made to set a cookie under a different domain than the current page.'),
-		self::UnableToSetCookie => array('UnableToSetCookie', 'A request to set a cookie\'s value could not be satisfied.'),
-		self::UnexpectedAlertOpen => array('UnexpectedAlertOpen', 'A modal dialog was open, blocking this operation'),
-		self::NoAlertOpenError => array('NoAlertOpenError', 'An attempt was made to operate on a modal dialog when one was not open.'),
-		self::ScriptTimeout => array('ScriptTimeout', 'A script did not complete before its timeout expired.'),
-		self::InvalidElementCoordinates => array('InvalidElementCoordinates', 'The coordinates provided to an interactions operation are invalid.'),
-		self::IMENotAvailable => array('IMENotAvailable', 'IME was not available.'),
-		self::IMEEngineActivationFailed => array('IMEEngineActivationFailed', 'An IME engine could not be started.'),
-		self::InvalidSelector => array('InvalidSelector', 'Argument was an invalid selector (e.g. XPath/CSS).'),
+        self::NO_SUCH_ELEMENT => array('NoSuchElement', 'An element could not be located on the page using the given search parameters.'),
+        self::NO_SUCH_FRAME => array('NoSuchFrame', 'A request to switch to a frame could not be satisfied because the frame could not be found.'),
+        self::UNKNOWN_COMMAND => array('UnknownCommand', 'The requested resource could not be found, or a request was received using an HTTP method that is not supported by the mapped resource.'),
+        self::STALE_ELEMENT_REFERENCE => array('StaleElementReference', 'An element command failed because the referenced element is no longer attached to the DOM.'),
+        self::ELEMENT_NOT_VISIBLE => array('ElementNotVisible', 'An element command could not be completed because the element is not visible on the page.'),
+        self::INVALID_ELEMENT_STATE => array('InvalidElementState', 'An element command could not be completed because the element is in an invalid state (e.g. attempting to click a disabled element).'),
+        self::UNKNOWN_ERROR => array('UnknownError', 'An unknown server-side error occurred while processing the command.'),
+        self::ELEMENT_IS_NOT_SELECTABLE => array('ElementIsNotSelectable', 'An attempt was made to select an element that cannot be selected.'),
+        self::JAVASCRIPT_ERROR => array('JavaScriptError', 'An error occurred while executing user supplied JavaScript.'),
+        self::XPATH_LOOKUP_ERROR => array('XPathLookupError', 'An error occurred while searching for an element by XPath.'),
+        self::TIMEOUT => array('Timeout', 'An operation did not complete before its timeout expired.'),
+        self::NO_SUCH_WINDOW => array('NoSuchWindow', 'A request to switch to a different window could not be satisfied because the window could not be found.'),
+        self::INVALID_COOKIE_DOMAIN => array('InvalidCookieDomain', 'An illegal attempt was made to set a cookie under a different domain than the current page.'),
+        self::UNABLE_TO_SET_COOKIE => array('UnableToSetCookie', 'A request to set a cookie\'s value could not be satisfied.'),
+        self::UNEXPECTED_ALERT_OPEN => array('UnexpectedAlertOpen', 'A modal dialog was open, blocking this operation'),
+        self::NO_ALERT_OPEN_ERROR => array('NoAlertOpenError', 'An attempt was made to operate on a modal dialog when one was not open.'),
+        self::SCRIPT_TIMEOUT => array('ScriptTimeout', 'A script did not complete before its timeout expired.'),
+        self::INVALID_ELEMENT_COORDINATES => array('InvalidElementCoordinates', 'The coordinates provided to an interactions operation are invalid.'),
+        self::IME_NOT_AVAILABLE => array('IMENotAvailable', 'IME was not available.'),
+        self::IME_ENGINE_ACTIVATION_FAILED => array('IMEEngineActivationFailed', 'An IME engine could not be started.'),
+        self::INVALID_SELECTOR => array('InvalidSelector', 'Argument was an invalid selector (e.g. XPath/CSS).'),
 
-		self::CurlExec => array('CurlExec', 'curl_exec() error.'),
-		self::ObsoleteCommand => array('ObsoleteCommand', 'This WebDriver command is obsolete.'),
-		self::NoParametersExpected => array('NoParametersExpected', 'This HTTP request method expects no parameters.'),
-		self::JsonParameterExpected => array('JsonParameterExpected', 'This POST request expects a JSON parameter (array).'),
-		self::InvalidRequest => array('InvalidRequest', 'This command does not support this HTTP request method.'),
-		self::UnknownLocatorStrategy => array('UnknownLocatorStrategy', 'This locator strategy is not supported.'),
-		self::WebTestAssertion => array('WebTestAssertion', 'WebTest assertion failed.'),
-	);
+        self::CURL_EXEC => array('CurlExec', 'curl_exec() error.'),
+        self::OBSOLETE_COMMAND => array('ObsoleteCommand', 'This WebDriver command is obsolete.'),
+        self::NO_PARAMETERS_EXPECTED => array('NoParametersExpected', 'This HTTP request method expects no parameters.'),
+        self::JSON_PARAMETERS_EXPECTED => array('JsonParameterExpected', 'This POST request expects a JSON parameter (array).'),
+        self::UNEXPECTED_PARAMETERS => array('UnexpectedParameters', 'This command does not expect this number of parameters.'),
+        self::INVALID_REQUEST => array('InvalidRequest', 'This command does not support this HTTP request method.'),
+        self::UNKNOWN_LOCATOR_STRATEGY => array('UnknownLocatorStrategy', 'This locator strategy is not supported.'),
+        self::WEBTEST_ASSERTION => array('WebTestAssertion', 'WebTest assertion failed.'),
+    );
 
-	/**
-	 * Factory method to create WebDriver_Exception objects
-	 *
-	 * @param int $code
-	 * @param string $message
-	 * @param Exception $previous_exception
-	 * @return WebDriver_Exception
-	 */
-	static function factory($code, $message = null, $previous_exception = null) {
-		// unknown error
-		if (!isset(self::$errs[$code])) {
-			if (trim($message) == '') {
-				$message = 'Unknown Error';
-			}
+    /**
+     * Factory method to create WebDriver_Exception objects
+     *
+     * @param int       $code              Code
+     * @param string    $message           Message
+     * @param Exception $previousException Previous exception
+     *
+     * @return WebDriver_Exception
+     */
+    public static function factory($code, $message = null, $previousException = null)
+    {
+        // unknown error
+        if (!isset(self::$errs[$code])) {
+            if (trim($message) == '') {
+                $message = 'Unknown Error';
+            }
 
-			return new WebDriver_Exception($message, $code, $previous_exception);
-		}
+            return new WebDriver_Exception($message, $code, $previousException);
+        }
 
-		$error_definition = self::$errs[$code];
+        $errorDefinition = self::$errs[$code];
 
-		// dynamically define custom exception classes
-		$class_name = __CLASS__ . '_' . $error_definition[0];
-		if (!class_exists($class_name, false)) {
-			eval(
-				'final class '.$class_name.' extends WebDriver_Exception {}'
-			);
-		}
+        // dynamically define custom exception classes
+        $className = __CLASS__ . '_' . $errorDefinition[0];
+        if (!class_exists($className, false)) {
+            eval(
+                'final class ' . $className . ' extends WebDriver_Exception {}'
+            );
+        }
 
-		if (trim($message) == '') {
-			$message = $error_definition[1];
-		}
+        if (trim($message) == '') {
+            $message = $errorDefinition[1];
+        }
 
-		return new $class_name($message, $code, $previous_exception);
-	}
+        return new $className($message, $code, $previousException);
+    }
 }

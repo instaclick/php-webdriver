@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2011 Anthon Pang. All Rights Reserved.
+ * Copyright 2011-2012 Anthon Pang. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  * limitations under the License.
  *
  * @package WebDriver
+ *
+ * @author Anthon Pang <anthonp@nationalfibre.net>
+ * @author Fabrizio Branca <mail@fabrizio-branca.de>
  */
 
 /**
@@ -24,41 +27,63 @@
  *
  * @method size
  * @method position
+ * @method maximize
  */
-final class WebDriver_Window extends WebDriver_Base {
-	/**
-	 * Return array of supported method names and corresponding HTTP request types
-	 *
-	 * @return array
-	 */
-	protected function methods() {
-		return array(
-			'size' => array('GET', 'POST'),
-			'position' => array('GET', 'POST'),
-			'maximize' => array('POST'),
-		);
-	}
+final class WebDriver_Window extends WebDriver_Base
+{
+    /**
+     * Window handle
+     *
+     * @var string
+     */
+    private $windowHandle;
 
-	private $handle;
+    /**
+     * Return array of supported method names and corresponding HTTP request types
+     *
+     * @return array
+     */
+    protected function methods()
+    {
+        return array(
+            'size' => array('GET', 'POST'),
+            'position' => array('GET', 'POST'),
+            'maximize' => array('POST'),
+        );
+    }
 
-	/**
-	 * Get window handle
-	 *
-	 * @return string
-	 */
-	public function getHandle() {
-		return $this->handle;
-	}
+    /**
+     * Return array of obsolete method names and corresponding HTTP request types
+     *
+     * @return array
+     */
+    protected function obsoleteMethods()
+    {
+        return array(
+            'restore' => array('POST'),
+        );
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param string $url
-	 * @param string $window_handle
-	 */
-	public function __construct($url, $window_handle) {
-		$this->handle = $window_handle;
+    /**
+     * Get window handle
+     *
+     * @return string
+     */
+    public function getHandle()
+    {
+        return $this->windowHandle;
+    }
 
-		parent::__construct($url . '/' . $window_handle);
-	}
+    /**
+     * Constructor
+     *
+     * @param string $url          URL
+     * @param string $windowHandle Window handle
+     */
+    public function __construct($url, $windowHandle)
+    {
+        $this->windowHandle = $windowHandle;
+
+        parent::__construct($url . '/' . $windowHandle);
+    }
 }

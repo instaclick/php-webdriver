@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2011 Anthon Pang. All Rights Reserved.
+ * Copyright 2011-2012 Anthon Pang. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,429 +15,343 @@
  * limitations under the License.
  *
  * @package WebDriver
+ *
+ * @author Anthon Pang <anthonp@nationalfibre.net>
  */
-
-/**
- * abstract WebDriver_WebTest_Script class
- *
- * WebDriver-based web test runner, outputing results in TAP format.
- *
- * @link http://testanything.org/wiki/index.php/TAP_version_13_specification
- *
- * @package WebDriver
- */
-abstract class WebDriver_WebTest_Script
-{
-	protected $session;
-	protected $assert_stats;
-
-	/**
-	 * Constructor
-	 *
-	 * @param WebDriver_Session $session
-	 */
-	public function __construct($session)
-	{
-		$this->session = $session;
-		$this->assert_stats = array(
-			'pass' => 0,
-			'failure' => 0,
-			'total' => 0,
-		);
-	}
-
-	/**
-	 * Assert (expect) value
-	 *
-	 * @param mixed $expression
-	 * @param mixed $expected
-	 * @param string $message
-	 * @throw WebDriver_Exception_WebTestAssertion if $expression is not equal to $expected
-	 */
-	protected function assert($expression, $expected, $message)
-	{
-		$this->assert_stats['total']++;
-
-		if ($expression !== $expected)
-		{
-			$this->assert_stats['failure']++;
-			throw WebDriver_Exception::factory(WebDriver_Exception::WebTestAssertion, $message);
-		}
-
-		$this->assert_stats['pass']++;
-	}
-
-	/**
-	 * Assert (expect) exception
-	 *
-	 * @param mixed $expression
-	 * @param string $message
-	 * @throw WebDriver_Exception_WebTestAssertion if not exception is thrown
-	 */
-	protected function assert_exception($callback, $message)
-	{
-		$this->assert_stats['total']++;
-
-		try {
-			$callback();
-
-			$this->assert_stats['failure']++;
-			throw WebDriver_Exception::factory(WebDriver_Exception::WebTestAssertion, $message);
-		} catch (Exception $e) {
-			// expected exception
-		}
-
-		$this->assert_stats['pass']++;
-	}
-}
 
 /**
  * WebDriver_WebTest class - test runner
  *
+ * WebDriver-based web test runner, outputing results in TAP format.
+ *
  * @package WebDriver
+ *
+ * @link    http://testanything.org/wiki/index.php/TAP_version_13_specification
  */
 class WebDriver_WebTest
 {
-	private static $magicMethods = array(
-		'__construct',
-		'__destruct',
-		'__call',
-		'__callStatic',
-		'__get',
-		'__set',
-		'__isset',
-		'__unset',
-		'__sleep',
-		'__wakeup',
-		'__toString',
-		'__invoke',
-		'__set_state',
-		'__clone',
-	);
+    private static $magicMethods = array(
+        '__construct',
+        '__destruct',
+        '__call',
+        '__callStatic',
+        '__get',
+        '__set',
+        '__isset',
+        '__unset',
+        '__sleep',
+        '__wakeup',
+        '__toString',
+        '__invoke',
+        '__set_state',
+        '__clone',
+    );
 
-	/**
-	 * Error handler to instead throw exceptions
-	 *
-	 * @param int $errno
-	 * @param string $errstr
-	 * @param string $errfile
-	 * @param int $errline
-	 * @throws ErrorException
-	 */
-	static public function exception_error_handler($errno, $errstr, $errfile, $errline )
-	{
-		throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
-	}
+    /**
+     * Error handler to instead throw exceptions
+     *
+     * @param int    $errno   Error number
+     * @param string $errstr  Error string
+     * @param string $errfile Source file of error
+     * @param int    $errline Line number in source file
+     *
+     * @throws ErrorException
+     */
+    static public function exception_error_handler($errno, $errstr, $errfile, $errline)
+    {
+        throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+    }
 
-	/**
-	 * Assertion handler to instead throw exceptions
-	 *
-	 * @param string $file
-	 * @param int $line
-	 * @param string $code
-	 * @throws ErrorException
-	 */
-	static public function assert_handler($file, $line, $code)
-	{
-		throw WebDriver_Exception::factory(WebDriver_Exception::WebTestAssertion, "assertion failed: $file:$line: $code");
-	}
+    /**
+     * Assertion handler to instead throw exceptions
+     *
+     * @param string $file Source file
+     * @param int    $line Line number
+     * @param string $code Error code
+     *
+     * @throws ErrorException
+     */
+    static public function assert_handler($file, $line, $code)
+    {
+        throw WebDriver_Exception::factory(WebDriver_Exception::WEBTEST_ASSERTION, "assertion failed: $file:$line: $code");
+    }
 
-	/**
-	 * Get classes declared in the target file
-	 *
-	 * @param string $file
-	 * @return array Array of class names
-	 */
-	public function getClasses($file)
-	{
-		$classes = get_declared_classes();
-		include_once($file);
-		return array_diff(get_declared_classes(), $classes);
-	}
+    /**
+     * Get classes declared in the target file
+     *
+     * @param string $file File name
+     *
+     * @return array Array of class names
+     */
+    public function getClasses($file)
+    {
+        $classes = get_declared_classes();
 
-	/**
-	 * Dump comment block
-	 *
-	 * Note: Reflection extension expects phpdocs style comments
-	 *
-	 * @param string $comment
-	 */
-	public function dumpComment($comment)
-	{
-		if ($comment)
-		{
-			$lines = explode("\n", trim($comment));
-			$lines = preg_replace(
-				array('~^\s*/[*]+\s*~', '~^\s*[*]+/?\s*~'),
-				'# ',
-				$lines
-			);
-			echo implode("\n", $lines) . "\n";
-		}
-	}
+        include_once($file);
 
-	/**
-	 * Dump diagnostic block (YAML format)
-	 *
-	 * @param mixed $diagnostic
-	 */
-	public function dumpDiagnostic($diagnostic)
-	{
-		if ($diagnostic)
-		{
-			if (function_exists('yaml_emit'))
-			{
-				$diagnostic = trim(yaml_emit($diagnostic));
-			}
-			else
-			{
-				$diagnostic = "---\n" . trim($diagnostic) . "\n...";
-			}
+        return array_diff(get_declared_classes(), $classes);
+    }
 
-			if (is_string($diagnostic))
-			{
-				$lines = explode("\n", $diagnostic);
-				$lines = preg_replace('/^/', '  ', $lines);
-				echo implode("\n", $lines) . "\n";
-			}
-		}
-	}
+    /**
+     * Dump comment block
+     *
+     * Note: Reflection extension expects phpdocs style comments
+     *
+     * @param string $comment
+     */
+    public function dumpComment($comment)
+    {
+        if ($comment) {
+            $lines = explode("\n", trim($comment));
+            $lines = preg_replace(
+                array('~^\s*/[*]+\s*~', '~^\s*[*]+/?\s*~'),
+                '# ',
+                $lines
+            );
+            echo implode("\n", $lines) . "\n";
+        }
+    }
 
-	/**
-	 * Parse TODO/SKIP directives (if any) from comment block
-	 *
-	 * @param string $comment
-	 * @return string|null
-	 */
-	public function getDirective($comment)
-	{
-		if ($comment)
-		{
-			if (preg_match('~\b(SKIP|TODO)(\s+([\S \t]+))?~', $comment, $matches))
-			{
-				return $matches[0];
-			}
-		}
+    /**
+     * Dump diagnostic block (YAML format)
+     *
+     * @param mixed $diagnostic
+     */
+    public function dumpDiagnostic($diagnostic)
+    {
+        if ($diagnostic) {
+            if (function_exists('yaml_emit')) {
+                $diagnostic = trim(yaml_emit($diagnostic));
+            } else {
+                $diagnostic = "---\n" . trim($diagnostic) . "\n...";
+            }
 
-		return null;
-	}
+            if (is_string($diagnostic)) {
+                $lines = explode("\n", $diagnostic);
+                $lines = preg_replace('/^/', '  ', $lines);
+                echo implode("\n", $lines) . "\n";
+            }
+        }
+    }
 
-	/**
-	 * Is this a testable method?
-	 *
-	 * @param string $className
-	 * @param RefelectionMethod $reflectionMethod
-	 * @return bool False if method should not be counted
-	 */
-	protected function isTestableMethod($className, $reflectionMethod)
-	{
-		$method = $reflectionMethod->getName();
-		$modifiers = $reflectionMethod->getModifiers();
+    /**
+     * Parse TODO/SKIP directives (if any) from comment block
+     *
+     * @param string $comment Comment
+     *
+     * @return string|null
+     */
+    public function getDirective($comment)
+    {
+        if ($comment) {
+            if (preg_match('~\b(SKIP|TODO)(\s+([\S \t]+))?~', $comment, $matches)) {
+                return $matches[0];
+            }
+        }
 
-		if ($method === $className
-			|| $modifiers !== ReflectionMethod::IS_PUBLIC
-			|| in_array($method, self::$magicMethods))
-		{
-			return false;
-		}
+        return null;
+    }
 
-		return true;
-	}
+    /**
+     * Is this a testable method?
+     *
+     * @param string            $className        Class name
+     * @param RefelectionMethod $reflectionMethod Reflection method
+     *
+     * @return boolean False if method should not be counted
+     */
+    protected function isTestableMethod($className, $reflectionMethod)
+    {
+        $method = $reflectionMethod->getName();
+        $modifiers = $reflectionMethod->getModifiers();
 
-	/**
-	 * Run tests
-	 *
-	 * @param string $file
-	 * @return bool True if success; false otherwise
-	 */
-	public function runTests($file)
-	{
-		$success = true;
+        if ($method === $className
+            || $modifiers !== ReflectionMethod::IS_PUBLIC
+            || in_array($method, self::$magicMethods)
+        ) {
+            return false;
+        }
 
-		$webdriver = new WebDriver();
-		$session = $webdriver->session();
+        return true;
+    }
 
-		$classes = $this->getClasses($file);
+    /**
+     * Run tests
+     *
+     * @param string $file File
+     *
+     * @return boolean True if success; false otherwise
+     */
+    public function runTests($file)
+    {
+        $success = true;
 
-		/*
-		 * count the number of testable methods
-		 */
-		$totalMethods = 0;
-		foreach ($classes as $class)
-		{
-			$parents = class_parents($class, false);
-			if ($parents && in_array('WebDriver_WebTest_Script', $parents))
-			{
-				$reflectionClass = new ReflectionClass($class);
-				$reflectionMethods = $reflectionClass->getMethods();
-				foreach ($reflectionMethods as $reflectionMethod)
-				{
-					if ($this->isTestableMethod($class, $reflectionMethod))
-					{
-						$totalMethods++;
-					}
-				}
-			}
-		}
+        $webdriver = new WebDriver();
+        $session = $webdriver->session();
 
-		if ($totalMethods)
-		{
-			$i = 0;
-			echo "1..$totalMethods\n";
-			foreach ($classes as $class)
-			{
-				$parents = class_parents($class, false);
-				if ($parents && in_array('WebDriver_WebTest_Script', $parents))
-				{
-					// the object under test
-					$objectUnderTest = new $class($session);
+        $classes = $this->getClasses($file);
 
-					$reflectionClass = new ReflectionClass($class);
+        /*
+         * count the number of testable methods
+         */
+        $totalMethods = 0;
+        foreach ($classes as $class) {
+            $parents = class_parents($class, false);
+            if ($parents && in_array('WebDriver_WebTest_Script', $parents)) {
+                $reflectionClass = new ReflectionClass($class);
+                $reflectionMethods = $reflectionClass->getMethods();
+                foreach ($reflectionMethods as $reflectionMethod) {
+                    if ($this->isTestableMethod($class, $reflectionMethod)) {
+                        $totalMethods++;
+                    }
+                }
+            }
+        }
 
-					$comment = $reflectionClass->getDocComment();
-					$this->dumpComment($comment);
+        if ($totalMethods) {
+            $i = 0;
+            echo "1..$totalMethods\n";
+            foreach ($classes as $class) {
+                $parents = class_parents($class, false);
+                if ($parents && in_array('WebDriver_WebTest_Script', $parents)) {
+                    // the object under test
+                    $objectUnderTest = new $class($session);
 
-					$reflectionMethods = $reflectionClass->getMethods();
-					foreach ($reflectionMethods as $reflectionMethod)
-					{
-						if (!$this->isTestableMethod($class, $reflectionMethod))
-						{
-							continue;
-						}
+                    $reflectionClass = new ReflectionClass($class);
 
-						$i++;
+                    $comment = $reflectionClass->getDocComment();
+                    $this->dumpComment($comment);
 
-						$comment = $reflectionMethod->getDocComment();
-						$this->dumpComment($comment);
+                    $reflectionMethods = $reflectionClass->getMethods();
+                    foreach ($reflectionMethods as $reflectionMethod) {
+                        if (!$this->isTestableMethod($class, $reflectionMethod)) {
+                            continue;
+                        }
 
-						$directive = $this->getDirective($comment);
+                        $i++;
 
-						$description = $method;
-						$reflectionParameters = $reflectionMethod->getParameters();
-						foreach ($reflectionParameters as $reflectionParameter)
-						{
-							if ($reflectionParameter->getName() == 'description'
-								&& $reflectionParameter->isDefaultValueAvailable())
-							{
-								$defaultValue = $reflectionParameter->getDefaultValue();
-								if (is_string($defaultValue))
-								{
-									$description = $defaultValue;
-									break;
-								}
-							}
-						}
+                        $comment = $reflectionMethod->getDocComment();
+                        $this->dumpComment($comment);
 
-						$diagnostic = null;
-						$rc = false;
-						try {
-							$objectUnderTest->$method();
-							$rc = true;
-						} catch (WebDriver_Exception_Curl $e) {
-							$success = false;
-							echo 'Bail out! ' . $e->getMessage() . "\n";
-							break 2;
-						} catch (Exception $e) {
-							$success = false;
-							$diagnostic = $e->getMessage();
+                        $directive = $this->getDirective($comment);
 
-							// @todo check driver capability for screenshot
+                        $description = $method;
+                        $reflectionParameters = $reflectionMethod->getParameters();
+                        foreach ($reflectionParameters as $reflectionParameter) {
+                            if ($reflectionParameter->getName() == 'description'
+                                && $reflectionParameter->isDefaultValueAvailable()
+                            ) {
+                                $defaultValue = $reflectionParameter->getDefaultValue();
+                                if (is_string($defaultValue)) {
+                                    $description = $defaultValue;
+                                    break;
+                                }
+                            }
+                        }
 
-							$screenshot = $session->screenshot();
-							if (!empty($screenshot))
-							{
-								$imageName = basename($file) . ".$i.png";
-								file_put_contents($imageName, base64_decode($screenshot));
-							}
-						}
+                        $diagnostic = null;
+                        $rc = false;
+                        try {
+                            $objectUnderTest->$method();
+                            $rc = true;
+                        } catch (WebDriver_Exception_Curl $e) {
+                            $success = false;
+                            echo 'Bail out! ' . $e->getMessage() . "\n";
+                            break 2;
+                        } catch (Exception $e) {
+                            $success = false;
+                            $diagnostic = $e->getMessage();
 
-						echo ($rc ? 'ok' : 'not ok') . " $i - $description" . ($directive ? " # $directive" : '') . "\n";
+                            // @todo check driver capability for screenshot
 
-						$this->dumpDiagnostic($diagnostic);
-					}
+                            $screenshot = $session->screenshot();
+                            if (!empty($screenshot)) {
+                                $imageName = basename($file) . ".$i.png";
+                                file_put_contents($imageName, base64_decode($screenshot));
+                            }
+                        }
 
-					unset($objectUnderTest);
-				}
-			}
-		}
-		else
-		{
-			echo "0..0\n";
-		}
+                        echo ($rc ? 'ok' : 'not ok') . " $i - $description" . ($directive ? " # $directive" : '') . "\n";
 
-		if ($session)
-		{
-			$session->close();
-		}
+                        $this->dumpDiagnostic($diagnostic);
+                    }
 
-		return $success;
-	}
+                    unset($objectUnderTest);
+                }
+            }
+        } else {
+            echo "0..0\n";
+        }
 
-	/**
-	 * Main dispatch routine
-	 *
-	 * @param int $argc number of arguments
-	 * @param array $argv arguments
-	 * @return bool True if success; false otherwise
-	 */
-	static public function main($argc, $argv)
-	{
-		set_error_handler(array('WebDriver_WebTest', 'exception_error_handler'));
+        if ($session) {
+            $session->close();
+        }
 
-		assert_options(ASSERT_ACTIVE, 1);
-		assert_options(ASSERT_WARNING, 0);
-		assert_options(ASSERT_CALLBACK, array('WebDriver_WebTest', 'assert_handler'));
+        return $success;
+    }
 
-		/*
-		 * parse command line options
-		 */
-		if ($argc == 1)
-		{
-			$argc++;
-			array_push($argv, '-h');
-		}
+    /**
+     * Main dispatch routine
+     *
+     * @param int   $argc number of arguments
+     * @param array $argv arguments
+     * 
+     * @return boolean True if success; false otherwise
+     */
+    static public function main($argc, $argv)
+    {
+        set_error_handler(array('WebDriver_WebTest', 'exception_error_handler'));
 
-		for ($i = 1; $i < $argc; $i++)
-		{
-			$opt = $argv[$i];
-			$optValue = '';
+        assert_options(ASSERT_ACTIVE, 1);
+        assert_options(ASSERT_WARNING, 0);
+        assert_options(ASSERT_CALLBACK, array('WebDriver_WebTest', 'assert_handler'));
 
-			if (preg_match('~([-]+[^=]+)=(.+)~', $opt, $matches))
-			{
-				$opt = $matches[1];
-				$optValue = $matches[2];
-			}
+        /*
+         * parse command line options
+         */
+        if ($argc == 1) {
+            $argc++;
+            array_push($argv, '-h');
+        }
 
-			switch ($opt)
-			{
-				case '-h':
-				case '--help':
-					echo $argv[0] . " [-d directory] [--tap] [--xml] [--disable-screenshot] test.php\n";
-					exit(1);
+        for ($i = 1; $i < $argc; $i++) {
+            $opt = $argv[$i];
+            $optValue = '';
 
-				case '-d':
-				case '--output-directory':
+            if (preg_match('~([-]+[^=]+)=(.+)~', $opt, $matches)) {
+                $opt = $matches[1];
+                $optValue = $matches[2];
+            }
 
-				case '--format':
-				case '--tap':
-				case '--xml':
+            switch ($opt) {
+                case '-h':
+                case '--help':
+                    echo $argv[0] . " [-d directory] [--tap] [--xml] [--disable-screenshot] test.php\n";
+                    exit(1);
 
-				case '--disable-screenshot':
+                case '-d':
+                case '--output-directory':
 
-				default:
-			}
-		}
+                case '--format':
+                case '--tap':
+                case '--xml':
 
-		echo "TAP version 13\n";
+                case '--disable-screenshot':
 
-		$success = false;
-		try {
-			$webtest = new self;
-			$success = $webtest->runTests($argv[1]);
-		} catch (Exception $e) {
-			echo 'Bail out! ' . $e->getMessage() . "\n";
-		}
+                default:
+            }
+        }
 
-		return $success;
-	}
+        echo "TAP version 13\n";
+
+        $success = false;
+        try {
+            $webtest = new self;
+            $success = $webtest->runTests($argv[1]);
+        } catch (Exception $e) {
+            echo 'Bail out! ' . $e->getMessage() . "\n";
+        }
+
+        return $success;
+    }
 }

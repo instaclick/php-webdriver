@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2004-present Facebook. All Rights Reserved.
+ * Copyright 2004-2012 Facebook. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  * limitations under the License.
  *
  * @package WebDriver
+ *
+ * @author Justin Bishop <jubishop@gmail.com>
+ * @author Anthon Pang <anthonp@nationalfibre.net>
+ * @author Fabrizio Branca <mail@fabrizio-branca.de>
  */
 
 /**
@@ -24,71 +28,78 @@
  *
  * @method status
  */
-final class WebDriver extends WebDriver_Base {
-	/**
-	 * Check browser names used in static functions in the selenium source:
-	 * @see http://code.google.com/p/selenium/source/browse/trunk/java/client/src/org/openqa/selenium/remote/DesiredCapabilities.java
-	 *
-	 * Note: Capability array takes these browserNames and not the "browserTypes"
-	 *
-	 * Also check
-	 * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Capabilities_JSON_Object
-	 */
-	const ANDROID           = 'android';
-	const CHROME            = 'chrome';
-	const FIREFOX           = 'firefox';
-	const HTMLUNIT          = 'htmlunit';
-	const INTERNET_EXPLORER = 'internet explorer';
-	const IPHONE            = 'iPhone';
-	const IPAD              = 'iPad';
-	const OPERA             = 'opera';
+final class WebDriver extends WebDriver_Base
+{
+    /**
+     * Check browser names used in static functions in the selenium source:
+     * @see http://code.google.com/p/selenium/source/browse/trunk/java/client/src/org/openqa/selenium/remote/DesiredCapabilities.java
+     *
+     * Note: Capability array takes these browserNames and not the "browserTypes"
+     *
+     * Also check
+     * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Capabilities_JSON_Object
+     */
+    const ANDROID           = 'android';
+    const CHROME            = 'chrome';
+    const FIREFOX           = 'firefox';
+    const HTMLUNIT          = 'htmlunit';
+    const INTERNET_EXPLORER = 'internet explorer';
+    const IPHONE            = 'iPhone';
+    const IPAD              = 'iPad';
+    const OPERA             = 'opera';
 
-	/**
-	 * Return array of supported method names and corresponding HTTP request types
-	 *
-	 * @return array
-	 */
-	protected function methods() {
-		return array(
-			'status' => 'GET',
-		);
-	}
+    /**
+     * Return array of supported method names and corresponding HTTP request types
+     *
+     * @return array
+     */
+    protected function methods()
+    {
+        return array(
+            'status' => 'GET',
+        );
+    }
 
-	/**
-	 * Get session object for chaining
-	 *
-	 * @param string $browser
-	 * @param array $additional_capabilities
-	 * @return WebDriver_Session
-	 */
-	public function session($browser = self::FIREFOX, $additional_capabilities = array()) {
-		$desired_capabilities = array_merge(
-			$additional_capabilities,
-			array(WebDriver_Session::BROWSER_NAME => $browser)
-		);
+    /**
+     * Get session object for chaining
+     *
+     * @param string $browser                Browser name
+     * @param array  $additionalCapabilities Additional capabilities desired
+     *
+     * @return WebDriver_Session
+     */
+    public function session($browser = self::FIREFOX, $additionalCapabilities = array())
+    {
+        $desiredCapabilities = array_merge(
+            $additionalCapabilities,
+            array(WebDriver_Session::BROWSER_NAME => $browser)
+        );
 
-		$results = $this->curl(
-			'POST',
-			'/session',
-			array('desiredCapabilities' => $desired_capabilities),
-			array(CURLOPT_FOLLOWLOCATION => true)
-		);
+        $results = $this->curl(
+            'POST',
+            '/session',
+            array('desiredCapabilities' => $desiredCapabilities),
+            array(CURLOPT_FOLLOWLOCATION => true)
+        );
 
-		return new WebDriver_Session($results['info']['url']);
-	}
+        return new WebDriver_Session($results['info']['url']);
+    }
 
-	/**
-	 * Get list of currently active sessions
-	 *
-	 * @return array an of WebDriver_Session objects
-	 */
-	public function sessions() {
-		$result = $this->curl('GET', '/sessions');
-		$sessions = array();
-		foreach ($result['value'] as $session) {
-			$sessions[] = new WebDriverSession(
-				$this->url . '/session/' . $session['id']);
-		}
-		return $sessions;
-	}
+    /**
+     * Get list of currently active sessions
+     *
+     * @return array an array of WebDriver_Session objects
+     */
+    public function sessions()
+    {
+        $result   = $this->curl('GET', '/sessions');
+        $sessions = array();
+
+        foreach ($result['value'] as $session) {
+            $sessions[] = new WebDriverSession(
+                $this->url . '/session/' . $session['id']);
+        }
+
+        return $sessions;
+    }
 }

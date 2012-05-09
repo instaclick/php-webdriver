@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 /**
- * Copyright 2011 Anthon Pang. All Rights Reserved.
+ * Copyright 2011-2012 Anthon Pang. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,15 @@
  * limitations under the License.
  *
  * @package WebDriver
+ * 
+ * @author Anthon Pang <anthonp@nationalfibre.net>
  */
 
 /**
  * WebDriver-based web test runner
  */
 require_once(dirname(__FILE__) . '/__init__.php');
+require_once(dirname(__FILE__) . '/WebTest/Script.php');
 require_once(dirname(__FILE__) . '/WebTest.php');
 
 $rc = WebDriver_WebTest::main($argc, $argv);

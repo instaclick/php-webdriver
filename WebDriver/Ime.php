@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2011 Anthon Pang. All Rights Reserved.
+ * Copyright 2011-2012 Anthon Pang. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  * @package WebDriver
+ *
+ * @author Anthon Pang <anthonp@nationalfibre.net>
  */
 
 /**
@@ -28,19 +30,21 @@
  * @method deactivate
  * @method activate
  */
-final class WebDriver_Ime extends WebDriver_Base {
-	/**
-	 * Return array of supported method names and corresponding HTTP request types
-	 *
-	 * @return array
-	 */
-	protected function methods() {
-		return array(
-			'available_engines' => 'GET',
-			'active_engine' => 'GET',
-			'activated' => 'GET',
-			'deactivate' => 'POST',
-			'activate' => 'POST',
-		);
-	}
+final class WebDriver_Ime extends WebDriver_Base
+{
+    /**
+     * Return array of supported method names and corresponding HTTP request types
+     *
+     * @return array
+     */
+    protected function methods()
+    {
+        return array(
+            'available_engines' => array('GET'),
+            'active_engine' => array('GET'),
+            'activated' => array('GET'),
+            'deactivate' => array('POST'),
+            'activate' => array('POST'),
+        );
+    }
 }

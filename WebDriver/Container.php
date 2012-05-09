@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2004-present Facebook. All Rights Reserved.
+ * Copyright 2004-2012 Facebook. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  * limitations under the License.
  *
  * @package WebDriver
+ *
+ * @author Justin Bishop <jubishop@gmail.com>
+ * @author Anthon Pang <anthonp@nationalfibre.net>
+ * @author Fabrizio Branca <mail@fabrizio-branca.de>
  */
 
 /**
@@ -22,171 +26,189 @@
  *
  * @package WebDriver
  */
-abstract class WebDriver_Container extends WebDriver_Base {
+abstract class WebDriver_Container extends WebDriver_Base
+{
+    const CLASS_NAME = 'class name';
+    const CSS_SELECTOR = 'css selector';
+    const ID = 'id';
+    const NAME = 'name';
+    const LINK_TEXT = 'link text';
+    const PARTIAL_LINK_TEXT = 'partial link text';
+    const TAG_NAME = 'tag name';
+    const XPATH = 'xpath';
 
-	const CLASS_NAME = 'class name';
-	const CSS_SELECTOR = 'css selector';
-	const ID = 'id';
-	const NAME = 'name';
-	const LINK_TEXT = 'link text';
-	const PARTIAL_LINK_TEXT = 'partial link text';
-	const TAG_NAME = 'tag name';
-	const XPATH = 'xpath';
+    /**
+     * Locator strategies
+     */
+    private static $strategies = array(
+        self::CLASS_NAME,
+        self::CSS_SELECTOR,
+        self::ID,
+        self::NAME,
+        self::LINK_TEXT,
+        self::PARTIAL_LINK_TEXT,
+        self::TAG_NAME,
+        self::XPATH,
+    );
 
-	/**
-	 * Locator strategies
-	 */
-	private static $strategies = array(
-		self::CLASS_NAME,
-		self::CSS_SELECTOR,
-		self::ID,
-		self::NAME,
-		self::LINK_TEXT,
-		self::PARTIAL_LINK_TEXT,
-		self::TAG_NAME,
-		self::XPATH,
-	);
+    /**
+     * Search for element on page, starting from the document root.
+     *
+     * @param string $using the locator strategy to use
+     * @param string $value the search target
+     *
+     * @return WebDriver_Element
+     *
+     * @throws WebDriver_Exception if element not found, or invalid XPath
+     */
+    public function element($using = null, $value = null)
+    {
+        $locatorJson = $this->parseArgs('element', func_get_args());
 
-	/**
-	 * Search for element on page, starting from the document root.
-	 *
-	 * @param string $using the locator strategy to use
-	 * @param string $value the search target
-	 * @return WebDriver_Element
-	 * @throws WebDriver_Exception if element not found, or invalid XPath
-	 */
-	public function element() {
-		$locator_json = $this->parseArgs('element', func_get_args());
+        try {
+            $results = $this->curl(
+                'POST',
+                '/element',
+                $locatorJson
+            );
+        } catch (WebDriver_Exception_NoSuchElement $e) {
+            throw WebDriver_Exception::factory(WebDriver_Exception::NO_SUCH_ELEMENT,
+                sprintf(
+                    'Element not found with %s, %s',
+                    $locatorJson['using'],
+                    $locatorJson['value']) . "\n\n" . $e->getMessage(), $e
+            );
+        }
 
-		try {
-			$results = $this->curl(
-				'POST',
-				'/element',
-				$locator_json
-			);
-		} catch (WebDriver_Exception_NoSuchElement $e) {
-			throw WebDriver_Exception::factory(WebDriver_Exception::NoSuchElement,
-				sprintf(
-					'Element not found with %s, %s',
-					$locator_json['using'],
-					$locator_json['value']) . "\n\n" . $e->getMessage(), $e
-			);
-		}
+        return $this->webDriverElement($results['value']);
+    }
 
-		return $this->webDriverElement($results['value']);
-	}
+    /**
+     * Search for multiple elements on page, starting from the document root.
+     *
+     * @param string $using the locator strategy to use
+     * @param string $value the search target
+     *
+     * @return array
+     *
+     * @throws WebDriver_Exception if invalid XPath
+     */
+    public function elements($using = null, $value = null)
+    {
+        $locatorJson = $this->parseArgs('elements', func_get_args());
 
-	/**
-	 * Search for multiple elements on page, starting from the document root.
-	 *
-	 * @param string $using the locator strategy to use
-	 * @param string $value the search target
-	 * @return array
-	 * @throws WebDriver_Exception if invalid XPath
-	 */
-	public function elements() {
-		$locator_json = $this->parseArgs('elements', func_get_args());
+        $results = $this->curl(
+            'POST',
+            '/elements',
+            $locatorJson
+        );
 
-		$results = $this->curl(
-			'POST',
-			'/elements',
-			$locator_json
-		);
+        return array_filter(array_map(
+            array($this, 'webDriverElement'), $results['value']
+        ));
+    }
 
-		return array_filter(array_map(
-			array($this, 'webDriverElement'), $results['value']
-		));
-	}
+    /**
+     * Parse arguments allowing either separate $using and $value parameters, or
+     * as an array containing the JSON parameters
+     *
+     * @param string $method method name
+     * @param array  $argv   arguments
+     *
+     * @return array
+     *
+     * @throws Exception if invalid number of arguments to the called method
+     */
+    private function parseArgs($method, $argv)
+    {
+        $argc = count($argv);
 
-	/**
-	 * Parse arguments allowing either separate $using and $value parameters, or
-	 * as an array containing the JSON parameters
-	 *
-	 * @param string $method method name
-	 * @param array $argv arguments
-	 * @return array
-	 * @throws Exception if invalid number of arguments to the called method
-	 */
-	private function parseArgs($method, $argv) {
-		$argc = count($argv);
+        switch ($argc) {
+            case 2:
+                $using = $argv[0];
+                $value = $argv[1];
+                break;
 
-		switch ($argc) {
-			case 2:
-				$using = $argv[0];
-				$value = $argv[1];
-				break;
+            case 1:
+                $arg = $argv[0];
+                if (is_array($arg)) {
+                    $using = $arg['using'];
+                    $value = $arg['value'];
+                    break;
+                }
 
-			case 1:
-				$arg = $argv[0];
-				if (is_array($arg)) {
-					$using = $arg['using'];
-					$value = $arg['value'];
-					break;
-				}
+            default:
+                throw WebDriver_Exception::factory(WebDriver_Exception::JSON_PARAMETERS_EXPECTED,
+                    sprintf('Invalid arguments to %s method: %s', $method, print_r($argv, true))
+                );
+        }
 
-			default:
-				throw WebDriver_Exception::factory(WebDriver_Exception::JsonParameterExpected,
-					sprintf('Invalid arguments to %s method: %s', $method, print_r($argv, true))
-				);
-		}
+        return $this->locateBy($using, $value);
+    }
 
-		return $this->locate_by($using, $value);
-	}
+    /**
+     * Return JSON parameter for element / elements command
+     *
+     * @param string $using locator strategy
+     * @param string $value search target
+     *
+     * @return array
+     */
+    public function locateBy($using, $value)
+    {
+        if (!in_array($using, self::$strategies)) {
+            throw WebDriver_Exception::factory(WebDriver_Exception::UNKNOWN_LOCATOR_STRATEGY,
+                sprintf('Invalid locator strategy %s', $using)
+            );
+        }
 
-	/**
-	 * Return JSON parameter for element / elements command
-	 *
-	 * @param string $using locator strategy
-	 * @param string $value search target
-	 * @return array
-	 */
-	public function locate_by($using, $value) {
-		if (!in_array($using, self::$strategies)) {
-			throw WebDriver_Exception::factory(WebDriver_Exception::UnknownLocatorStrategy,
-				sprintf('Invalid locator strategy %s', $using)
-			);
-		}
+        return array(
+            'using' => $using,
+            'value' => $value,
+        );
+    }
 
-		return array(
-			'using' => $using,
-			'value' => $value,
-		);
-	}
+    /**
+     * Return WebDriver_Element wrapper for $value
+     *
+     * @param mixed $value
+     *
+     * @return WebDriver_Element|null
+     */
+    protected function webDriverElement($value)
+    {
+        return array_key_exists('ELEMENT', (array) $value)
+            ? new WebDriver_Element(
+                $this->getElementPath($value['ELEMENT']), // url
+                $value['ELEMENT'] // id
+            )
+            : null;
+    }
 
-	/**
-	 * Return WebDriver_Element wrapper for $value
-	 *
-	 * @param mixed $value
-	 * @return WebDriver_Element|null
-	 */
-	protected function webDriverElement($value) {
-		return array_key_exists('ELEMENT', (array) $value)
-			? new WebDriver_Element( $this->getElementPath($value['ELEMENT']), // url
-			$value['ELEMENT']) // id
-			: null;
-	}
+    /**
+     * Magic method that maps calls to class methods to element locator strategies
+     *
+     * @param string $name      Method name
+     * @param array  $arguments Arguments
+     *
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        if (count($arguments) == 1 && in_array(str_replace('_', ' ', $name), self::$strategies)) {
+            return $this->locateBy($name, $arguments[0]);
+        }
 
-	/**
-	 * Magic method that maps calls to class methods to element locator strategies
-	 *
-	 * @param string $name
-	 * @param array $arguments
-	 * @return mixed
-	 */
-	public function __call($name, $arguments) {
-		if (count($arguments) == 1 && in_array(str_replace('_', ' ', $name), self::$strategies)) {
-			return $this->locate_by($name, $arguments[0]);
-		}
+        // fallback to executing WebDriver commands
+        return parent::__call($name, $arguments);
+    }
 
-		// fallback to executing WebDriver commands
-		return parent::__call($name, $arguments);
-	}
-
-	/**
-	 * Get wire protocol URL for an element
-	 *
-	 * @param string $element_id
-	 * @return string
-	 */
-	abstract protected function getElementPath($element_id);
+    /**
+     * Get wire protocol URL for an element
+     *
+     * @param string $elementId
+     *
+     * @return string
+     */
+    abstract protected function getElementPath($elementId);
 }

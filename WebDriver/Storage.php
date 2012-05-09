@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2011 Anthon Pang. All Rights Reserved.
+ * Copyright 2011-2012 Anthon Pang. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  * @package WebDriver
+ *
+ * @author Anthon Pang <anthonp@nationalfibre.net>
  */
 
 /**
@@ -25,107 +27,120 @@
  * @method key
  * @method size
  */
-abstract class WebDriver_Storage extends WebDriver_Base {
-        /**
-         * Return array of supported method names and corresponding HTTP request types
-         *
-         * @return array
-         */
-        protected function methods() {
-                return array(
-			'key' => 'GET',
-                        'size' => 'GET',
-		);
-	}
+abstract class WebDriver_Storage extends WebDriver_Base
+{
+    const LOCAL = "Local";
+    const SESSION = "Session";
 
-	/**
-	 * Get all keys from storage or a specific key/value pair
-	 *
-	 * @return mixed
-	 */
-	public function get() {
-		// get all keys
-		if (func_num_args() == 0) {
-			$result = $this->curl('GET', '');
-			return $result['value'];
-		}
+    /**
+     * Return array of supported method names and corresponding HTTP request types
+     *
+     * @return array
+     */
+    protected function methods()
+    {
+        return array(
+            'key' => array('GET'),
+            'size' => array('GET'),
+        );
+    }
 
-		// get key/value pair
-		if (func_num_args() == 1) {
-			$arg = func_get_arg(0);
-			$this->curl('GET', '/key/' . $arg);
-			return $this;
-		}
+    /**
+     * Get all keys from storage or a specific key/value pair
+     *
+     * @return mixed
+     */
+    public function get()
+    {
+        // get all keys
+        if (func_num_args() == 0) {
+            $result = $this->curl('GET', '');
 
-		throw WebDriver_Exception::factory(WebDriver_Exception::UnexpectedParameters);
-	}
+            return $result['value'];
+        }
 
-	/**
-	 * Set specific key/value pair
-	 *
-	 * @return WebDriver_Base
-	 */
-	public function set() {
-		if (func_num_args() == 1
-			&& is_array($arg = func_get_arg(0)))
-		{
-			$this->curl('POST', '', $arg);
-			return $this;
-		}
+        // get key/value pair
+        if (func_num_args() == 1) {
+            $arg = func_get_arg(0);
+            $this->curl('GET', '/key/' . $arg);
 
-		if (func_num_args() == 2) {
-			$arg = array(
-				'key' => func_get_arg(0),
-				'value' => func_get_arg(1),
-			);
-			$this->curl('POST', '', $arg);
-			return $this;
-		}
+            return $this;
+        }
 
-		throw WebDriver_Exception::factory(WebDriver_Exception::UnexpectedParameters);
-	}
+        throw WebDriver_Exception::factory(WebDriver_Exception::UNEXPECTED_PARAMETERS);
+    }
 
-	/**
-	 * Delete storage or a specific key
-	 *
-	 * @return WebDriver_Base
-	 */
-	public function delete() {
-		// delete storage
-		if (func_num_args() == 0) {
-			$this->curl('DELETE', '/delete');
-			return $this;
-		}
+    /**
+     * Set specific key/value pair
+     *
+     * @return WebDriver_Base
+     */
+    public function set()
+    {
+        if (func_num_args() == 1
+            && is_array($arg = func_get_arg(0))
+        ) {
+            $this->curl('POST', '', $arg);
 
-		// delete key from storage
-		if (func_num_args() == 1) {
-			$key = func_get_arg(0);
-			$this->curl('DELETE', '/key/' . $key);
-			return $this;
-		}
+            return $this;
+        }
 
-		throw WebDriver_Exception::factory(WebDriver_Exception::UnexpectedParameters);
-	}
-}
+        if (func_num_args() == 2) {
+            $arg = array(
+                'key' => func_get_arg(0),
+                'value' => func_get_arg(1),
+            );
+            $this->curl('POST', '', $arg);
 
-/**
- * WebDriver_Storage_Local class
- *
- * @package WebDriver
- *
- * @method key
- * @method size
- */
-final class WebDriver_Storage_Local extends WebDriver_Storage {
-}
+            return $this;
+        }
 
-/**
- * WebDriver_Storage_Session class
- *
- * @package WebDriver
- *
- * @method key
- * @method size
- */
-final class WebDriver_Storage_Session extends WebDriver_Storage {
+        throw WebDriver_Exception::factory(WebDriver_Exception::UNEXPECTED_PARAMETERS);
+    }
+
+    /**
+     * Delete storage or a specific key
+     *
+     * @return WebDriver_Base
+     */
+    public function delete()
+    {
+        // delete storage
+        if (func_num_args() == 0) {
+            $this->curl('DELETE', '/delete');
+
+            return $this;
+        }
+
+        // delete key from storage
+        if (func_num_args() == 1) {
+            $key = func_get_arg(0);
+            $this->curl('DELETE', '/key/' . $key);
+
+            return $this;
+        }
+
+        throw WebDriver_Exception::factory(WebDriver_Exception::UNEXPECTED_PARAMETERS);
+    }
+
+    /**
+     * Factory method to create Storage objects
+     *
+     * @param string $type "local" or "session" storage
+     * @param string $url  URL
+     *
+     * @return WebDriver_Storage
+     */
+    public static function factory($type, $url)
+    {
+        // dynamically define custom storage classes
+        $className = __CLASS__ . '_' . $type;
+        if (!class_exists($className, false)) {
+            eval(
+                'final class ' . $className.' extends WebDriver_Storage {}'
+            );
+        }
+
+        return new $className($url);
+    }
 }

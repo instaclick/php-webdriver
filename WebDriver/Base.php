@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2004-present Facebook. All Rights Reserved.
+ * Copyright 2004-2012 Facebook. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  * limitations under the License.
  *
  * @package WebDriver
+ *
+ * @author Justin Bishop <jubishop@gmail.com>
+ * @author Anthon Pang <anthonp@nationalfibre.net>
+ * @author Fabrizio Branca <mail@fabrizio-branca.de>
+ * @author Tsz Ming Wong <tszming@gmail.com>
  */
 
 /**
@@ -22,199 +27,215 @@
  *
  * @package WebDriver
  */
-abstract class WebDriver_Base {
-	/**
-	 * Return array of supported method names and corresponding HTTP request types
-	 *
-	 * @return array
-	 */
-	abstract protected function methods();
+abstract class WebDriver_Base
+{
+    /**
+     * URL
+     *
+     * @var string
+     */
+    protected $url;
 
-	/**
-	 * Return array of obsolete method names and corresponding HTTP request types
-	 *
-	 * @return array
-	 */
-	protected function obsolete_methods() {
-		return array();
-	}
+    /**
+     * Return array of supported method names and corresponding HTTP request types
+     *
+     * @return array
+     */
+    abstract protected function methods();
 
-	protected $url;
+    /**
+     * Return array of obsolete method names and corresponding HTTP request types
+     *
+     * @return array
+     */
+    protected function obsoleteMethods()
+    {
+        return array();
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param string $url URL to Selenium server
-	 */
-	public function __construct($url = 'http://localhost:4444/wd/hub') {
-		$this->url = $url;
-	}
+    /**
+     * Constructor
+     *
+     * @param string $url URL to Selenium server
+     */
+    public function __construct($url = 'http://localhost:4444/wd/hub')
+    {
+        $this->url = $url;
+    }
 
-	/**
-	 * Magic method which returns URL to Selenium server
-	 *
-	 * @return string
-	 */
-	public function __toString() {
-		return $this->url;
-	}
+    /**
+     * Magic method which returns URL to Selenium server
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->url;
+    }
 
-	/**
-	 * Returns URL to Selenium server
-	 *
-	 * @return string
-	 */
-	public function getURL() {
-		return $this->url;
-	}
+    /**
+     * Returns URL to Selenium server
+     *
+     * @return string
+     */
+    public function getURL()
+    {
+        return $this->url;
+    }
 
-	/**
-	 * Curl request to webdriver server.
-	 *
-	 * @param string $http_method  'GET', 'POST', or 'DELETE'
-	 * @param string $command      If not defined in methods() this function will throw.
-	 * @param array  $params       If an array(), they will be posted as JSON parameters
-	 *                             If a number or string, "/$params" is appended to url
-	 * @param array  $extra_opts   key=>value pairs of curl options to pass to curl_setopt()
-	 * @return array               array('value' => ..., 'info' => ...)
-	 * @throws WebDriver_Exception if error
-	 */
-	protected function curl($http_method, $command, $params = null, $extra_opts = array()) {
-		if ($params && is_array($params) && $http_method !== 'POST') {
-			throw WebDriver_Exception::factory(WebDriver_Exception::NoParametersExpected, sprintf(
-				'The http method called for %s is %s but it has to be POST' .
-				' if you want to pass the JSON params %s',
-				$command,
-				$http_method,
-				json_encode($params)
-			));
-		}
+    /**
+     * Curl request to webdriver server.
+     *
+     * @param string $requestMethod HTTP request method, e.g., 'GET', 'POST', or 'DELETE'
+     * @param string $command       If not defined in methods() this function will throw.
+     * @param array  $parameters    If an array(), they will be posted as JSON parameters
+     *                              If a number or string, "/$params" is appended to url
+     * @param array  $extraOptions  key=>value pairs of curl options to pass to curl_setopt()
+     *
+     * @return array array('value' => ..., 'info' => ...)
+     *
+     * @throws WebDriver_Exception if error
+     */
+    protected function curl($requestMethod, $command, $parameters = null, $extraOptions = array())
+    {
+        if ($parameters && is_array($parameters) && $requestMethod !== 'POST') {
+            throw WebDriver_Exception::factory(WebDriver_Exception::NO_PARAMETERS_EXPECTED, sprintf(
+                'The http method called for %s is %s but it has to be POST' .
+                ' if you want to pass the JSON params %s',
+                $command,
+                $requestMethod,
+                json_encode($parameters)
+            ));
+        }
 
-		$url = sprintf('%s%s', $this->url, $command);
-		if ($params && (is_int($params) || is_string($params))) {
-			$url .= '/' . $params;
-		}
+        $url = sprintf('%s%s', $this->url, $command);
+        if ($parameters && (is_int($parameters) || is_string($parameters))) {
+            $url .= '/' . $parameters;
+        }
 
-		$curl = WebDriver_Environment::CurlInit($http_method, $url, $params);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=UTF-8', 'Accept: application/json'));
+        $curl = WebDriver_Environment::CurlInit($requestMethod, $url, $params);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=UTF-8', 'Accept: application/json'));
 
-		if ($http_method === 'POST') {
-			curl_setopt($curl, CURLOPT_POST, true);
-			if ($params && is_array($params)) {
-				curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($params));
-			}
-		} else if ($http_method == 'DELETE') {
-			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-		}
+        if ($requestMethod === 'POST') {
+            curl_setopt($curl, CURLOPT_POST, true);
+            if ($parameters && is_array($parameters)) {
+                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
+            }
+        } else if ($requestMethod == 'DELETE') {
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        }
 
-		foreach ($extra_opts as $option => $value) {
-			curl_setopt($curl, $option, $value);
-		}
+        foreach ($extraOptions as $option => $value) {
+            curl_setopt($curl, $option, $value);
+        }
 
-		$raw_results = trim(WebDriver_Environment::CurlExec($curl));
-		$info = curl_getinfo($curl);
+        $rawResults = trim(WebDriver_Environment::CurlExec($curl));
+        $info = curl_getinfo($curl);
 
-		if ($error = curl_error($curl)) {
-			$msg = sprintf(
-				'Curl error thrown for http %s to %s',
-				$http_method,
-				$url
-			);
-			if ($params && is_array($params)) {
-				$msg .= sprintf(' with params: %s', json_encode($params));
-			}
-			throw WebDriver_Exception::factory(WebDriver_Exception::CurlExec, $msg . "\n\n" . $error);
-		}
-		curl_close($curl);
+        if ($error = curl_error($curl)) {
+            $message = sprintf(
+                'Curl error thrown for http %s to %s$s',
+                $requestMethod,
+                $url,
+                $parameters && is_array($params)
+                ? ' with params: ' . json_encode($parameters) : ''
+            );
 
-		$results = json_decode($raw_results, true);
+            throw WebDriver_Exception::factory(WebDriver_Exception::CURL_EXEC, $message . "\n\n" . $error);
+        }
 
-		$value = null;
-		if (is_array($results) && array_key_exists('value', $results)) {
-			$value = $results['value'];
-		}
+        curl_close($curl);
 
-		$message = null;
-		if (is_array($value) && array_key_exists('message', $value)) {
-			$message = $value['message'];
-		}
+        $results = json_decode($rawResults, true);
+        $value   = null;
 
-		// if not success, throw exception
-		if ($results['status'] != 0) {
-			throw WebDriver_Exception::factory($results['status'], $message);
-		}
+        if (is_array($results) && array_key_exists('value', $results)) {
+            $value = $results['value'];
+        }
 
-		return array('value' => $value, 'info' => $info);
-	}
+        $message = null;
 
-	/**
-	 * Magic method that maps calls to class methods to execute WebDriver commands
-	 *
-	 * @param string $name
-	 * @param array $arguments
-	 * @return mixed
-	 */
-	public function __call($name, $arguments) {
-		if (count($arguments) > 1) {
-			throw WebDriver_Exception::factory(WebDriver_Exception::JsonParameterExpected,
-				'Commands should have at most only one parameter,' .
-				' which should be the JSON Parameter object'
-			);
-		}
+        if (is_array($value) && array_key_exists('message', $value)) {
+            $message = $value['message'];
+        }
 
-		if (preg_match('/^(get|post|delete)/', $name, $matches)) {
-			$http_method = strtoupper($matches[0]);
-			$webdriver_command = strtolower(substr($name, strlen($http_method)));
-		} else if (count($arguments) > 0) {
-			$webdriver_command = $name;
-			$this->getHTTPMethod($webdriver_command);
-			$http_method = 'POST';
-		} else {
-			$webdriver_command = $name;
-			$http_method = $this->getHTTPMethod($webdriver_command);
-		}
+        // if not success, throw exception
+        if ($results['status'] != 0) {
+            throw WebDriver_Exception::factory($results['status'], $message);
+        }
 
-		$methods = $this->methods();
-		if (!in_array($http_method, (array) $methods[$webdriver_command])) {
-			throw WebDriver_Exception::factory(WebDriver_Exception::InvalidRequest, sprintf(
-				'%s is not an available http method for the command %s.',
-				$http_method,
-				$webdriver_command
-			));
-		}
+        return array('value' => $value, 'info' => $info);
+    }
 
-		$results = $this->curl(
-			$http_method,
-			'/' . $webdriver_command,
-			array_shift($arguments)
-		);
+    /**
+     * Magic method that maps calls to class methods to execute WebDriver commands
+     *
+     * @param string $name      Method name
+     * @param array  $arguments Arguments
+     *
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        if (count($arguments) > 1) {
+            throw WebDriver_Exception::factory(WebDriver_Exception::JSON_PARAMETERS_EXPECTED,
+                'Commands should have at most only one parameter,' .
+                ' which should be the JSON Parameter object'
+            );
+        }
 
-		return $results['value'];
-	}
+        if (preg_match('/^(get|post|delete)/', $name, $matches)) {
+            $requestMethod = strtoupper($matches[0]);
+            $webdriverCommand = strtolower(substr($name, strlen($requestMethod)));
+        } else if (count($arguments) > 0) {
+            $webdriverCommand = $name;
+            $this->getRequestMethod($webdriverCommand);
+            $requestMethod = 'POST';
+        } else {
+            $webdriverCommand = $name;
+            $requestMethod = $this->getRequestMethod($webdriverCommand);
+        }
 
-	/**
-	 * Get default HTTP method for a given WebDriver command
-	 *
-	 * @param string $webdriver_command
-	 * @return string
-	 * @throws Exception if invalid WebDriver command
-	 */
-	private function getHTTPMethod($webdriver_command) {
-		if (!array_key_exists($webdriver_command, $this->methods())) {
-			if (array_key_exists($webdriver_command, $this->obsolete_methods())) {
-				throw WebDriver_Exception::factory(WebDriver_Exception::ObsoleteCommand,
-					sprintf('%s is an obsolete WebDriver command.', $webdriver_command)
-				);
-			} else {
-				throw WebDriver_Exception::factory(WebDriver_Exception::UnknownCommand,
-					sprintf('%s is not a valid WebDriver command.', $webdriver_command)
-				);
-			}
-		}
+        $methods = $this->methods();
+        if (!in_array($requestMethod, (array) $methods[$webdriverCommand])) {
+            throw WebDriver_Exception::factory(WebDriver_Exception::INVALID_REQUEST, sprintf(
+                '%s is not an available http method for the command %s.',
+                $requestMethod,
+                $webdriverCommand
+            ));
+        }
 
-		$methods = $this->methods();
-		$http_methods = (array) $methods[$webdriver_command];
-		return array_shift($http_methods);
-	}
+        $results = $this->curl(
+            $requestMethod,
+            '/' . $webdriverCommand,
+            array_shift($arguments)
+        );
+
+        return $results['value'];
+    }
+
+    /**
+     * Get default HTTP request method for a given WebDriver command
+     *
+     * @param string $webdriverCommand
+     *
+     * @return string
+     *
+     * @throws Exception if invalid WebDriver command
+     */
+    private function getRequestMethod($webdriverCommand)
+    {
+        if (!array_key_exists($webdriverCommand, $this->methods())) {
+            throw WebDriver_Exception::factory(array_key_exists($webdriverCommand, $this->obsoleteMethods())
+                ? WebDriver_Exception::OBSOLETE_COMMAND : WebDriver_Exception::UNKNOWN_COMMAND,
+                sprintf('%s is not a valid WebDriver command.', $webdriverCommand)
+            );
+        }
+
+        $methods = $this->methods();
+        $requestMethods = (array) $methods[$webdriverCommand];
+
+        return array_shift($requestMethods);
+    }
 }
