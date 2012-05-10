@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2004-2012 Facebook. All Rights Reserved.
+ * Copyright 2011-2012 Anthon Pang. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,40 +16,26 @@
  *
  * @package WebDriver
  *
- * @author Justin Bishop <jubishop@gmail.com>
  * @author Anthon Pang <anthonp@nationalfibre.net>
  * @author Fabrizio Branca <mail@fabrizio-branca.de>
  */
 
+namespace WebDriver;
+
 /**
- * WebDriver_Element class
+ * WebDriver\Key class
  *
  * @package WebDriver
- *
- * @method click
- * @method submit
- * @method text
- * @method value
- * @method name
- * @method clear
- * @method selected
- * @method enabled
- * @method attribute
- * @method equals
- * @method displayed
- * @method location
- * @method location_in_view
- * @method size
- * @method css
  */
-final class WebDriver_Element extends WebDriver_Container
+final class Key
 {
     /*
      * The Unicode "Private Use Area" code points (0xE000-0xF8FF) are used to represent
      * pressable, non-text keys.
      *
      * @link http://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/element/:id/value
-     *    key_name   = "UTF-8";        // UCS-2
+     *
+     *    key_name    = "UTF-8";        // UCS-2
      */
     const NULL_KEY    = "\xEE\x80\x80"; // E000
     const CANCEL      = "\xEE\x80\x81"; // E001
@@ -107,88 +93,4 @@ final class WebDriver_Element extends WebDriver_Container
     const F12         = "\xEE\x80\xBC"; // E03C
     const COMMAND     = "\xEE\x80\xBD"; // E03D
     const META        = "\xEE\x80\xBD"; // E03D
-
-    /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
-     */
-    protected function methods()
-    {
-        return array(
-            'click' => array('POST'),
-            'submit' => array('POST'),
-            'text' => array('GET'),
-            'value' => array('POST'),
-            'name' => array('GET'),
-            'clear' => array('POST'),
-            'selected' => array('GET'),
-            'enabled' => array('GET'),
-            'attribute' => array('GET'),
-            'equals' => array('GET'),
-            'displayed' => array('GET'),
-            'location' => array('GET'),
-            'location_in_view' => array('GET'),
-            'size' => array('GET'),
-            'css' => array('GET'),
-        );
-    }
-
-    /**
-     * Return array of obsolete method names and corresponding HTTP request types
-     *
-     * @return array
-     */
-    protected function obsoleteMethods()
-    {
-        return array(
-            'value' => array('GET'),
-            'selected' => array('POST'),
-            'toggle' => array('POST'),
-            'hover' => array('POST'),
-            'drag' => array('POST'),
-        );
-    }
-
-    /**
-     * Element ID
-     *
-     * @var string
-     */
-    private $id;
-
-    /**
-     * Constructor
-     *
-     * @param string $url URL
-     * @param string $id  element ID
-     */
-    public function __construct($url, $id)
-    {
-        parent::__construct($url);
-
-        $this->id = $id;
-    }
-
-    /**
-     * Get element ID
-     *
-     * @return string
-     */
-    public function getID()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get wire protocol URL for an element
-     *
-     * @param string $elementId Element ID
-     *
-     * @return string
-     */
-    protected function getElementPath($elementId)
-    {
-        return preg_replace(sprintf('/%s$/', $this->id), $elementId, $this->url);
-    }
 }

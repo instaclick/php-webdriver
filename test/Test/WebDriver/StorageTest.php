@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 /**
  * Copyright 2011-2012 Anthon Pang. All Rights Reserved.
@@ -16,16 +15,32 @@
  * limitations under the License.
  *
  * @package WebDriver
- * 
+ *
  * @author Anthon Pang <anthonp@nationalfibre.net>
  */
 
-/**
- * WebDriver-based web test runner
- */
-require_once(dirname(__FILE__) . '/__init__.php');
-require_once(dirname(__FILE__) . '/WebTest/Script.php');
-require_once(dirname(__FILE__) . '/WebTest.php');
+namespace Test\WebDriver;
 
-$rc = WebDriver_WebTest::main($argc, $argv);
-exit((int) !$rc);
+use WebDriver\Storage;
+
+/**
+ * Test WebDriver\Storage class
+ *
+ * @package WebDriver
+ *
+ * @method integer size() Get the number of items in the storage.
+ */
+class StorageTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * test factory()
+     */
+    public function testFactory()
+    {
+        $out = Storage::factory('Local', '/');
+        $this->assertTrue($out instanceof Storage\Local);
+
+        $out = Storage::factory('sEsSiOn', '/');
+        $this->assertTrue($out instanceof Storage\Session);
+    }
+}

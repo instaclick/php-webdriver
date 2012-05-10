@@ -22,12 +22,16 @@
  * @author Tsz Ming Wong <tszming@gmail.com>
  */
 
+namespace WebDriver;
+
+use WebDriver\Exception as WebDriverException;
+
 /**
- * Abstract WebDriver_Base class
+ * Abstract WebDriver\AbstractWebDriver class
  *
  * @package WebDriver
  */
-abstract class WebDriver_Base
+abstract class AbstractWebDriver
 {
     /**
      * URL
@@ -37,14 +41,14 @@ abstract class WebDriver_Base
     protected $url;
 
     /**
-     * Return array of supported method names and corresponding HTTP request types
+     * Return array of supported method names and corresponding HTTP request methods
      *
      * @return array
      */
     abstract protected function methods();
 
     /**
-     * Return array of obsolete method names and corresponding HTTP request types
+     * Return array of obsolete method names and corresponding HTTP request methods
      *
      * @return array
      */
@@ -94,14 +98,14 @@ abstract class WebDriver_Base
      *
      * @return array array('value' => ..., 'info' => ...)
      *
-     * @throws WebDriver_Exception if error
+     * @throws \WebDriver\Exception if error
      */
     protected function curl($requestMethod, $command, $parameters = null, $extraOptions = array())
     {
         if ($parameters && is_array($parameters) && $requestMethod !== 'POST') {
-            throw WebDriver_Exception::factory(WebDriver_Exception::NO_PARAMETERS_EXPECTED, sprintf(
-                'The http method called for %s is %s but it has to be POST' .
-                ' if you want to pass the JSON params %s',
+            throw WebDriverException::factory(WebDriverException::NO_PARAMETERS_EXPECTED, sprintf(
+                'The http request method called for %s is %s but it has to be POST' .
+                ' if you want to pass the JSON parameters %s',
                 $command,
                 $requestMethod,
                 json_encode($parameters)
@@ -109,63 +113,8 @@ abstract class WebDriver_Base
         }
 
         $url = sprintf('%s%s', $this->url, $command);
-        if ($parameters && (is_int($parameters) || is_string($parameters))) {
-            $url .= '/' . $parameters;
-        }
 
-        $curl = WebDriver_Environment::CurlInit($requestMethod, $url, $params);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=UTF-8', 'Accept: application/json'));
-
-        if ($requestMethod === 'POST') {
-            curl_setopt($curl, CURLOPT_POST, true);
-            if ($parameters && is_array($parameters)) {
-                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
-            }
-        } else if ($requestMethod == 'DELETE') {
-            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-        }
-
-        foreach ($extraOptions as $option => $value) {
-            curl_setopt($curl, $option, $value);
-        }
-
-        $rawResults = trim(WebDriver_Environment::CurlExec($curl));
-        $info = curl_getinfo($curl);
-
-        if ($error = curl_error($curl)) {
-            $message = sprintf(
-                'Curl error thrown for http %s to %s$s',
-                $requestMethod,
-                $url,
-                $parameters && is_array($params)
-                ? ' with params: ' . json_encode($parameters) : ''
-            );
-
-            throw WebDriver_Exception::factory(WebDriver_Exception::CURL_EXEC, $message . "\n\n" . $error);
-        }
-
-        curl_close($curl);
-
-        $results = json_decode($rawResults, true);
-        $value   = null;
-
-        if (is_array($results) && array_key_exists('value', $results)) {
-            $value = $results['value'];
-        }
-
-        $message = null;
-
-        if (is_array($value) && array_key_exists('message', $value)) {
-            $message = $value['message'];
-        }
-
-        // if not success, throw exception
-        if ($results['status'] != 0) {
-            throw WebDriver_Exception::factory($results['status'], $message);
-        }
-
-        return array('value' => $value, 'info' => $info);
+        return ServiceFactory::getInstance()->getService('service.curl')->execute($requestMethod, $url, $parameters, $extraOptions);
     }
 
     /**
@@ -175,11 +124,13 @@ abstract class WebDriver_Base
      * @param array  $arguments Arguments
      *
      * @return mixed
+     *
+     * @throws \WebDriver\Exception if invalid WebDriver command
      */
     public function __call($name, $arguments)
     {
         if (count($arguments) > 1) {
-            throw WebDriver_Exception::factory(WebDriver_Exception::JSON_PARAMETERS_EXPECTED,
+            throw WebDriverException::factory(WebDriverException::JSON_PARAMETERS_EXPECTED,
                 'Commands should have at most only one parameter,' .
                 ' which should be the JSON Parameter object'
             );
@@ -199,8 +150,8 @@ abstract class WebDriver_Base
 
         $methods = $this->methods();
         if (!in_array($requestMethod, (array) $methods[$webdriverCommand])) {
-            throw WebDriver_Exception::factory(WebDriver_Exception::INVALID_REQUEST, sprintf(
-                '%s is not an available http method for the command %s.',
+            throw WebDriverException::factory(WebDriverException::INVALID_REQUEST, sprintf(
+                '%s is not an available http request method for the command %s.',
                 $requestMethod,
                 $webdriverCommand
             ));
@@ -222,13 +173,13 @@ abstract class WebDriver_Base
      *
      * @return string
      *
-     * @throws Exception if invalid WebDriver command
+     * @throws \WebDriver\Exception if invalid WebDriver command
      */
     private function getRequestMethod($webdriverCommand)
     {
         if (!array_key_exists($webdriverCommand, $this->methods())) {
-            throw WebDriver_Exception::factory(array_key_exists($webdriverCommand, $this->obsoleteMethods())
-                ? WebDriver_Exception::OBSOLETE_COMMAND : WebDriver_Exception::UNKNOWN_COMMAND,
+            throw WebDriverException::factory(array_key_exists($webdriverCommand, $this->obsoleteMethods())
+                ? WebDriverException::OBSOLETE_COMMAND : WebDriverException::UNKNOWN_COMMAND,
                 sprintf('%s is not a valid WebDriver command.', $webdriverCommand)
             );
         }

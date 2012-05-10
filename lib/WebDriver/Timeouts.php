@@ -19,20 +19,22 @@
  * @author Anthon Pang <anthonp@nationalfibre.net>
  */
 
+namespace WebDriver;
+
+use WebDriver\Exception as WebDriverException;
+
 /**
- * WebDriver_Timeouts class
+ * WebDriver\Timeouts class
  *
  * @package WebDriver
  *
- * @method async_script
- * @method implicit_wait
+ * @method void async_script($json) Set the amount of time, in milliseconds, that asynchronous scripts (executed by execute_async) are permitted to run before they are aborted and a timeout error is returned to the client.
+ * @method void implicit_wait($json) Set the amount of time the driver should wait when searching for elements.
  */
-final class WebDriver_Timeouts extends WebDriver_Base
+final class Timeouts extends AbstractWebDriver
 {
     /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function methods()
     {
@@ -46,13 +48,13 @@ final class WebDriver_Timeouts extends WebDriver_Base
      * helper method to wait until user-defined condition is met
      *
      * @param function $callback      callback which returns non-false result if wait condition was met
-     * @param int      $maxIterations maximum number of iterations
-     * @param int      $sleep         sleep duration in seconds between iterations
+     * @param integer  $maxIterations maximum number of iterations
+     * @param integer  $sleep         sleep duration in seconds between iterations
      * @param array    $args          optional args; if the callback needs $this, then pass it here
      *
      * @return mixed result from callback function
      *
-     * @throws Exception if thrown by callback, or WebDriver_Exception_Timeout if helper times out
+     * @throws \Exception if thrown by callback, or \WebDriver\Exception\Timeout if helper times out
      */
     public function wait($callback, $maxIterations = 1, $sleep = 0, $args = array())
     {
@@ -69,6 +71,6 @@ final class WebDriver_Timeouts extends WebDriver_Base
             $i && sleep($sleep);
         }
 
-        throw WebDriver_Exception::factory(WebDriver_Exception::TIMEOUT, 'wait() method timed out');
+        throw WebDriverException::factory(WebDriverException::TIMEOUT, 'wait() method timed out');
     }
 }

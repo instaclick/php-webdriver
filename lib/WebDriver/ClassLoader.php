@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2011-2012 Anthon Pang. All Rights Reserved.
+ * Copyright 2012 Anthon Pang. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,32 +19,18 @@
  * @author Anthon Pang <anthonp@nationalfibre.net>
  */
 
+namespace WebDriver;
+
 /**
- * WebDriver_Ime class
+ * @TODO implement the class loader!
+ */
+require_once(__DIR__ . '/__init__.php');
+
+/**
+ * WebDriver\ClassLoader (autoloader) class
  *
  * @package WebDriver
- *
- * @method available_engines
- * @method active_engine
- * @method activated
- * @method deactivate
- * @method activate
  */
-final class WebDriver_Ime extends WebDriver_Base
+final class ClassLoader
 {
-    /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
-     */
-    protected function methods()
-    {
-        return array(
-            'available_engines' => array('GET'),
-            'active_engine' => array('GET'),
-            'activated' => array('GET'),
-            'deactivate' => array('POST'),
-            'activate' => array('POST'),
-        );
-    }
 }

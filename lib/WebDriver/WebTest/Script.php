@@ -19,17 +19,22 @@
  * @author Anthon Pang <anthonp@nationalfibre.net>
  */
 
+namespace WebDriver\WebTest;
+
+use WebDriver\Session;
+use WebDriver\Exception as WebDriverException;
+
 /**
- * abstract WebDriver_WebTest_Script class
+ * abstract WebDriver\WebTest\Script class
  *
  * @package WebDriver
  */
-abstract class WebDriver_WebTest_Script
+abstract class Script
 {
     /**
      * Session
      *
-     * @var WebDriver_Session
+     * @var \WebDriver\Session
      */
     protected $session;
 
@@ -43,11 +48,12 @@ abstract class WebDriver_WebTest_Script
     /**
      * Constructor
      *
-     * @param WebDriver_Session $session
+     * @param \WebDriver\Session $session
      */
-    public function __construct($session)
+    public function __construct(\WebDriver\Session $session)
     {
         $this->session = $session;
+
         $this->assertStats = array(
             'pass' => 0,
             'failure' => 0,
@@ -60,9 +66,9 @@ abstract class WebDriver_WebTest_Script
      *
      * @param mixed  $expression Expression
      * @param mixed  $expected   Expected
-     * @param string $message    Messag
+     * @param string $message    Message
      *
-     * @throw WebDriver_Exception_WebTestAssertion if $expression is not equal to $expected
+     * @throw \WebDriver\Exception\WebTestAssertion if $expression is not equal to $expected
      */
     protected function assert($expression, $expected, $message)
     {
@@ -71,7 +77,7 @@ abstract class WebDriver_WebTest_Script
         if ($expression !== $expected) {
             $this->assertStats['failure']++;
 
-            throw WebDriver_Exception::factory(WebDriver_Exception::WEBTEST_ASSERTION, $message);
+            throw WebDriverException::factory(WebDriverException::WEBTEST_ASSERTION, $message);
         }
 
         $this->assertStats['pass']++;
@@ -83,9 +89,9 @@ abstract class WebDriver_WebTest_Script
      * @param function $callback Callback function
      * @param string   $message  Message
      *
-     * @throw WebDriver_Exception_WebTestAssertion if not exception is thrown
+     * @throw \WebDriver\Exception\WebTestAssertion if not exception is thrown
      */
-    protected function assert_exception($callback, $message)
+    protected function assertException($callback, $message)
     {
         $this->assertStats['total']++;
 
@@ -93,8 +99,9 @@ abstract class WebDriver_WebTest_Script
             $callback();
 
             $this->assertStats['failure']++;
-            throw WebDriver_Exception::factory(WebDriver_Exception::WEBTEST_ASSERTION, $message);
-        } catch (Exception $e) {
+
+            throw WebDriverException::factory(WebDriverException::WEBTEST_ASSERTION, $message);
+        } catch (\Exception $e) {
             // expected exception
         }
 

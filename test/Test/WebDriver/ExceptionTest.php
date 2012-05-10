@@ -19,38 +19,32 @@
  * @author Anthon Pang <anthonp@nationalfibre.net>
  */
 
+namespace Test\WebDriver;
+
+use WebDriver\Exception;
+
 /**
- * WebDriver_Touch class
+ * Test WebDriver\Exception class
  *
  * @package WebDriver
- *
- * @method click
- * @method down
- * @method up
- * @method move
- * @method scroll
- * @method doubleclick
- * @method longclick
- * @method flick
  */
-final class WebDriver_Touch extends WebDriver_Base
+class ExceptionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
+     * test factory()
      */
-    protected function methods()
+    public function testFactory()
     {
-        return array(
-            'click' => array('POST'),
-            'down' => array('POST'),
-            'up' => array('POST'),
-            'move' => array('POST'),
-            'scroll' => array('POST'),
-            'doubleclick' => array('POST'),
-            'longclick' => array('POST'),
-            'flick' => array('POST'),
-        );
+        $out = Exception::factory(255, 'wtf');
+        $this->assertTrue(get_class($out) === 'Exception');
+        $this->assertTrue($out->getMessage() === 'wtf');
+
+        $out = Exception::factory(Exception::SUCCESS);
+        $this->assertTrue(get_class($out) === 'Exception');
+        $this->assertTrue($out->getMessage() === 'Unknown Error');
+
+        $out = Exception::factory(Exception::CURL_EXEC);
+        $this->assertTrue($out instanceof Exception\CurlExec);
+        $this->assertTrue($out->getMessage() === 'curl_exec() error.');
     }
 }

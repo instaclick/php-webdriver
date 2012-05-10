@@ -18,8 +18,9 @@
  *
  * @author Justin Bishop <jubishop@gmail.com>
  * @author Anthon Pang <anthonp@nationalfibre.net>
- * @author Fabrizio Branca <mail@fabrizio-branca.de>
  */
+
+namespace WebDriver;
 
 /**
  * WebDriver class
@@ -28,30 +29,10 @@
  *
  * @method status
  */
-final class WebDriver extends WebDriver_Base
+final class WebDriver extends AbstractWebDriver
 {
     /**
-     * Check browser names used in static functions in the selenium source:
-     * @see http://code.google.com/p/selenium/source/browse/trunk/java/client/src/org/openqa/selenium/remote/DesiredCapabilities.java
-     *
-     * Note: Capability array takes these browserNames and not the "browserTypes"
-     *
-     * Also check
-     * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Capabilities_JSON_Object
-     */
-    const ANDROID           = 'android';
-    const CHROME            = 'chrome';
-    const FIREFOX           = 'firefox';
-    const HTMLUNIT          = 'htmlunit';
-    const INTERNET_EXPLORER = 'internet explorer';
-    const IPHONE            = 'iPhone';
-    const IPAD              = 'iPad';
-    const OPERA             = 'opera';
-
-    /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function methods()
     {
@@ -66,13 +47,13 @@ final class WebDriver extends WebDriver_Base
      * @param string $browser                Browser name
      * @param array  $additionalCapabilities Additional capabilities desired
      *
-     * @return WebDriver_Session
+     * @return \WebDriver\Session
      */
-    public function session($browser = self::FIREFOX, $additionalCapabilities = array())
+    public function session($browser = Browser::FIREFOX, $additionalCapabilities = array())
     {
         $desiredCapabilities = array_merge(
             $additionalCapabilities,
-            array(WebDriver_Session::BROWSER_NAME => $browser)
+            array(Capability::BROWSER_NAME => $browser)
         );
 
         $results = $this->curl(
@@ -82,13 +63,13 @@ final class WebDriver extends WebDriver_Base
             array(CURLOPT_FOLLOWLOCATION => true)
         );
 
-        return new WebDriver_Session($results['info']['url']);
+        return new Session($results['info']['url']);
     }
 
     /**
      * Get list of currently active sessions
      *
-     * @return array an array of WebDriver_Session objects
+     * @return array an array of \WebDriver\Session objects
      */
     public function sessions()
     {
@@ -96,8 +77,7 @@ final class WebDriver extends WebDriver_Base
         $sessions = array();
 
         foreach ($result['value'] as $session) {
-            $sessions[] = new WebDriverSession(
-                $this->url . '/session/' . $session['id']);
+            $sessions[] = new Session($this->url . '/session/' . $session['id']);
         }
 
         return $sessions;

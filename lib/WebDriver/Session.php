@@ -18,78 +18,55 @@
  *
  * @author Justin Bishop <jubishop@gmail.com>
  * @author Anthon Pang <anthonp@nationalfibre.net>
- * @author Fabrizio Branca <mail@fabrizio-branca.de>
  */
 
+namespace WebDriver;
+
 /**
- * WebDriver_Session class
+ * WebDriver\Session class
  *
  * @package WebDriver
  *
- * @method url
- * @method forward
- * @method back
- * @method refresh
- * @method execute
- * @method execute_async
- * @method screenshot
- * @method window_handle
- * @method window_handles
- * @method cookie
- * @method frame
- * @method source
- * @method title
- * @method keys
- * @method orientation
- * @method alert_text
- * @method accept_alert
- * @method dismiss_alert
- * @method moveto
- * @method click
- * @method buttondown
- * @method buttonup
- * @method doubleclick
- * @method location
+ * @method string window_handle() Retrieve the current window handle.
+ * @method array window_handles() Retrieve the list of all window handles available to the session.
+ * @method string getUrl() Retrieve the URL of the current page
+ * @method void url($jsonUrl) Navigate to a new URL
+ * @method void forward() Navigates forward in the browser history, if possible.
+ * @method void back() Navigates backward in the browser history, if possible.
+ * @method void refresh() Refresh the current page.
+ * @method mixed execute($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (synchronous)
+ * @method mixed execute_async($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (asynchronous)
+ * @method string screenshot() Take a screenshot of the current page.
+ * @method void frame($jsonFrameId) Change focus to another frame on the page.
+ * @method array getCookie() Retrieve all cookies visible to the current page.
+ * @method array cookie($jsonCookie) Set a cookie.
+ * @method string source() Get the current page source.
+ * @method string title() Get the current page title.
+ * @method void keys($jsonKeys) Send a sequence of key strokes to the active element.
+ * @method string getOrientation() Get the current browser orientation.
+ * @method void orientation($jsonOrientation) Set the current browser orientation.
+ * @method string getAlert_text() Gets the text of the currently displayed JavaScript alert(), confirm(), or prompt() dialog.
+ * @method void alert_text($jsonText) Sends keystrokes to a JavaScript prompt() dialog.
+ * @method void accept_alert() Accepts the currently displayed alert dialog.
+ * @method void dismiss_alert() Dismisses the currently displayed alert dialog.
+ * @method void moveto($jsonCoordinates) Move the mouse by an offset of the specificed element (or current mouse cursor).
+ * @method void click($jsonButton) Click any mouse button (at the coordinates set by the last moveto command).
+ * @method void buttondown() Click and hold the left mouse button (at the coordinates set by the last moveto command).
+ * @method void buttonup() Releases the mouse button previously held (where the mouse is currently at).
+ * @method void doubleclick() Double-clicks at the current mouse coordinates (set by moveto).
+ * @method array getLocation() Get the current geo location.
+ * @method void location($jsonCoordinates) Set the current geo location.
  */
-final class WebDriver_Session extends WebDriver_Container
+final class Session extends Container
 {
     /**
-     * @see http://code.google.com/p/selenium/source/browse/trunk/java/client/src/org/openqa/selenium/remote/CapabilityType.java
-     * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Capabilities_JSON_Object
-     */
-    const BROWSER_NAME                      = 'browserName';
-    const VERSION                           = 'version';
-    const PLATFORM                          = 'platform';
-    const SUPPORTS_JAVASCRIPT               = 'javascriptEnabled';
-    const TAKES_SCREENSHOT                  = 'takesScreenshot';
-    const SUPPORTS_ALERTS                   = 'handlesAlerts';
-    const SUPPORTS_SQL_DATABASE             = 'databaseEnabled';
-    const SUPPORTS_LOCATION_CONTEXT         = 'locationContextEnabled';
-    const SUPPORTS_APPLICATION_CACHE        = 'applicationCacheEnabled';
-    const SUPPORTS_BROWSER_CONNECTION       = 'browserConnectionEnabled';
-    const SUPPORTS_FINDING_BY_CSS           = 'cssSelectorsEnabled';
-    const SUPPORTS_WEB_STORAGE              = 'webStorageEnabled';
-    const ROTATABLE                         = 'rotatable';
-    const ACCEPT_SSL_CERTS                  = 'acceptSslCerts';
-    const HAS_NATIVE_EVENTS                 = 'nativeEvents';
-    const PROXY                             = 'proxy';
-
-    // For Selenium Server
-    // @todo where does this come from?
-    const AVOIDING_PROXY                    = 'avoidProxy';
-    const ONLY_PROXYING_SELENIUM_TRAFFIC    = 'onlyProxySeleniumTraffic';
-    const PROXYING_EVERYTHING               = 'proxyEverything';
-    const PROXY_PAC                         = 'proxy_pac';
-    const ENSURING_CLEAN_SESSION            = 'ensureCleanSession';
-
-    /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function methods()
     {
         return array(
+            'window_handle' => array('GET'),
+            'window_handles' => array('GET'),
             'url' => array('GET', 'POST'), // alternate for POST, use open($url)
             'forward' => array('POST'),
             'back' => array('POST'),
@@ -97,10 +74,8 @@ final class WebDriver_Session extends WebDriver_Container
             'execute' => array('POST'),
             'execute_async' => array('POST'),
             'screenshot' => array('GET'),
-            'window_handle' => array('GET'),
-            'window_handles' => array('GET'),
-            'cookie' => array('GET', 'POST'), // for DELETE, use deleteAllCookies()
             'frame' => array('POST'),
+            'cookie' => array('GET', 'POST'), // for DELETE, use deleteAllCookies()
             'source' => array('GET'),
             'title' => array('GET'),
             'keys' => array('POST'),
@@ -118,9 +93,7 @@ final class WebDriver_Session extends WebDriver_Container
     }
 
     /**
-     * Return array of obsolete method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function obsoleteMethods()
     {
@@ -136,7 +109,7 @@ final class WebDriver_Session extends WebDriver_Container
      *
      * @param string $url
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Session
      */
     public function open($url)
     {
@@ -170,8 +143,8 @@ final class WebDriver_Session extends WebDriver_Container
     }
 
     // There's a limit to our ability to exploit the dynamic nature of PHP when it
-    // comes to the cookie methods because GET and DELETE request types are indistinguishable
-    // from each other, neither takes parameters.
+    // comes to the cookie methods because GET and DELETE request methods are indistinguishable
+    // from each other: neither takes parameters.
 
     /**
      * Get all cookies: /session/:sessionId/cookie (GET)
@@ -192,7 +165,7 @@ final class WebDriver_Session extends WebDriver_Container
      *
      * @param array $cookieJson
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Session
      */
     public function setCookie($cookieJson)
     {
@@ -204,7 +177,7 @@ final class WebDriver_Session extends WebDriver_Container
     /**
      * Delete all cookies: /session/:sessionId/cookie (DELETE)
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Session
      */
     public function deleteAllCookies()
     {
@@ -218,7 +191,7 @@ final class WebDriver_Session extends WebDriver_Container
      *
      * @param string $cookieName
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Session
      */
     public function deleteCookie($cookieName)
     {
@@ -233,7 +206,7 @@ final class WebDriver_Session extends WebDriver_Container
      * - $session->window($name) - set focus
      * - $session->window($window_handle)->method() - chaining
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\AbstractWebDriver
      */
     public function window()
     {
@@ -253,13 +226,13 @@ final class WebDriver_Session extends WebDriver_Container
         }
 
         // chaining
-        return new WebDriver_Window($this->url . '/window', $arg);
+        return new Window($this->url . '/window', $arg);
     }
 
     /**
      * Delete window: /session/:sessionId/window (DELETE)
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Session
      */
     public function deleteWindow()
     {
@@ -273,7 +246,7 @@ final class WebDriver_Session extends WebDriver_Container
      *
      * @param mixed $name window handler or name attribute
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Session
      */
     public function focusWindow($name)
     {
@@ -287,7 +260,7 @@ final class WebDriver_Session extends WebDriver_Container
      * - $session->timesouts($json) - set timeout for an operation
      * - $session->timeouts()->method() - chaining
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Timeouts
      */
     public function timeouts()
     {
@@ -310,18 +283,18 @@ final class WebDriver_Session extends WebDriver_Container
         }
 
         // chaining
-        return new WebDriver_Timeouts($this->url . '/timeouts');
+        return new Timeouts($this->url . '/timeouts');
     }
 
     /**
      * ime method chaining, e.g.,
      * - $session->ime()->method()
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Ime
      */
     public function ime()
     {
-        return new WebDriver_Ime($this->url . '/ime');
+        return new Ime($this->url . '/ime');
     }
 
     /**
@@ -334,48 +307,45 @@ final class WebDriver_Session extends WebDriver_Container
     {
         $results = $this->curl('POST', '/element/active');
 
-        return $this->WebDriver_Element($results['value']);
+        return $this->webDriverElement($results['value']);
     }
 
     /**
      * touch method chaining, e.g.,
      * - $session->touch()->method()
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Touch
+     *
      */
     public function touch()
     {
-        return new WebDriver_Touch($this->url . '/touch');
+        return new Touch($this->url . '/touch');
     }
 
     /**
      * local_storage method chaining, e.g.,
      * - $session->local_storage()->method()
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Storage
      */
     public function local_storage()
     {
-        return WebDriver_Storage::factory(WebDriver_Storage::LOCAL, $this->url . '/local_storage');
+        return Storage::factory('local', $this->url . '/local_storage');
     }
 
     /**
      * session_storage method chaining, e.g.,
      * - $session->session_storage()->method()
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Storage
      */
     public function session_storage()
     {
-        return WebDriver_Storage::factory(WebDriver_Storage::SESSION, $this->url . '/session_storage');
+        return Storage::factory('session', $this->url . '/session_storage');
     }
 
     /**
-     * Get wire protocol URL for an element
-     *
-     * @param string $elementId
-     *
-     * @return string
+     * {@inheritdoc}
      */
     protected function getElementPath($elementId)
     {

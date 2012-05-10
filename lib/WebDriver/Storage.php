@@ -19,28 +19,28 @@
  * @author Anthon Pang <anthonp@nationalfibre.net>
  */
 
+namespace WebDriver;
+
+use WebDriver\Exception as WebDriverException;
+
 /**
- * WebDriver_Storage class
+ * WebDriver\Storage class
  *
  * @package WebDriver
  *
- * @method key
- * @method size
+ * @method mixed getKey($key) Get key/value pair.
+ * @method void deleteKey($key) Delete a specific key.
+ * @method integer size() Get the number of items in the storage.
  */
-abstract class WebDriver_Storage extends WebDriver_Base
+abstract class Storage extends AbstractWebDriver
 {
-    const LOCAL = "Local";
-    const SESSION = "Session";
-
     /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function methods()
     {
         return array(
-            'key' => array('GET'),
+            'key' => array('GET', 'DELETE'),
             'size' => array('GET'),
         );
     }
@@ -61,19 +61,18 @@ abstract class WebDriver_Storage extends WebDriver_Base
 
         // get key/value pair
         if (func_num_args() == 1) {
-            $arg = func_get_arg(0);
-            $this->curl('GET', '/key/' . $arg);
-
-            return $this;
+            return $this->getKey(func_get_arg(0));
         }
 
-        throw WebDriver_Exception::factory(WebDriver_Exception::UNEXPECTED_PARAMETERS);
+        throw WebDriverException::factory(WebDriverException::UNEXPECTED_PARAMETERS);
     }
 
     /**
      * Set specific key/value pair
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Storage
+     *
+     * @throw \WebDriver\Exception\UnexpectedParameters if unexpected parameters
      */
     public function set()
     {
@@ -95,52 +94,53 @@ abstract class WebDriver_Storage extends WebDriver_Base
             return $this;
         }
 
-        throw WebDriver_Exception::factory(WebDriver_Exception::UNEXPECTED_PARAMETERS);
+        throw WebDriverException::factory(WebDriverException::UNEXPECTED_PARAMETERS);
     }
 
     /**
      * Delete storage or a specific key
      *
-     * @return WebDriver_Base
+     * @return \WebDriver\Storage
+     *
+     * @throw \WebDriver\Exception\UnexpectedParameters if unexpected parameters
      */
     public function delete()
     {
         // delete storage
         if (func_num_args() == 0) {
-            $this->curl('DELETE', '/delete');
+            $this->curl('DELETE', '');
 
             return $this;
         }
 
         // delete key from storage
         if (func_num_args() == 1) {
-            $key = func_get_arg(0);
-            $this->curl('DELETE', '/key/' . $key);
-
-            return $this;
+            return $this->deleteKey(func_get_arg(0));
         }
 
-        throw WebDriver_Exception::factory(WebDriver_Exception::UNEXPECTED_PARAMETERS);
+        throw WebDriverException::factory(WebDriverException::UNEXPECTED_PARAMETERS);
     }
 
     /**
      * Factory method to create Storage objects
      *
-     * @param string $type "local" or "session" storage
+     * @param string $type 'local' or 'session' storage
      * @param string $url  URL
      *
-     * @return WebDriver_Storage
+     * @return \WebDriver\Storage
      */
     public static function factory($type, $url)
     {
         // dynamically define custom storage classes
-        $className = __CLASS__ . '_' . $type;
-        if (!class_exists($className, false)) {
+        $className = ucfirst(strtolower($type));
+        $namespacedClassName = __CLASS__ . '\\' . $className;
+
+        if (!class_exists($namespacedClassName, false)) {
             eval(
-                'final class ' . $className.' extends WebDriver_Storage {}'
+                'namespace ' . __CLASS__ . '; final class ' . $className . ' extends \\' . __CLASS__ . '{}'
             );
         }
 
-        return new $className($url);
+        return new $namespacedClassName($url);
     }
 }
