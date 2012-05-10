@@ -25,7 +25,7 @@
  *
  * @package WebDriver
  */
-class WebDriver_Exception extends Exception
+abstract class WebDriver_Exception extends Exception
 {
     /**
      * Response status codes
@@ -85,7 +85,7 @@ class WebDriver_Exception extends Exception
     const WEBTEST_ASSERTION = -8;
 
     private static $errs = array(
-//    self::SUCCESS => array('Success', 'This should never be thrown!'),
+//      self::SUCCESS => array('Success', 'This should never be thrown!'),
 
         self::NO_SUCH_ELEMENT => array('NoSuchElement', 'An element could not be located on the page using the given search parameters.'),
         self::NO_SUCH_FRAME => array('NoSuchFrame', 'A request to switch to a frame could not be satisfied because the frame could not be found.'),
@@ -122,7 +122,7 @@ class WebDriver_Exception extends Exception
     /**
      * Factory method to create WebDriver_Exception objects
      *
-     * @param int       $code              Code
+     * @param integer   $code              Code
      * @param string    $message           Message
      * @param Exception $previousException Previous exception
      *
@@ -141,16 +141,16 @@ class WebDriver_Exception extends Exception
 
         $errorDefinition = self::$errs[$code];
 
+        if (trim($message) == '') {
+            $message = $errorDefinition[1];
+        }
+
         // dynamically define custom exception classes
         $className = __CLASS__ . '_' . $errorDefinition[0];
         if (!class_exists($className, false)) {
             eval(
                 'final class ' . $className . ' extends WebDriver_Exception {}'
             );
-        }
-
-        if (trim($message) == '') {
-            $message = $errorDefinition[1];
         }
 
         return new $className($message, $code, $previousException);

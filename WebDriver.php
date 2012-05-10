@@ -49,9 +49,7 @@ final class WebDriver extends WebDriver_Base
     const OPERA             = 'opera';
 
     /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function methods()
     {
@@ -96,8 +94,7 @@ final class WebDriver extends WebDriver_Base
         $sessions = array();
 
         foreach ($result['value'] as $session) {
-            $sessions[] = new WebDriverSession(
-                $this->url . '/session/' . $session['id']);
+            $sessions[] = new WebDriverSession($this->url . '/session/' . $session['id']);
         }
 
         return $sessions;

@@ -24,18 +24,16 @@
  *
  * @package WebDriver
  *
- * @method available_engines
- * @method active_engine
- * @method activated
- * @method deactivate
- * @method activate
+ * @method array available_engines() List all available engines on the machines.
+ * @method string active_engine() Get the name of the active IME engine.
+ * @method boolean activated() Indicates whether IME input is active at the momeent.
+ * @method void deactivate() De-activates the curently active IME engine.
+ * @method void activate($json) Make an engine that is available active.
  */
 final class WebDriver_Ime extends WebDriver_Base
 {
     /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function methods()
     {

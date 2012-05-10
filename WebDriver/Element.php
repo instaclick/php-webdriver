@@ -26,21 +26,21 @@
  *
  * @package WebDriver
  *
- * @method click
- * @method submit
- * @method text
- * @method value
- * @method name
- * @method clear
- * @method selected
- * @method enabled
- * @method attribute
- * @method equals
- * @method displayed
- * @method location
- * @method location_in_view
- * @method size
- * @method css
+ * @method void click() Click on an element.
+ * @method void submit() Submit a FORM element.
+ * @method string text() Returns the visible text for the element.
+ * @method void value($json) Send a sequence of key strokes to an element.
+ * @method string name() Query for an element's tag name.
+ * @method void clear() Clear a TEXTAREA or text INPUT element's value.
+ * @method boolean selected() Determine if an OPTION element, or an INPUT element of type checkbox or radiobutton is currently selected.
+ * @method boolean enabled() Determine if an element is currently enabled.
+ * @method string attribute($attributeName) Get the value of an element's attribute.
+ * @method boolean equals($otherId) Test if two element IDs refer to the same DOM element.
+ * @method boolean displayed() Determine if an element is currently displayed.
+ * @method array location() Determine an element's location on the page.
+ * @method array location_in_view() Determine an element's location on the screen once it has been scrolled into view.
+ * @method array size() Determine an element's size in pixels.
+ * @method string css($propertyName) Query the value of an element's computed CSS property.
  */
 final class WebDriver_Element extends WebDriver_Container
 {
@@ -49,7 +49,8 @@ final class WebDriver_Element extends WebDriver_Container
      * pressable, non-text keys.
      *
      * @link http://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/element/:id/value
-     *    key_name   = "UTF-8";        // UCS-2
+     *
+     *    key_name    = "UTF-8";        // UCS-2
      */
     const NULL_KEY    = "\xEE\x80\x80"; // E000
     const CANCEL      = "\xEE\x80\x81"; // E001
@@ -109,9 +110,7 @@ final class WebDriver_Element extends WebDriver_Container
     const META        = "\xEE\x80\xBD"; // E03D
 
     /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function methods()
     {
@@ -135,9 +134,7 @@ final class WebDriver_Element extends WebDriver_Container
     }
 
     /**
-     * Return array of obsolete method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function obsoleteMethods()
     {
@@ -181,11 +178,7 @@ final class WebDriver_Element extends WebDriver_Container
     }
 
     /**
-     * Get wire protocol URL for an element
-     *
-     * @param string $elementId Element ID
-     *
-     * @return string
+     * {@inheritdoc}
      */
     protected function getElementPath($elementId)
     {

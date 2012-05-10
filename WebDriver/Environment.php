@@ -20,13 +20,13 @@
  * @author Anthon Pang <anthonp@nationalfibre.net>
  */
 
-// For security reasons some enterprises don't allow the use of some built-in
-// php functions.  This class is meant to be a proxy for these functions.
-// Modify these as necessary for your enviroment, and then .gitignore this file
-// so you can still easily git pull other changes from the main github repo.
-
 /**
  * WebDriver_Environment class
+ *
+ * For security reasons some enterprises don't allow the use of some built-in
+ * php functions.  This class is meant to be a proxy for these functions.
+ * Modify these as necessary for your enviroment, and then .gitignore this file
+ * so you can still easily git pull other changes from the main github repo.
  *
  * @package WebDriver
  */

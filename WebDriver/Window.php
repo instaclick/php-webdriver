@@ -25,9 +25,11 @@
  *
  * @package WebDriver
  *
- * @method size
- * @method position
- * @method maximize
+ * @method array getSize() Get size of the window.
+ * @method void size($json) Change the size of the window.
+ * @method array getPosition() Get position of the window.
+ * @method void position($json) Change position of the window.
+ * @method void maximize() Maximize the window if not already maximized.
  */
 final class WebDriver_Window extends WebDriver_Base
 {
@@ -39,9 +41,7 @@ final class WebDriver_Window extends WebDriver_Base
     private $windowHandle;
 
     /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function methods()
     {
@@ -53,9 +53,7 @@ final class WebDriver_Window extends WebDriver_Base
     }
 
     /**
-     * Return array of obsolete method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function obsoleteMethods()
     {

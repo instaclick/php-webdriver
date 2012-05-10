@@ -37,14 +37,14 @@ abstract class WebDriver_Base
     protected $url;
 
     /**
-     * Return array of supported method names and corresponding HTTP request types
+     * Return array of supported method names and corresponding HTTP request methods
      *
      * @return array
      */
     abstract protected function methods();
 
     /**
-     * Return array of obsolete method names and corresponding HTTP request types
+     * Return array of obsolete method names and corresponding HTTP request methods
      *
      * @return array
      */
@@ -89,7 +89,7 @@ abstract class WebDriver_Base
      * @param string $requestMethod HTTP request method, e.g., 'GET', 'POST', or 'DELETE'
      * @param string $command       If not defined in methods() this function will throw.
      * @param array  $parameters    If an array(), they will be posted as JSON parameters
-     *                              If a number or string, "/$params" is appended to url
+     *                              If a number or string, "/$parameters" is appended to url
      * @param array  $extraOptions  key=>value pairs of curl options to pass to curl_setopt()
      *
      * @return array array('value' => ..., 'info' => ...)
@@ -100,8 +100,8 @@ abstract class WebDriver_Base
     {
         if ($parameters && is_array($parameters) && $requestMethod !== 'POST') {
             throw WebDriver_Exception::factory(WebDriver_Exception::NO_PARAMETERS_EXPECTED, sprintf(
-                'The http method called for %s is %s but it has to be POST' .
-                ' if you want to pass the JSON params %s',
+                'The http request method called for %s is %s but it has to be POST' .
+                ' if you want to pass the JSON parameters %s',
                 $command,
                 $requestMethod,
                 json_encode($parameters)
@@ -113,7 +113,7 @@ abstract class WebDriver_Base
             $url .= '/' . $parameters;
         }
 
-        $curl = WebDriver_Environment::CurlInit($requestMethod, $url, $params);
+        $curl = WebDriver_Environment::CurlInit($requestMethod, $url, $parameters);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=UTF-8', 'Accept: application/json'));
 
@@ -138,8 +138,8 @@ abstract class WebDriver_Base
                 'Curl error thrown for http %s to %s$s',
                 $requestMethod,
                 $url,
-                $parameters && is_array($params)
-                ? ' with params: ' . json_encode($parameters) : ''
+                $parameters && is_array($parameters)
+                ? ' with parameters: ' . json_encode($parameters) : ''
             );
 
             throw WebDriver_Exception::factory(WebDriver_Exception::CURL_EXEC, $message . "\n\n" . $error);
@@ -175,6 +175,8 @@ abstract class WebDriver_Base
      * @param array  $arguments Arguments
      *
      * @return mixed
+     *
+     * @throws WebDriver_Exception if invalid WebDriver command
      */
     public function __call($name, $arguments)
     {
@@ -200,7 +202,7 @@ abstract class WebDriver_Base
         $methods = $this->methods();
         if (!in_array($requestMethod, (array) $methods[$webdriverCommand])) {
             throw WebDriver_Exception::factory(WebDriver_Exception::INVALID_REQUEST, sprintf(
-                '%s is not an available http method for the command %s.',
+                '%s is not an available http request method for the command %s.',
                 $requestMethod,
                 $webdriverCommand
             ));

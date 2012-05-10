@@ -28,6 +28,9 @@
  */
 abstract class WebDriver_Container extends WebDriver_Base
 {
+    /**
+     * Locator strategies
+     */
     const CLASS_NAME = 'class name';
     const CSS_SELECTOR = 'css selector';
     const ID = 'id';
@@ -38,18 +41,24 @@ abstract class WebDriver_Container extends WebDriver_Base
     const XPATH = 'xpath';
 
     /**
-     * Locator strategies
+     * {@inheritdoc}
      */
-    private static $strategies = array(
-        self::CLASS_NAME,
-        self::CSS_SELECTOR,
-        self::ID,
-        self::NAME,
-        self::LINK_TEXT,
-        self::PARTIAL_LINK_TEXT,
-        self::TAG_NAME,
-        self::XPATH,
-    );
+    public function __construct($url = 'http://localhost:4444/wd/hub')
+    {
+        parent::__construct($url);
+
+        $locatorStrategies = new \ReflectionClass('WebDriver\LocatorStrategy');
+        $this->strategies  = array(
+            self::CLASS_NAME,
+            self::CSS_SELECTOR,
+            self::ID,
+            self::NAME,
+            self::LINK_TEXT,
+            self::PARTIAL_LINK_TEXT,
+            self::TAG_NAME,
+            self::XPATH,
+        );
+    }
 
     /**
      * Search for element on page, starting from the document root.
@@ -103,6 +112,10 @@ abstract class WebDriver_Container extends WebDriver_Base
             $locatorJson
         );
 
+        if (!is_array($results['value'])) {
+            return array();
+        }
+
         return array_filter(array_map(
             array($this, 'webDriverElement'), $results['value']
         ));
@@ -143,7 +156,7 @@ abstract class WebDriver_Container extends WebDriver_Base
                 );
         }
 
-        return $this->locateBy($using, $value);
+        return $this->locate($using, $value);
     }
 
     /**
@@ -153,10 +166,12 @@ abstract class WebDriver_Container extends WebDriver_Base
      * @param string $value search target
      *
      * @return array
+     *
+     * @throws WebDriver_Exception if invalid locator strategy
      */
-    public function locateBy($using, $value)
+    public function locate($using, $value)
     {
-        if (!in_array($using, self::$strategies)) {
+        if (!in_array($using, $this->strategies)) {
             throw WebDriver_Exception::factory(WebDriver_Exception::UNKNOWN_LOCATOR_STRATEGY,
                 sprintf('Invalid locator strategy %s', $using)
             );
@@ -186,17 +201,12 @@ abstract class WebDriver_Container extends WebDriver_Base
     }
 
     /**
-     * Magic method that maps calls to class methods to element locator strategies
-     *
-     * @param string $name      Method name
-     * @param array  $arguments Arguments
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function __call($name, $arguments)
     {
-        if (count($arguments) == 1 && in_array(str_replace('_', ' ', $name), self::$strategies)) {
-            return $this->locateBy($name, $arguments[0]);
+        if (count($arguments) == 1 && in_array(str_replace('_', ' ', $name), $this->strategies)) {
+            return $this->locate($name, $arguments[0]);
         }
 
         // fallback to executing WebDriver commands

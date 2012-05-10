@@ -60,7 +60,7 @@ abstract class WebDriver_WebTest_Script
      *
      * @param mixed  $expression Expression
      * @param mixed  $expected   Expected
-     * @param string $message    Messag
+     * @param string $message    Message
      *
      * @throw WebDriver_Exception_WebTestAssertion if $expression is not equal to $expected
      */
@@ -85,7 +85,7 @@ abstract class WebDriver_WebTest_Script
      *
      * @throw WebDriver_Exception_WebTestAssertion if not exception is thrown
      */
-    protected function assert_exception($callback, $message)
+    protected function assertException($callback, $message)
     {
         $this->assertStats['total']++;
 

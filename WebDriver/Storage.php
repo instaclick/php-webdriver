@@ -24,23 +24,19 @@
  *
  * @package WebDriver
  *
- * @method key
- * @method size
+ * @method mixed getKey($key) Get key/value pair.
+ * @method void deleteKey($key) Delete a specific key.
+ * @method integer size() Get the number of items in the storage.
  */
 abstract class WebDriver_Storage extends WebDriver_Base
 {
-    const LOCAL = "Local";
-    const SESSION = "Session";
-
     /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function methods()
     {
         return array(
-            'key' => array('GET'),
+            'key' => array('GET', 'DELETE'),
             'size' => array('GET'),
         );
     }
@@ -49,6 +45,8 @@ abstract class WebDriver_Storage extends WebDriver_Base
      * Get all keys from storage or a specific key/value pair
      *
      * @return mixed
+     *
+     * @throw WebDriver_Exception_UnexpectedParameters if unexpected parameters
      */
     public function get()
     {
@@ -61,10 +59,7 @@ abstract class WebDriver_Storage extends WebDriver_Base
 
         // get key/value pair
         if (func_num_args() == 1) {
-            $arg = func_get_arg(0);
-            $this->curl('GET', '/key/' . $arg);
-
-            return $this;
+            return $this->getKey(func_get_arg(0));
         }
 
         throw WebDriver_Exception::factory(WebDriver_Exception::UNEXPECTED_PARAMETERS);
@@ -74,6 +69,8 @@ abstract class WebDriver_Storage extends WebDriver_Base
      * Set specific key/value pair
      *
      * @return WebDriver_Base
+     *
+     * @throw WebDriver_Exception_UnexpectedParameters if unexpected parameters
      */
     public function set()
     {
@@ -102,22 +99,21 @@ abstract class WebDriver_Storage extends WebDriver_Base
      * Delete storage or a specific key
      *
      * @return WebDriver_Base
+     *
+     * @throw WebDriver_Exception_UnexpectedParameters if unexpected parameters
      */
     public function delete()
     {
         // delete storage
         if (func_num_args() == 0) {
-            $this->curl('DELETE', '/delete');
+            $this->curl('DELETE', '');
 
             return $this;
         }
 
         // delete key from storage
         if (func_num_args() == 1) {
-            $key = func_get_arg(0);
-            $this->curl('DELETE', '/key/' . $key);
-
-            return $this;
+            return $this->deleteKey(func_get_arg(0));
         }
 
         throw WebDriver_Exception::factory(WebDriver_Exception::UNEXPECTED_PARAMETERS);
@@ -126,7 +122,7 @@ abstract class WebDriver_Storage extends WebDriver_Base
     /**
      * Factory method to create Storage objects
      *
-     * @param string $type "local" or "session" storage
+     * @param string $type 'local' or 'session' storage
      * @param string $url  URL
      *
      * @return WebDriver_Storage
@@ -134,7 +130,8 @@ abstract class WebDriver_Storage extends WebDriver_Base
     public static function factory($type, $url)
     {
         // dynamically define custom storage classes
-        $className = __CLASS__ . '_' . $type;
+        $className = __CLASS__ . '_' . ucfirst(strtolower($type));
+
         if (!class_exists($className, false)) {
             eval(
                 'final class ' . $className.' extends WebDriver_Storage {}'

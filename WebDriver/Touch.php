@@ -24,21 +24,19 @@
  *
  * @package WebDriver
  *
- * @method click
- * @method down
- * @method up
- * @method move
- * @method scroll
- * @method doubleclick
- * @method longclick
- * @method flick
+ * @method void click($jsonElement) Single tap on the touch enabled device.
+ * @method void down($jsonCoordinates) Finger down on the screen.
+ * @method void up($jsonCoordinates) Finger up on the screen.
+ * @method void move($jsonCoordinates) Finger move on the screen.
+ * @method void scroll($jsonCoordinates) Scroll on the touch screen using finger based motion events.  Coordinates are either absolute, or relative to a element (if specified).
+ * @method void doubleclick($jsonElement) Double tap on the touch screen using finger motion events.
+ * @method void longclick($jsonElement) Long press on the touch screen using finger motion events.
+ * @method void flick($json) Flick on the touch screen using finger motion events.
  */
 final class WebDriver_Touch extends WebDriver_Base
 {
     /**
-     * Return array of supported method names and corresponding HTTP request types
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function methods()
     {
