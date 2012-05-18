@@ -169,7 +169,7 @@ final class Session extends Container
      */
     public function setCookie($cookieJson)
     {
-        $this->curl('POST', '/cookie', is_array($cookieJson) ? $cookieJson : array('cookie' => $cookieJson));
+        $this->curl('POST', '/cookie', array('cookie' => $cookieJson));
 
         return $this;
     }
