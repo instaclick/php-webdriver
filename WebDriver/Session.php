@@ -199,7 +199,7 @@ final class WebDriver_Session extends WebDriver_Container
      */
     public function setCookie($cookieJson)
     {
-        $this->curl('POST', '/cookie', is_array($cookieJson) ? $cookieJson : array('cookie' => $cookieJson));
+        $this->curl('POST', '/cookie', array('cookie' => $cookieJson));
 
         return $this;
     }
