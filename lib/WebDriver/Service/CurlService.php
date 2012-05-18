@@ -36,10 +36,6 @@ class CurlService implements CurlServiceInterface
      */
     public function execute($requestMethod, $url, $parameters = null, $extraOptions = array())
     {
-        if ($parameters && (is_int($parameters) || is_string($parameters))) {
-            $url .= '/' . $parameters;
-        }
-
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=UTF-8', 'Accept: application/json'));

@@ -114,6 +114,10 @@ abstract class AbstractWebDriver
 
         $url = sprintf('%s%s', $this->url, $command);
 
+        if ($parameters && (is_int($parameters) || is_string($parameters))) {
+            $url .= '/' . $parameters;
+        }
+
         return ServiceFactory::getInstance()->getService('service.curl')->execute($requestMethod, $url, $parameters, $extraOptions);
     }
 
