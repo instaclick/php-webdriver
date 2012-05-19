@@ -36,17 +36,20 @@ class CurlService implements CurlServiceInterface
      */
     public function execute($requestMethod, $url, $parameters = null, $extraOptions = array())
     {
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+	$customHeaders = array(
             'Content-Type: application/json;charset=UTF-8',
             'Accept: application/json;charset=UTF-8',
-        ));
+        );
+
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
         if ($requestMethod === 'POST') {
             curl_setopt($curl, CURLOPT_POST, true);
             if ($parameters && is_array($parameters)) {
                 curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
+            } else {
+                $customHeaders[] = 'Content-Length: 0';
             }
         } else if ($requestMethod == 'DELETE') {
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
@@ -55,6 +58,8 @@ class CurlService implements CurlServiceInterface
         foreach ($extraOptions as $option => $value) {
             curl_setopt($curl, $option, $value);
         }
+
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $customHeaders);
 
         $rawResults = trim(curl_exec($curl));
         $info = curl_getinfo($curl);
