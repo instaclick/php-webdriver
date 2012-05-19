@@ -113,7 +113,7 @@ final class Session extends Container
      */
     public function open($url)
     {
-        $this->curl('POST', '/url', is_array($url) ? $url : array('url' => $url));
+        $this->curl('POST', '/url', array('url' => $url));
 
         return $this;
     }
