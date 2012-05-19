@@ -143,7 +143,7 @@ final class WebDriver_Session extends WebDriver_Container
      */
     public function open($url)
     {
-        $this->curl('POST', '/url', is_array($url) ? $url : array('url' => $url));
+        $this->curl('POST', '/url', array('url' => $url));
 
         return $this;
     }
