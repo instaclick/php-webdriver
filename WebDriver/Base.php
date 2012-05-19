@@ -113,14 +113,20 @@ abstract class WebDriver_Base
             $url .= '/' . $parameters;
         }
 
+        $customHeaders = array(
+            'Content-Type: application/json;charset=UTF-8',
+            'Accept: application/json;charset=UTF-8',
+        );
+
         $curl = WebDriver_Environment::CurlInit($requestMethod, $url, $parameters);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=UTF-8', 'Accept: application/json;charset=UTF-8'));
 
         if ($requestMethod === 'POST') {
             curl_setopt($curl, CURLOPT_POST, true);
             if ($parameters && is_array($parameters)) {
                 curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
+            } else {
+                $customHeaders[] = 'Content-Length: 0';
             }
         } else if ($requestMethod == 'DELETE') {
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
@@ -129,6 +135,8 @@ abstract class WebDriver_Base
         foreach ($extraOptions as $option => $value) {
             curl_setopt($curl, $option, $value);
         }
+
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $customHeaders);
 
         $rawResults = trim(WebDriver_Environment::CurlExec($curl));
         $info = curl_getinfo($curl);
