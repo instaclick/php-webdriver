@@ -115,7 +115,7 @@ abstract class WebDriver_Base
 
         $curl = WebDriver_Environment::CurlInit($requestMethod, $url, $parameters);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=UTF-8', 'Accept: application/json'));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=UTF-8', 'Accept: application/json;charset=UTF-8'));
 
         if ($requestMethod === 'POST') {
             curl_setopt($curl, CURLOPT_POST, true);
