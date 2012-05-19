@@ -38,7 +38,10 @@ class CurlService implements CurlServiceInterface
     {
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=UTF-8', 'Accept: application/json'));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json;charset=UTF-8',
+            'Accept: application/json;charset=UTF-8',
+        ));
 
         if ($requestMethod === 'POST') {
             curl_setopt($curl, CURLOPT_POST, true);
