@@ -143,10 +143,6 @@ abstract class AbstractWebDriver
         if (preg_match('/^(get|post|delete)/', $name, $matches)) {
             $requestMethod = strtoupper($matches[0]);
             $webdriverCommand = strtolower(substr($name, strlen($requestMethod)));
-        } else if (count($arguments) > 0) {
-            $webdriverCommand = $name;
-            $this->getRequestMethod($webdriverCommand);
-            $requestMethod = 'POST';
         } else {
             $webdriverCommand = $name;
             $requestMethod = $this->getRequestMethod($webdriverCommand);
