@@ -42,6 +42,7 @@ final class WebDriver extends AbstractWebDriver
     }
 
     /**
+     * New Session: /session (POST)
      * Get session object for chaining
      *
      * @param string $browser                Browser name

@@ -27,8 +27,6 @@ use WebDriver\Storage;
  * Test WebDriver\Storage class
  *
  * @package WebDriver
- *
- * @method integer size() Get the number of items in the storage.
  */
 class StorageTest extends \PHPUnit_Framework_TestCase
 {
