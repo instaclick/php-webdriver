@@ -30,7 +30,7 @@ namespace WebDriver;
  * @method string window_handle() Retrieve the current window handle.
  * @method array window_handles() Retrieve the list of all window handles available to the session.
  * @method string getUrl() Retrieve the URL of the current page
- * @method void url($jsonUrl) Navigate to a new URL
+ * @method void postUrl($jsonUrl) Navigate to a new URL
  * @method void forward() Navigates forward in the browser history, if possible.
  * @method void back() Navigates backward in the browser history, if possible.
  * @method void refresh() Refresh the current page.
@@ -39,14 +39,14 @@ namespace WebDriver;
  * @method string screenshot() Take a screenshot of the current page.
  * @method void frame($jsonFrameId) Change focus to another frame on the page.
  * @method array getCookie() Retrieve all cookies visible to the current page.
- * @method array cookie($jsonCookie) Set a cookie.
+ * @method array postCookie($jsonCookie) Set a cookie.
  * @method string source() Get the current page source.
  * @method string title() Get the current page title.
  * @method void keys($jsonKeys) Send a sequence of key strokes to the active element.
  * @method string getOrientation() Get the current browser orientation.
- * @method void orientation($jsonOrientation) Set the current browser orientation.
+ * @method void postOrientation($jsonOrientation) Set the current browser orientation.
  * @method string getAlert_text() Gets the text of the currently displayed JavaScript alert(), confirm(), or prompt() dialog.
- * @method void alert_text($jsonText) Sends keystrokes to a JavaScript prompt() dialog.
+ * @method void postAlert_text($jsonText) Sends keystrokes to a JavaScript prompt() dialog.
  * @method void accept_alert() Accepts the currently displayed alert dialog.
  * @method void dismiss_alert() Dismisses the currently displayed alert dialog.
  * @method void moveto($jsonCoordinates) Move the mouse by an offset of the specificed element (or current mouse cursor).
@@ -55,7 +55,7 @@ namespace WebDriver;
  * @method void buttonup() Releases the mouse button previously held (where the mouse is currently at).
  * @method void doubleclick() Double-clicks at the current mouse coordinates (set by moveto).
  * @method array getLocation() Get the current geo location.
- * @method void location($jsonCoordinates) Set the current geo location.
+ * @method void postLocation($jsonCoordinates) Set the current geo location.
  */
 final class Session extends Container
 {

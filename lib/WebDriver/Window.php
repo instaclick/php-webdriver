@@ -28,9 +28,9 @@ namespace WebDriver;
  * @package WebDriver
  *
  * @method array getSize() Get size of the window.
- * @method void size($json) Change the size of the window.
+ * @method void postSize($json) Change the size of the window.
  * @method array getPosition() Get position of the window.
- * @method void position($json) Change position of the window.
+ * @method void postPosition($json) Change position of the window.
  * @method void maximize() Maximize the window if not already maximized.
  */
 final class Window extends AbstractWebDriver
