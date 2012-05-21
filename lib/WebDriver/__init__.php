@@ -39,6 +39,8 @@ require_once(__DIR__ . '/Timeouts.php');
 require_once(__DIR__ . '/Touch.php');
 require_once(__DIR__ . '/Window.php');
 require_once(__DIR__ . '/Storage.php');
+require_once(__DIR__ . '/SauceLabs/Capability.php');
+require_once(__DIR__ . '/SauceLabs/SauceRest.php');
 require_once(__DIR__ . '/Service/CurlServiceInterface.php');
 require_once(__DIR__ . '/Service/CurlService.php');
 require_once(__DIR__ . '/ServiceFactory.php');

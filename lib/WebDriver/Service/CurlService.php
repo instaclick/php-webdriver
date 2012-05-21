@@ -78,24 +78,6 @@ class CurlService implements CurlServiceInterface
 
         curl_close($curl);
 
-        $results = json_decode($rawResults, true);
-        $value   = null;
-
-        if (is_array($results) && array_key_exists('value', $results)) {
-            $value = $results['value'];
-        }
-
-        $message = null;
-
-        if (is_array($value) && array_key_exists('message', $value)) {
-            $message = $value['message'];
-        }
-
-        // if not success, throw exception
-        if ($results['status'] != 0) {
-            throw WebDriverException::factory($results['status'], $message);
-        }
-
-        return array('value' => $value, 'info' => $info);
+        return array($rawResults, $info);
     }
 }

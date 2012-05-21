@@ -27,7 +27,7 @@ namespace WebDriver;
  *
  * @package WebDriver
  */
-final class Capability
+class Capability
 {
     /**
      * Desired capabilities
