@@ -59,6 +59,7 @@ final class WebDriver extends WebDriver_Base
     }
 
     /**
+     * New Session: /session (POST)
      * Get session object for chaining
      *
      * @param string $browser                Browser name

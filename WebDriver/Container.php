@@ -61,6 +61,8 @@ abstract class WebDriver_Container extends WebDriver_Base
     }
 
     /**
+     * Find element: /session/:sessionId/element (POST)
+     * Find child element: /session/:sessionId/element/:id/element (POST)
      * Search for element on page, starting from the document root.
      *
      * @param string $using the locator strategy to use
@@ -93,6 +95,8 @@ abstract class WebDriver_Container extends WebDriver_Base
     }
 
     /**
+     * Find elements: /session/:sessionId/elements (POST)
+     * Find child elements: /session/:sessionId/element/:id/elements (POST)
      * Search for multiple elements on page, starting from the document root.
      *
      * @param string $using the locator strategy to use
