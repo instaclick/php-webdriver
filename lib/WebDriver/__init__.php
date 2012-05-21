@@ -24,12 +24,14 @@
 /**
  * @package WebDriver
  */
+require_once(__DIR__ . '/AppCacheStatus.php');
 require_once(__DIR__ . '/Browser.php');
 require_once(__DIR__ . '/Capability.php');
 require_once(__DIR__ . '/Key.php');
 require_once(__DIR__ . '/LocatorStrategy.php');
 require_once(__DIR__ . '/AbstractWebDriver.php');
 require_once(__DIR__ . '/WebDriver.php');
+require_once(__DIR__ . '/ApplicationCache.php');
 require_once(__DIR__ . '/Container.php');
 require_once(__DIR__ . '/Session.php');
 require_once(__DIR__ . '/Element.php');
