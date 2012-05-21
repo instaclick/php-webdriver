@@ -37,7 +37,7 @@ interface CurlServiceInterface
      *                              If a number or string, "/$params" is appended to url
      * @param array  $extraOptions  key=>value pairs of curl options to pass to curl_setopt()
      *
-     * @return array array('value' => ..., 'info' => ...)
+     * @return array
      *
      * @throws \WebDriver\Exception if error
      */
