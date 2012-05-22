@@ -54,8 +54,11 @@ namespace WebDriver;
  * @method void buttondown() Click and hold the left mouse button (at the coordinates set by the last moveto command).
  * @method void buttonup() Releases the mouse button previously held (where the mouse is currently at).
  * @method void doubleclick() Double-clicks at the current mouse coordinates (set by moveto).
+ * @method array execute_sql($jsonQuery) Execute SQL.
  * @method array getLocation() Get the current geo location.
  * @method void postLocation($jsonCoordinates) Set the current geo location.
+ * @method boolean getBrowser_connection() Is browser online?
+ * @method void postBrowser_connection($jsonState) Set browser online.
  */
 final class Session extends Container
 {
@@ -88,7 +91,9 @@ final class Session extends Container
             'buttondown' => 'POST',
             'buttonup' => array('POST'),
             'doubleclick' => array('POST'),
+            'execute_sql' => array('POST'),
             'location' => array('GET', 'POST'),
+            'browser_connection' => array('GET', 'POST'),
         );
     }
 
@@ -100,6 +105,12 @@ final class Session extends Container
         return array(
             'modifier' => array('POST'),
             'speed' => array('GET', 'POST'),
+            'alert' => array('GET'),
+            'visible' => array('GET', 'POST'),
+
+            // specific to Java SeleniumServer
+            'file' => array('POST'),
+            'log' => array('POST'),
         );
     }
 
@@ -149,6 +160,8 @@ final class Session extends Container
     /**
      * Get all cookies: /session/:sessionId/cookie (GET)
      * Alternative to: $session->cookie();
+     *
+     * Note: get cookie by name not implemented in API
      *
      * @return mixed
      */
@@ -342,6 +355,17 @@ final class Session extends Container
     public function session_storage()
     {
         return Storage::factory('session', $this->url . '/session_storage');
+    }
+
+    /**
+     * application cache chaining, e.g.,
+     * - $session->application_cache()->status()
+     *
+     * @return \WebDriver\ApplicationCache
+     */
+    public function application_cache()
+    {
+        return new ApplicationCache($this->url . '/application_cache');
     }
 
     /**
