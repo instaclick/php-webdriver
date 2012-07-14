@@ -375,4 +375,13 @@ final class Session extends Container
     {
         return sprintf('%s/element/%s', $this->url, $elementId);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function screenshot()
+    {
+        return $this->curl("GET" , "/screenshot");
+    }
+
 }
