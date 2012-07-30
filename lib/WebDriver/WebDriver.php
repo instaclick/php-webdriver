@@ -47,10 +47,11 @@ final class WebDriver extends AbstractWebDriver
      *
      * @param string $browser                Browser name
      * @param array  $additionalCapabilities Additional capabilities desired
+     * @param array  $requiredCapabilities   Required capabilities
      *
      * @return \WebDriver\Session
      */
-    public function session($browser = Browser::FIREFOX, $additionalCapabilities = array())
+    public function session($browser = Browser::FIREFOX, $additionalCapabilities = array(), $requiredCapabilities = array())
     {
         $desiredCapabilities = array_merge(
             $additionalCapabilities,
@@ -60,7 +61,10 @@ final class WebDriver extends AbstractWebDriver
         $results = $this->curl(
             'POST',
             '/session',
-            array('desiredCapabilities' => $desiredCapabilities),
+            array(
+                'desiredCapabilities' => $desiredCapabilities,
+                'requiredCapabilities' => $requiredCapabilities,
+            ),
             array(CURLOPT_FOLLOWLOCATION => true)
         );
 
