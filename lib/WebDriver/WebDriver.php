@@ -45,18 +45,16 @@ final class WebDriver extends AbstractWebDriver
      * New Session: /session (POST)
      * Get session object for chaining
      *
-     * @param string $browser                Browser name
-     * @param array  $additionalCapabilities Additional capabilities desired
-     * @param array  $requiredCapabilities   Required capabilities
+     * @param mixed $requiredCapabilities Required capabilities (or browser name)
+     * @param array $desiredCapabilities  Desired capabilities
      *
      * @return \WebDriver\Session
      */
-    public function session($browser = Browser::FIREFOX, $additionalCapabilities = array(), $requiredCapabilities = array())
+    public function session($requiredCapabilities = Browser::FIREFOX, $desiredCapabilities = array())
     {
-        $desiredCapabilities = array_merge(
-            $additionalCapabilities,
-            array(Capability::BROWSER_NAME => $browser)
-        );
+        $requiredCapabilities = is_array($requiredCapabilities)
+            ? $requiredCapabilities
+            : array(Capability::BROWSER_NAME => $requiredCapabilities);
 
         $results = $this->curl(
             'POST',
