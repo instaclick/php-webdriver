@@ -52,10 +52,15 @@ final class WebDriver extends AbstractWebDriver
      */
     public function session($requiredCapabilities = Browser::FIREFOX, $desiredCapabilities = array())
     {
-        $requiredCapabilities = is_array($requiredCapabilities)
-            ? $requiredCapabilities
-            : array(Capability::BROWSER_NAME => $requiredCapabilities);
+        if (!is_array($requiredCapabilities)) {
+            $desiredCapabilities  = array_merge(
+                $desiredCapabilities,
+                array(Capability::BROWSER_NAME => $requiredCapabilities)
+            );
 
+            $requiredCapabilities = array();
+        }
+        
         $results = $this->curl(
             'POST',
             '/session',
