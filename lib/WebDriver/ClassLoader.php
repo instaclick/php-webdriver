@@ -22,15 +22,60 @@
 namespace WebDriver;
 
 /**
- * @TODO implement the class loader!
- */
-require_once(__DIR__ . '/__init__.php');
-
-/**
  * WebDriver\ClassLoader (autoloader) class
  *
  * @package WebDriver
  */
 final class ClassLoader
 {
+    /**
+     * Load class
+     *
+     * @param string $class Class name
+     */
+    public static function loadClass($class)
+    {
+        $file = strpos($class, '\\') !== false
+            ? str_replace('\\', DIRECTORY_SEPARATOR, $class)
+            : str_replace('_', DIRECTORY_SEPARATOR, $class);
+
+        $path = dirname(__DIR__) . DIRECTORY_SEPARATOR . $file . '.php';
+
+        if (file_exists($path)) {
+            include_once $path;
+        }
+    }
+
+    /**
+     * Autoloader
+     *
+     * @param string $class Class name
+     */
+    public static function autoload($class)
+    {
+        try {
+            self::loadClass($class);
+        } catch (Exception $e) {
+        }
+    }
+}
+
+// Note: only one __autoload per PHP instance
+if(function_exists('spl_autoload_register'))
+{
+    // use the SPL autoload stack
+    spl_autoload_register(array('WebDriver\ClassLoader', 'autoload'));
+
+    // preserve any existing __autoload
+    if(function_exists('__autoload'))
+    {
+        spl_autoload_register('__autoload');
+    }
+}
+else
+{
+    function __autoload($class)
+    {
+        ClassLoader::autoload($class);
+    }
 }
