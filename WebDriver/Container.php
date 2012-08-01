@@ -47,7 +47,6 @@ abstract class WebDriver_Container extends WebDriver_Base
     {
         parent::__construct($url);
 
-        $locatorStrategies = new \ReflectionClass('WebDriver\LocatorStrategy');
         $this->strategies  = array(
             self::CLASS_NAME,
             self::CSS_SELECTOR,
