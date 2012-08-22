@@ -57,8 +57,9 @@ class Capability
      *
      * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Proxy_JSON_Object
      */
-    const DIRECT = 'direct';
-    const MANUAL = 'manual';
-    const PAC    = 'pac';
-    const SYSTEM = 'system';
+    const DIRECT     = 'direct';
+    const MANUAL     = 'manual';
+    const PAC        = 'pac';
+    const AUTODETECT = 'autodetect';
+    const SYSTEM     = 'system';
 }
