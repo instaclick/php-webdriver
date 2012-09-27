@@ -17,7 +17,7 @@
  * @package WebDriver
  *
  * @author Justin Bishop <jubishop@gmail.com>
- * @author Anthon Pang <anthonp@nationalfibre.net>
+ * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
 namespace WebDriver;

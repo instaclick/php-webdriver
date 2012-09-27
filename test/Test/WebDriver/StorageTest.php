@@ -16,7 +16,7 @@
  *
  * @package WebDriver
  *
- * @author Anthon Pang <anthonp@nationalfibre.net>
+ * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
 namespace Test\WebDriver;

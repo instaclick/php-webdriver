@@ -17,7 +17,7 @@
  * @package WebDriver
  *
  * @author Fabrizio Branca <mail@fabrizio-branca.de>
- * @author Anthon Pang <anthonp@nationalfibre.net>
+ * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
 namespace WebDriver;
