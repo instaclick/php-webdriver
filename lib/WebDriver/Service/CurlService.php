@@ -66,7 +66,7 @@ class CurlService implements CurlServiceInterface
 
         if ($error = curl_error($curl)) {
             $message = sprintf(
-                'Curl error thrown for http %s to %s$s',
+                'Curl error thrown for http %s to %s%s',
                 $requestMethod,
                 $url,
                 $parameters && is_array($parameters)
