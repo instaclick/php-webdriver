@@ -62,6 +62,8 @@ class Capability extends BaseCapability
     // Sauce OnDemand specific
     const AVOID_PROXY           = 'avoid-proxy';           // Avoid proxy
     const DISABLE_POPUP_HANDLER = 'disable-popup-handler'; // Disable popup handler
+    const DEVICE_ORIENTATION    = 'deviceOrientation';     // Device orientation (portrait or landscape)
+    const DEVICE_TYPE           = 'deviceType';            // Device type (phone or tablet)
 
     // Job Sharing
     const PUBLIC_RESULTS        = 'public';                // Share job's result page, video, and logs
