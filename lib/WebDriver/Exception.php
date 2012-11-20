@@ -35,6 +35,7 @@ abstract class Exception extends \Exception
      * @link http://code.google.com/p/selenium/wiki/JsonWireProtocol#Response_Status_Codes
      */
     const SUCCESS = 0;
+    const NO_SUCH_DRIVER = 6;
     const NO_SUCH_ELEMENT = 7;
     const NO_SUCH_FRAME = 8;
     const UNKNOWN_COMMAND = 9;
@@ -65,7 +66,6 @@ abstract class Exception extends \Exception
     const NO_STRING = 3;
     const NO_STRING_LENGTH = 4;
     const NO_STRING_WRAPPER = 5;
-    const NO_SUCH_DRIVER = 6;
     const OBSOLETE_ELEMENT = 10;
     const ELEMENT_NOT_DISPLAYED = 11;
     const UNHANDLED = 13;
@@ -91,6 +91,7 @@ abstract class Exception extends \Exception
     private static $errs = array(
 //      self::SUCCESS => array('Success', 'This should never be thrown!'),
 
+        self::NO_SUCH_DRIVER => array('NoSuchDriver', 'A session is either terminated or not started'),
         self::NO_SUCH_ELEMENT => array('NoSuchElement', 'An element could not be located on the page using the given search parameters.'),
         self::NO_SUCH_FRAME => array('NoSuchFrame', 'A request to switch to a frame could not be satisfied because the frame could not be found.'),
         self::UNKNOWN_COMMAND => array('UnknownCommand', 'The requested resource could not be found, or a request was received using an HTTP method that is not supported by the mapped resource.'),
