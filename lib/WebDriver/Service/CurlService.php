@@ -53,6 +53,13 @@ class CurlService implements CurlServiceInterface
             }
         } else if ($requestMethod == 'DELETE') {
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        } else if ($requestMethod == 'PUT') {
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
+            if ($parameters && is_array($parameters)) {
+               curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
+            } else {
+                $customHeaders[] = 'Content-Length: 0';
+            }
         }
 
         foreach ($extraOptions as $option => $value) {
