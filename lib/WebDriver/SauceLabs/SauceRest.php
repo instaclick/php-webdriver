@@ -33,7 +33,7 @@ class SauceRest
     /**
      * @var string
      */
-    private $userName;
+    private $userId;
 
     /**
      * @var string
@@ -48,7 +48,7 @@ class SauceRest
      */
     public function __construct($userName, $accessKey)
     {
-        $this->userName = $userName;
+        $this->userId = $userName;
         $this->accessKey = $accessKey;
     }
 
@@ -67,7 +67,7 @@ class SauceRest
     {
         $extraOptions = array(
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-            CURLOPT_USERPWD => $this->userName . ':' . $this->accessKey,
+            CURLOPT_USERPWD => $this->userId . ':' . $this->accessKey,
         );
 
         $url = 'https://saucelabs.com/rest/v1/' . $url;
@@ -110,7 +110,7 @@ class SauceRest
      */
     public function createSubAccount($accountInfo)
     {
-        return $this->execute('POST', 'users/' . $this->userName, $accountInfo);
+        return $this->execute('POST', 'users/' . $this->userId, $accountInfo);
     }
 
     /**
