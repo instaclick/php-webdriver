@@ -60,20 +60,24 @@ final class ClassLoader
     }
 }
 
-// Note: only one __autoload per PHP instance
-if(function_exists('spl_autoload_register'))
-{
-    // use the SPL autoload stack
+if (function_exists('spl_autoload_register')) {
+    /**
+     * use the SPL autoload stack
+     */
     spl_autoload_register(array('WebDriver\ClassLoader', 'autoload'));
 
-    // preserve any existing __autoload
-    if(function_exists('__autoload'))
-    {
+    /**
+     * preserve any existing __autoload
+     */
+    if (function_exists('__autoload')) {
         spl_autoload_register('__autoload');
     }
-}
-else
-{
+} else {
+    /**
+     * Our fallback; only one __autoload per PHP instance
+     *
+     * @param string $class Class name
+     */
     function __autoload($class)
     {
         ClassLoader::autoload($class);

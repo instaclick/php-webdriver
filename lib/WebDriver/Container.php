@@ -192,7 +192,7 @@ abstract class Container extends AbstractWebDriver
      */
     public function __call($name, $arguments)
     {
-        if (count($arguments) == 1 && in_array(str_replace('_', ' ', $name), $this->strategies)) {
+        if (count($arguments) === 1 && in_array(str_replace('_', ' ', $name), $this->strategies)) {
             return $this->locate($name, $arguments[0]);
         }
 

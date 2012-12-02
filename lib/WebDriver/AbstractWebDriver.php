@@ -134,7 +134,7 @@ abstract class AbstractWebDriver
         }
 
         // if not success, throw exception
-        if ($results['status'] != 0) {
+        if ($results['status'] !== 0) {
             throw WebDriverException::factory($results['status'], $message);
         }
 

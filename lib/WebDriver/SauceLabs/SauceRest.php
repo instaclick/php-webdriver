@@ -17,6 +17,7 @@
  * @package WebDriver
  *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
+ * @author Fabrizio Branca <mail@fabrizio-branca.de>
  */
 
 namespace WebDriver\SauceLabs;
@@ -43,25 +44,25 @@ class SauceRest
     /**
      * Constructor
      *
-     * @param string $userName  Your Sauce user name
+     * @param string $userId    Your Sauce user name
      * @param string $accessKey Your Sauce API key
      */
-    public function __construct($userName, $accessKey)
+    public function __construct($userId, $accessKey)
     {
-        $this->userId = $userName;
+        $this->userId = $userId;
         $this->accessKey = $accessKey;
     }
 
     /**
      * Execute Sauce Labs REST API command
      *
-     * @see http://saucelabs.com/docs/saucerest
-     *
      * @param string $requestMethod HTTP request method
      * @param string $url           URL
      * @param mixed  $parameters    Parameters
      * 
      * @return mixed
+     *
+     * @see http://saucelabs.com/docs/saucerest
      */
     protected function execute($requestMethod, $url, $parameters = null)
     {
@@ -118,6 +119,8 @@ class SauceRest
      *
      * @param string $userId User ID
      * @param string $plan   Plan
+     *
+     * @return array
      */
     public function updateSubAccount($userId, $plan)
     {
@@ -128,8 +131,10 @@ class SauceRest
      * Unsubscribe a sub-account: /rest/v1/users/:userId/subscription (DELETE)
      *
      * @param string $userId User ID
+     *
+     * @return array
      */
-    public function unsubscribeSubAccount($userId, $plan)
+    public function unsubscribeSubAccount($userId)
     {
         return $this->execute('DELETE', 'users/' . $userId . '/subscription');
     }
@@ -212,7 +217,7 @@ class SauceRest
      */
     public function stopJob($jobId)
     {
-        return $this->execute('', $this->userId . '/jobs/' . $jobId . '/stop');
+        return $this->execute('PUT', $this->userId . '/jobs/' . $jobId . '/stop');
     }
 
     /**

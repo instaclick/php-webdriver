@@ -224,7 +224,7 @@ final class Session extends Container
     public function window()
     {
         // close current window
-        if (func_num_args() == 0) {
+        if (func_num_args() === 0) {
             $this->curl('DELETE', '/window');
 
             return $this;
@@ -278,14 +278,14 @@ final class Session extends Container
     public function timeouts()
     {
         // set timeouts
-        if (func_num_args() == 1) {
+        if (func_num_args() === 1) {
             $arg = func_get_arg(0); // json
             $this->curl('POST', '/timeouts', $arg);
 
             return $this;
         }
 
-        if (func_num_args() == 2) {
+        if (func_num_args() === 2) {
             $arg = array(
                 'type' => func_get_arg(0), // 'script' or 'implicit'
                 'ms' => func_get_arg(1),   // timeout in milliseconds

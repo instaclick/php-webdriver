@@ -53,14 +53,14 @@ abstract class Storage extends AbstractWebDriver
     public function get()
     {
         // get all keys
-        if (func_num_args() == 0) {
+        if (func_num_args() === 0) {
             $result = $this->curl('GET', '');
 
             return $result['value'];
         }
 
         // get key/value pair
-        if (func_num_args() == 1) {
+        if (func_num_args() === 1) {
             return $this->getKey(func_get_arg(0));
         }
 
@@ -76,7 +76,7 @@ abstract class Storage extends AbstractWebDriver
      */
     public function set()
     {
-        if (func_num_args() == 1
+        if (func_num_args() === 1
             && is_array($arg = func_get_arg(0))
         ) {
             $this->curl('POST', '', $arg);
@@ -84,7 +84,7 @@ abstract class Storage extends AbstractWebDriver
             return $this;
         }
 
-        if (func_num_args() == 2) {
+        if (func_num_args() === 2) {
             $arg = array(
                 'key' => func_get_arg(0),
                 'value' => func_get_arg(1),
@@ -107,14 +107,14 @@ abstract class Storage extends AbstractWebDriver
     public function delete()
     {
         // delete storage
-        if (func_num_args() == 0) {
+        if (func_num_args() === 0) {
             $this->curl('DELETE', '');
 
             return $this;
         }
 
         // delete key from storage
-        if (func_num_args() == 1) {
+        if (func_num_args() === 1) {
             return $this->deleteKey(func_get_arg(0));
         }
 

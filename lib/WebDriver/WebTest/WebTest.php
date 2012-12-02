@@ -252,7 +252,7 @@ class WebTest
                         $reflectionParameters = $reflectionMethod->getParameters();
 
                         foreach ($reflectionParameters as $reflectionParameter) {
-                            if ($reflectionParameter->getName() == 'description'
+                            if ($reflectionParameter->getName() === 'description'
                                 && $reflectionParameter->isDefaultValueAvailable()
                             ) {
                                 $defaultValue = $reflectionParameter->getDefaultValue();
@@ -327,7 +327,7 @@ class WebTest
         /*
          * parse command line options
          */
-        if ($argc == 1) {
+        if ($argc === 1) {
             $argc++;
             array_push($argv, '-h');
         }

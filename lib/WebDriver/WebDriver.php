@@ -60,7 +60,7 @@ final class WebDriver extends AbstractWebDriver
 
             $requiredCapabilities = array();
         }
-        
+
         $results = $this->curl(
             'POST',
             '/session',

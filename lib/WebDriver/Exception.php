@@ -139,7 +139,7 @@ abstract class Exception extends \Exception
     {
         // unknown error
         if (!isset(self::$errs[$code])) {
-            if (trim($message) == '') {
+            if (trim($message) === '') {
                 $message = 'Unknown Error';
             }
 
@@ -148,7 +148,7 @@ abstract class Exception extends \Exception
 
         $errorDefinition = self::$errs[$code];
 
-        if (trim($message) == '') {
+        if (trim($message) === '') {
             $message = $errorDefinition[1];
         }
 
