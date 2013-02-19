@@ -4,7 +4,7 @@
     "description": "PHP WebDriver for Selenium 2",
     "keywords": ["selenium", "webdriver", "webtest", "browser"],
     "homepage": "http://instaclick.com/torontotechjobs/",
-    "license": "Apache",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Justin Bishop",
@@ -24,5 +24,10 @@
         "psr-0": {
             "WebDriver": "lib/"
        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
     }
 }
