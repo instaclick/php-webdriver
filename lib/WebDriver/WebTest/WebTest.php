@@ -27,7 +27,7 @@ use WebDriver\Exception as WebDriverException;
 /**
  * WebDriver\WebTest\WebTest class - test runner
  *
- * WebDriver-based web test runner, outputing results in TAP format.
+ * WebDriver-based web test runner, outputting results in TAP format.
  *
  * @package WebDriver
  *
@@ -165,8 +165,8 @@ class WebTest
     /**
      * Is this a testable method?
      *
-     * @param string             $className        Class name
-     * @param \RefelectionMethod $reflectionMethod Reflection method
+     * @param string            $className        Class name
+     * @param \ReflectionMethod $reflectionMethod Reflection method
      *
      * @return boolean False if method should not be counted
      */
