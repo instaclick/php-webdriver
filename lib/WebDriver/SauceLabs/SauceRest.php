@@ -103,7 +103,7 @@ class SauceRest
     /**
      * Create new sub-account: /rest/v1/users/:userId (POST)
      *
-     * For "parterns", $accountInfo also contains 'plan' => (one of 'free', 'small', 'team', 'com', or 'complus')
+     * For "partners", $accountInfo also contains 'plan' => (one of 'free', 'small', 'team', 'com', or 'complus')
      *
      * @param array $accountInfo array('username' => ..., 'password' => ..., 'name' => ..., 'email' => ...)
      *
