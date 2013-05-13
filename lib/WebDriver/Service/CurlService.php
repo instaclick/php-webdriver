@@ -83,7 +83,7 @@ class CurlService implements CurlServiceInterface
         $rawResults = trim(curl_exec($curl));
         $info = curl_getinfo($curl);
 
-        if (URLE_GOT_NOTHING !== curl_errno($curl) && $error = curl_error($curl)) {
+        if (CURLE_GOT_NOTHING !== curl_errno($curl) && $error = curl_error($curl)) {
             $message = sprintf(
                 'Curl error thrown for http %s to %s%s',
                 $requestMethod,
