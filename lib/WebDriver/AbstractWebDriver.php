@@ -103,13 +103,15 @@ abstract class AbstractWebDriver
     protected function curl($requestMethod, $command, $parameters = null, $extraOptions = array())
     {
         if ($parameters && is_array($parameters) && $requestMethod !== 'POST') {
-            throw WebDriverException::factory(WebDriverException::NO_PARAMETERS_EXPECTED, sprintf(
-                'The http request method called for %s is %s but it has to be POST' .
-                ' if you want to pass the JSON parameters %s',
-                $command,
-                $requestMethod,
-                json_encode($parameters)
-            ));
+            throw WebDriverException::factory(
+                WebDriverException::NO_PARAMETERS_EXPECTED,
+                sprintf(
+                    'The http request method called for %s is %s but it has to be POST if you want to pass the JSON parameters %s',
+                    $command,
+                    $requestMethod,
+                    json_encode($parameters)
+                )
+            );
         }
 
         $url = sprintf('%s%s', $this->url, $command);
@@ -154,9 +156,9 @@ abstract class AbstractWebDriver
     public function __call($name, $arguments)
     {
         if (count($arguments) > 1) {
-            throw WebDriverException::factory(WebDriverException::JSON_PARAMETERS_EXPECTED,
-                'Commands should have at most only one parameter,' .
-                ' which should be the JSON Parameter object'
+            throw WebDriverException::factory(
+                WebDriverException::JSON_PARAMETERS_EXPECTED,
+                'Commands should have at most only one parameter, which should be the JSON Parameter object'
             );
         }
 
@@ -170,11 +172,14 @@ abstract class AbstractWebDriver
 
         $methods = $this->methods();
         if (!in_array($requestMethod, (array) $methods[$webdriverCommand])) {
-            throw WebDriverException::factory(WebDriverException::INVALID_REQUEST, sprintf(
-                '%s is not an available http request method for the command %s.',
-                $requestMethod,
-                $webdriverCommand
-            ));
+            throw WebDriverException::factory(
+                WebDriverException::INVALID_REQUEST,
+                sprintf(
+                    '%s is not an available http request method for the command %s.',
+                    $requestMethod,
+                    $webdriverCommand
+                )
+            );
         }
 
         $results = $this->curl(
@@ -198,7 +203,8 @@ abstract class AbstractWebDriver
     private function getRequestMethod($webdriverCommand)
     {
         if (!array_key_exists($webdriverCommand, $this->methods())) {
-            throw WebDriverException::factory(array_key_exists($webdriverCommand, $this->obsoleteMethods())
+            throw WebDriverException::factory(
+                array_key_exists($webdriverCommand, $this->obsoleteMethods())
                 ? WebDriverException::OBSOLETE_COMMAND : WebDriverException::UNKNOWN_COMMAND,
                 sprintf('%s is not a valid WebDriver command.', $webdriverCommand)
             );

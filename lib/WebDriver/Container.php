@@ -66,15 +66,32 @@ abstract class Container extends AbstractWebDriver
                 $locatorJson
             );
         } catch (WebDriverException\NoSuchElement $e) {
-            throw WebDriverException::factory(WebDriverException::NO_SUCH_ELEMENT,
+            throw WebDriverException::factory(
+                WebDriverException::NO_SUCH_ELEMENT,
                 sprintf(
-                    'Element not found with %s, %s',
+                    "Element not found with %s, %s\n\n%s",
                     $locatorJson['using'],
-                    $locatorJson['value']) . "\n\n" . $e->getMessage(), $e
+		    $locatorJson['value'],
+                    $e->getMessage()
+                ),
+                $e
             );
         }
 
-        return $this->webDriverElement($results['value']);
+        $element = $this->webDriverElement($results['value']);
+
+        if ($element === null) {
+            throw WebDriverException::factory(WebDriverException::NO_SUCH_ELEMENT,
+                sprintf(
+                    "Element not found with %s, %s\n\n%s",
+                    $locatorJson['using'],
+                    $locatorJson['value'],
+                    $e->getMessage()
+                )
+            );
+        }
+
+        return $element;
     }
 
     /**
@@ -138,7 +155,8 @@ abstract class Container extends AbstractWebDriver
                 }
 
             default:
-                throw WebDriverException::factory(WebDriverException::JSON_PARAMETERS_EXPECTED,
+                throw WebDriverException::factory(
+                    WebDriverException::JSON_PARAMETERS_EXPECTED,
                     sprintf('Invalid arguments to %s method: %s', $method, print_r($argv, true))
                 );
         }
@@ -159,7 +177,8 @@ abstract class Container extends AbstractWebDriver
     public function locate($using, $value)
     {
         if (!in_array($using, $this->strategies)) {
-            throw WebDriverException::factory(WebDriverException::UNKNOWN_LOCATOR_STRATEGY,
+            throw WebDriverException::factory(
+                WebDriverException::UNKNOWN_LOCATOR_STRATEGY,
                 sprintf('Invalid locator strategy %s', $using)
             );
         }
