@@ -152,16 +152,8 @@ abstract class Exception extends \Exception
             $message = $errorDefinition[1];
         }
 
-        // dynamically define custom exception classes
-        $className = $errorDefinition[0];
-        $namespacedClassName = __CLASS__ . '\\' . $className;
+        $className = __CLASS__ . '\\' . $errorDefinition[0];
 
-        if (!class_exists($namespacedClassName, false)) {
-            eval(
-                'namespace ' . __CLASS__ . '; final class ' . $className . ' extends \\' . __CLASS__ . ' {}'
-            );
-        }
-
-        return new $namespacedClassName($message, $code, $previousException);
+        return new $className($message, $code, $previousException);
     }
 }
