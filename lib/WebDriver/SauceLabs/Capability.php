@@ -33,7 +33,7 @@ class Capability extends BaseCapability
     /**
      * Desired capabilities - SauceLabs
      *
-     * @see http://saucelabs.com/docs/ondemand/additional-config#desired-capabilities
+     * @see https://saucelabs.com/docs/additional-config
      */
 
     // Job Annotation
@@ -48,24 +48,29 @@ class Capability extends BaseCapability
     const VIDEO_UPLOAD_ON_PASS  = 'video-upload-on-pass';  // Video upload on pass
     const RECORD_SCREENSHOTS    = 'record-screenshots';    // Record step-by-step screenshots
     const CAPTURE_HTML          = 'capture-html';          // HTML source capture
-    const STRIP_SE2_SCREENSHOTS = 'strip-se2-screenshots'; // Disable Selenium 2's automatic screenshots
+    const QUIET_EXCEPTIONS      = 'webdriver.remote.quietExceptions'; // Enable Selenium 2's automatic screenshots
     const SAUCE_ADVISOR         = 'sauce-advisor';         // Sauce Advisor
 
     // Selenium specific
     const SELENIUM_VERSION      = 'selenium-version';      // Use a specific Selenium version
+    const SINGLE_WINDOW         = 'single-window';         // Selenium RC's single window mode
+    const USER_EXTENSIONS_URL   = 'user-extensions-url';   // Selenium RC's user extensions
+    const FIREFOX_PROFILE_URL   = 'firefox-profile-url';   // Selenium RC's custom Firefox profiles
 
     // Timeouts
     const MAX_DURATION          = 'max-duration';          // Set maximum test duration
     const COMMAND_TIMEOUT       = 'command-timeout';       // Set command timeout
     const IDLE_TIMEOUT          = 'idle-timeout';          // Set idle test timeout
 
-    // Sauce OnDemand specific
-    const AVOID_PROXY           = 'avoid-proxy';           // Avoid proxy
+    // Sauce specific
+    const PRERUN                = 'prerun';                // Prerun executables
+    const TUNNEL_IDENTIFIER     = 'tunnel-identifier';     // Use identified tunnel
+    const SCREEN_RESOLUTION     = 'screen-resolution';     // Use specific screen resolution
     const DISABLE_POPUP_HANDLER = 'disable-popup-handler'; // Disable popup handler
+    const AVOID_PROXY           = 'avoid-proxy';           // Avoid proxy
     const DEVICE_ORIENTATION    = 'deviceOrientation';     // Device orientation (portrait or landscape)
     const DEVICE_TYPE           = 'deviceType';            // Device type (phone or tablet)
 
     // Job Sharing
-    const PUBLIC_RESULTS        = 'public';                // Share job's result page, video, and logs
-    const RESTRICTED_PUBLIC     = 'restricted-public';     // Share job's result page and video only
+    const PUBLIC_RESULTS        = 'public';                // Make public, private, or share jobs
 }

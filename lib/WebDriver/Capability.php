@@ -51,6 +51,7 @@ class Capability
     const ACCEPT_SSL_CERTS           = 'acceptSslCerts';
     const NATIVE_EVENTS              = 'nativeEvents';
     const PROXY                      = 'proxy';
+    const UNEXPECTED_ALERT_BEHAVIOUR = 'unexpectedAlertBehaviour';
 
     /**
      * Proxy types
