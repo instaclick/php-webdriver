@@ -83,10 +83,9 @@ abstract class Container extends AbstractWebDriver
         if ($element === null) {
             throw WebDriverException::factory(WebDriverException::NO_SUCH_ELEMENT,
                 sprintf(
-                    "Element not found with %s, %s\n\n%s",
+                    "Element not found with %s, %s\n",
                     $locatorJson['using'],
-                    $locatorJson['value'],
-                    $e->getMessage()
+                    $locatorJson['value']
                 )
             );
         }
