@@ -48,8 +48,8 @@ final class Window extends AbstractWebDriver
     protected function methods()
     {
         return array(
-            'size' => array('GET', 'POST'),
-            'position' => array('GET', 'POST'),
+            'size' => array('POST'),
+            'position' => array('POST'),
             'maximize' => array('POST'),
         );
     }
