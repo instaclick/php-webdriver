@@ -2,8 +2,13 @@
     "name": "instaclick/php-webdriver",
     "type": "library",
     "description": "PHP WebDriver for Selenium 2",
-    "keywords": ["selenium", "webdriver", "webtest", "browser"],
-    "homepage": "http://instaclick.com/torontotechjobs/",
+    "keywords": [
+        "selenium",
+        "webdriver",
+        "webtest",
+        "browser"
+    ],
+    "homepage": "http://instaclick.com/",
     "license": "Apache-2.0",
     "authors": [
         {
@@ -30,5 +35,8 @@
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         }
-    }
+    },
+    "bin": [
+        "bin/webunit"
+    ]
 }
