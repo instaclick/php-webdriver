@@ -75,12 +75,12 @@ final class WebDriver extends AbstractWebDriver
             array(CURLOPT_FOLLOWLOCATION => true)
         );
 
-        // for backwards-compatibility (Selenium 2.33 and below)
-        if (isset($results['info']['url'])) {
-            return new Session($results['info']['url']);
+        if (isset($results['value']['webdriver.remote.sessionid'])) {
+            return new Session($this->url . '/session/' . $results['value']['webdriver.remote.sessionid']);
         }
 
-        return new Session($this->url . '/session/' . $results['value']['webdriver.remote.sessionid']);
+        // backward compatibility fallback
+        return new Session($results['info']['url']);
     }
 
     /**
