@@ -2,7 +2,7 @@
 PHP WebDriver for Selenium 2
 ============================
 
-This fork is based on Facebook's php-webdriver project. [1]_
+This fork is based on Facebook's original php-webdriver project by Justin Bishop (now being re-written). [1]_
 
 Distinguishing features of this fork:
 
@@ -12,8 +12,8 @@ Distinguishing features of this fork:
 * auto-generate API documentation via phpDocumentor 2.x [3]_
 * includes a basic web test runner
 
-The *5.2.x* branch features class names and file re-organization that follows PEAR/ZF1 conventions.  However,
-bug fixes and enhancements from the master branch may not be backported.
+The *5.2.x* branch (no longer maintained) features class names and file re-organization that follows PEAR/ZF1
+conventions.  Bug fixes and enhancements from the master branch likely won't be backported.
 
 Downloads
 =========
