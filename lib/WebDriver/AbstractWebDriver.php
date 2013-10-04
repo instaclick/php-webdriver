@@ -140,7 +140,16 @@ abstract class AbstractWebDriver
             throw WebDriverException::factory($results['status'], $message);
         }
 
-        return array('value' => $value, 'info' => $info);
+        $return = array('value' => $value, 'info' => $info);
+
+        // Pass through the sessionId return value if it exists, failing over to webdriver.remote.sessionid in the val
+        if(isset($results['sessionId'])) {
+            $return['sessionId'] = $results['sessionId'];
+        } else if(isset($value['webdriver.remote.sessionid'])) {
+            $return['sessionId']  = $value['webdriver.remote.sessionid'];
+        }
+
+        return $return;
     }
 
     /**
