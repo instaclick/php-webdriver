@@ -267,15 +267,17 @@ class SauceRest
     /**
      * Get currently supported browsers: /rest/v1/info/browsers (GET)
      *
+     * @param string $termination Optional termination (one of "all", "selenium-rc", or "webdriver')
+     *
      * @return array
      */
-    public function getBrowsers($browser = FALSE)
+    public function getBrowsers($termination = false)
     {
-        if($browser) {
-            return $this->execute('GET', 'info/browsers/' . $browser);
-        } else {
-            return $this->execute('GET', 'info/browsers');
+        if ($termination) {
+            return $this->execute('GET', 'info/browsers/' . $termination);
         }
+
+        return $this->execute('GET', 'info/browsers');
     }
 
     /**
