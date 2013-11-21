@@ -269,9 +269,13 @@ class SauceRest
      *
      * @return array
      */
-    public function getBrowsers()
+    public function getBrowsers($browser = FALSE)
     {
-        return $this->execute('GET', 'info/browsers');
+        if($browser) {
+            return $this->execute('GET', 'info/browsers/' . $browser);
+        } else {
+            return $this->execute('GET', 'info/browsers');
+        }
     }
 
     /**
