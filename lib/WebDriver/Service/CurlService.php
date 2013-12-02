@@ -50,12 +50,7 @@ class CurlService implements CurlServiceInterface
                 break;
 
             case 'POST':
-                if ($parameters && is_array($parameters)) {
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
-                } else {
-                    $customHeaders[] = 'Content-Length: 0';
-                }
-
+                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
                 curl_setopt($curl, CURLOPT_POST, true);
                 break;
 
@@ -64,12 +59,7 @@ class CurlService implements CurlServiceInterface
                 break;
 
             case 'PUT':
-                if ($parameters && is_array($parameters)) {
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
-                } else {
-                    $customHeaders[] = 'Content-Length: 0';
-                }
-
+                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
                 break;
         }
