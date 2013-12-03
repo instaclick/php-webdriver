@@ -54,6 +54,7 @@ class CurlService implements CurlServiceInterface
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
                 } else {
                     $customHeaders[] = 'Content-Length: 0';
+                    $customHeaders[] = 'Expect:';
                 }
 
                 curl_setopt($curl, CURLOPT_POST, true);
@@ -68,6 +69,7 @@ class CurlService implements CurlServiceInterface
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
                 } else {
                     $customHeaders[] = 'Content-Length: 0';
+                    $customHeaders[] = 'Expect:';
                 }
 
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
