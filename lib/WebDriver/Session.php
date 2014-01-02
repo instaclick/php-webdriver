@@ -63,6 +63,11 @@ namespace WebDriver;
 final class Session extends Container
 {
     /**
+     * @var array
+     */
+    private $capabilities = null;
+
+    /**
      * {@inheritdoc}
      */
     protected function methods()
@@ -136,9 +141,13 @@ final class Session extends Container
      */
     public function capabilities()
     {
-        $result = $this->curl('GET', '');
+        if ( ! isset($this->capabilities)) {
+            $result = $this->curl('GET', '');
 
-        return $result['value'];
+            $this->capabilities = $result['value'];
+        }
+
+        return $this->capabilities;
     }
 
     /**
