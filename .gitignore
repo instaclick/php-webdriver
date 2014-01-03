@@ -1,2 +1,5 @@
+build/
 logs/
 nbproject/
+vendor/
+composer.lock
