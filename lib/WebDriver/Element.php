@@ -31,7 +31,7 @@ namespace WebDriver;
  * @method void click() Click on an element.
  * @method void submit() Submit a FORM element.
  * @method string text() Returns the visible text for the element.
- * @method void postValue($json) Send a sequence of key strokes to an element.
+ * @method void value($json) Send a sequence of key strokes to an element.
  * @method string name() Query for an element's tag name.
  * @method void clear() Clear a TEXTAREA or text INPUT element's value.
  * @method boolean selected() Determine if an OPTION element, or an INPUT element of type checkbox or radiobutton is currently selected.
