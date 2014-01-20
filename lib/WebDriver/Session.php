@@ -228,7 +228,7 @@ final class Session extends Container
      * - $session->window($name) - set focus
      * - $session->window($window_handle)->method() - chaining
      *
-     * @return \WebDriver\AbstractWebDriver
+     * @return \WebDriver\Window|\WebDriver\Session
      */
     public function window()
     {
