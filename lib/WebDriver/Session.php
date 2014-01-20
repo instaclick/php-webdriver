@@ -29,7 +29,7 @@ namespace WebDriver;
  *
  * @method string window_handle() Retrieve the current window handle.
  * @method array window_handles() Retrieve the list of all window handles available to the session.
- * @method string getUrl() Retrieve the URL of the current page
+ * @method string url() Retrieve the URL of the current page
  * @method void postUrl($jsonUrl) Navigate to a new URL
  * @method void forward() Navigates forward in the browser history, if possible.
  * @method void back() Navigates backward in the browser history, if possible.
