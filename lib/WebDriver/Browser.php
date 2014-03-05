@@ -46,4 +46,5 @@ final class Browser
     const IPHONE            = 'iPhone';
     const IPAD              = 'iPad';
     const OPERA             = 'opera';
+    const SAFARI	    = 'safari';
 }
