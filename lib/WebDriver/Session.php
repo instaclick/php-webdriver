@@ -37,7 +37,6 @@ namespace WebDriver;
  * @method mixed execute($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (synchronous)
  * @method mixed execute_async($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (asynchronous)
  * @method string screenshot() Take a screenshot of the current page.
- * @method void frame($jsonFrameId) Change focus to another frame on the page.
  * @method array getCookie() Retrieve all cookies visible to the current page.
  * @method array postCookie($jsonCookie) Set a cookie.
  * @method string source() Get the current page source.
@@ -82,7 +81,6 @@ final class Session extends Container
             'execute' => array('POST'),
             'execute_async' => array('POST'),
             'screenshot' => array('GET'),
-            'frame' => array('POST'),
             'cookie' => array('GET', 'POST'), // for DELETE, use deleteAllCookies()
             'source' => array('GET'),
             'title' => array('GET'),
@@ -278,11 +276,31 @@ final class Session extends Container
     }
 
     /**
+     * frame methods: /session/:sessionId/frame (POST)
+     * - $session->frame($json) - change focus to another frame on the page
+     * - $session->frame()->method() - chaining
+     *
+     * @return \WebDriver\Session|\WebDriver\Frame
+     */
+    public function frame()
+    {
+        if (func_num_args() === 1) {
+            $arg = func_get_arg(0); // json
+            $this->curl('POST', '/frame', $arg);
+
+            return $this;
+        }
+
+        // chaining
+        return new Frame($this->url . '/frame');
+    }
+
+    /**
      * timeouts methods: /session/:sessionId/timeouts (POST)
      * - $session->timeouts($json) - set timeout for an operation
      * - $session->timeouts()->method() - chaining
      *
-     * @return \WebDriver\Timeouts
+     * @return \WebDriver\Session|\WebDriver\Timeouts
      */
     public function timeouts()
     {
