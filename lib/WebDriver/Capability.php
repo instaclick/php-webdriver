@@ -52,6 +52,7 @@ class Capability
     const NATIVE_EVENTS              = 'nativeEvents';
     const PROXY                      = 'proxy';
     const UNEXPECTED_ALERT_BEHAVIOUR = 'unexpectedAlertBehaviour';
+    const ELEMENT_SCROLL_BEHAVIOR    = 'elementScrollBehavior';
 
     /**
      * Proxy types
