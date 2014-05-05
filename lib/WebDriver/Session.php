@@ -97,6 +97,7 @@ final class Session extends Container
             'execute_sql' => array('POST'),
             'location' => array('GET', 'POST'),
             'browser_connection' => array('GET', 'POST'),
+            'status' => array('GET'),
         );
     }
 
