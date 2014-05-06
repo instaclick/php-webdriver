@@ -62,7 +62,9 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
 
             $this->session = $this->driver->session();
         } catch (\Exception $e) {
-            if (strpos($e->getMessage(),'Failed connect to localhost:4444; Connection refused') !== false) {
+            if (strpos($e->getMessage(),'Failed connect to localhost:4444; Connection refused') !== false
+                || strpos($e->getMessage(), 'couldn\'t connect to host') !== false
+            ) {
                 $this->markTestSkipped('selenium server not running');
             } else {
                 throw $e;
@@ -81,7 +83,9 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         try {
             $status = $this->driver->status();
         } catch (\Exception $e) {
-            if (strpos($e->getMessage(),'Failed connect to localhost:4444; Connection refused') !== false) {
+            if (strpos($e->getMessage(),'Failed connect to localhost:4444; Connection refused') !== false
+                || strpos($e->getMessage(), 'couldn\'t connect to host') !== false
+            ) {
                 $this->markTestSkipped('selenium server not running');
             } else {
                 throw $e;
