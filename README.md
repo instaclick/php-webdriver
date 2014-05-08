@@ -7,7 +7,6 @@ Distinguishing features:
 * In the *master* branch, class names and file organization follow PSR-0 conventions for php 5.3+ namespaces.
 * Coding style follows PSR-1, PSR-2, and Symfony2 conventions.
 * Auto-generate API documentation via [phpDocumentor 2.x](http://phpdoc.org/).
-* Includes a basic web test runner.
 
 [![Build Status](https://travis-ci.org/instaclick/php-webdriver.png)](https://travis-ci.org/instaclick/php-webdriver)
 [![Coverage Status](https://coveralls.io/repos/instaclick/php-webdriver/badge.png)](https://coveralls.io/r/instaclick/php-webdriver)
