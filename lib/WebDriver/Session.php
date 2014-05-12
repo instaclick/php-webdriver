@@ -396,6 +396,25 @@ final class Session extends Container
     }
 
     /**
+     * Upload a file to a remote session and return the remote filename
+     *
+     * @return string
+     */
+    public function uploadFile($filename, $compress = false)
+    {
+        $zip = new Utility\FakeZip();
+        $zip->addFile($filename);
+        $output = $zip->getOutput($compress);
+
+        $base64 = base64_encode($output);
+
+        $result = $this->curl('POST', '/file', array('file' => $base64));
+
+        return $result['value'];
+
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getElementPath($elementId)
