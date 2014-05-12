@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2012-2014 Anthon Pang. All Rights Reserved.
+ * Copyright 2014 Anthon Pang. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,21 +22,21 @@
 namespace WebDriver;
 
 /**
- * WebDriver\AppCacheStatus class
+ * WebDriver\LogType class
  *
  * @package WebDriver
  */
-final class AppCacheStatus
+final class LogType
 {
     /**
-     * Application cache status
+     * Log Type
      *
-     * @see https://code.google.com/p/selenium/source/browse/java/client/src/org/openqa/selenium/html5/AppCacheStatus.java
+     * @see https://code.google.com/p/selenium/source/browse/java/client/src/org/openqa/selenium/logging/LogType.java
      */
-    const UNCACHED     = 0;
-    const IDLE         = 1;
-    const CHECKING     = 2;
-    const DOWNLOADING  = 3;
-    const UPDATE_READY = 4;
-    const OBSOLETE     = 5;
+    const BROWSER     = 'browser';
+    const CLIENT      = 'client';
+    const DRIVER      = 'driver';
+    const PERFORMANCE = 'performance';
+    const PROFILER    = 'driver';
+    const SERVER      = 'server';
 }
