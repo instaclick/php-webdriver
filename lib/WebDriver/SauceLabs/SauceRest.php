@@ -73,9 +73,9 @@ class SauceRest
 
         $url = 'https://saucelabs.com/rest/v1/' . $url;
 
-        list($rawResults, $info) = ServiceFactory::getInstance()->getService('service.curl')->execute($requestMethod, $url, $parameters, $extraOptions);
+        list($rawResult, $info) = ServiceFactory::getInstance()->getService('service.curl')->execute($requestMethod, $url, $parameters, $extraOptions);
 
-        return json_decode($rawResults, true);
+        return json_decode($rawResult, true);
     }
 
     /**

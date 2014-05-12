@@ -69,14 +69,14 @@ final class WebDriver extends AbstractWebDriver
             $parameters['requiredCapabilities'] = $requiredCapabilities;
         }
 
-        $results = $this->curl(
+        $result = $this->curl(
             'POST',
             '/session',
             $parameters,
             array(CURLOPT_FOLLOWLOCATION => true)
         );
 
-        return new Session($results['sessionUrl']);
+        return new Session($result['sessionUrl']);
     }
 
     /**

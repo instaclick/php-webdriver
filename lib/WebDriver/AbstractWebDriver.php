@@ -120,13 +120,13 @@ abstract class AbstractWebDriver
             $url .= '/' . $parameters;
         }
 
-        list($rawResults, $info) = ServiceFactory::getInstance()->getService('service.curl')->execute($requestMethod, $url, $parameters, $extraOptions);
+        list($rawResult, $info) = ServiceFactory::getInstance()->getService('service.curl')->execute($requestMethod, $url, $parameters, $extraOptions);
 
-        $results = json_decode($rawResults, true);
+        $result = json_decode($rawResult, true);
         $value   = null;
 
-        if (is_array($results) && array_key_exists('value', $results)) {
-            $value = $results['value'];
+        if (is_array($result) && array_key_exists('value', $result)) {
+            $value = $result['value'];
         }
 
         $message = null;
@@ -136,12 +136,12 @@ abstract class AbstractWebDriver
         }
 
         // if not success, throw exception
-        if ((int) $results['status'] !== 0) {
-            throw WebDriverException::factory($results['status'], $message);
+        if ((int) $result['status'] !== 0) {
+            throw WebDriverException::factory($result['status'], $message);
         }
 
-        $sessionId = isset($results['sessionId'])
-                   ? $results['sessionId']
+        $sessionId = isset($result['sessionId'])
+                   ? $result['sessionId']
                    : (isset($value['webdriver.remote.sessionid'])
                    ? $value['webdriver.remote.sessionid']
                    : null);
@@ -193,13 +193,13 @@ abstract class AbstractWebDriver
             );
         }
 
-        $results = $this->curl(
+        $result = $this->curl(
             $requestMethod,
             '/' . $webdriverCommand,
             array_shift($arguments)
         );
 
-        return $results['value'];
+        return $result['value'];
     }
 
     /**

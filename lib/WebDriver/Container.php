@@ -60,7 +60,7 @@ abstract class Container extends AbstractWebDriver
         $locatorJson = $this->parseArgs('element', func_get_args());
 
         try {
-            $results = $this->curl(
+            $result = $this->curl(
                 'POST',
                 '/element',
                 $locatorJson
@@ -78,7 +78,7 @@ abstract class Container extends AbstractWebDriver
             );
         }
 
-        $element = $this->webDriverElement($results['value']);
+        $element = $this->webDriverElement($result['value']);
 
         if ($element === null) {
             throw WebDriverException::factory(WebDriverException::NO_SUCH_ELEMENT,
@@ -109,18 +109,18 @@ abstract class Container extends AbstractWebDriver
     {
         $locatorJson = $this->parseArgs('elements', func_get_args());
 
-        $results = $this->curl(
+        $result = $this->curl(
             'POST',
             '/elements',
             $locatorJson
         );
 
-        if (!is_array($results['value'])) {
+        if (!is_array($result['value'])) {
             return array();
         }
 
         return array_filter(array_map(
-            array($this, 'webDriverElement'), $results['value']
+            array($this, 'webDriverElement'), $result['value']
         ));
     }
 

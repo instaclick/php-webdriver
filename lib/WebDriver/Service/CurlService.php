@@ -82,7 +82,7 @@ class CurlService implements CurlServiceInterface
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, $customHeaders);
 
-        $rawResults = trim(curl_exec($curl));
+        $rawResult = trim(curl_exec($curl));
         $info = curl_getinfo($curl);
 
         if (CURLE_GOT_NOTHING !== curl_errno($curl) && $error = curl_error($curl)) {
@@ -99,6 +99,6 @@ class CurlService implements CurlServiceInterface
 
         curl_close($curl);
 
-        return array($rawResults, $info);
+        return array($rawResult, $info);
     }
 }

@@ -348,9 +348,9 @@ final class Session extends Container
      */
     public function activeElement()
     {
-        $results = $this->curl('POST', '/element/active');
+        $result = $this->curl('POST', '/element/active');
 
-        return $this->webDriverElement($results['value']);
+        return $this->webDriverElement($result['value']);
     }
 
     /**
@@ -417,9 +417,9 @@ final class Session extends Container
                 )
             }
 
-            $this->curl('POST', '/log', $arg);
+            $result = $this->curl('POST', '/log', $arg);
 
-            return $this;
+            eeturn $result['value'];
         }
 
         // chaining
