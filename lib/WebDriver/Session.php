@@ -97,6 +97,9 @@ final class Session extends Container
             'execute_sql' => array('POST'),
             'location' => array('GET', 'POST'),
             'browser_connection' => array('GET', 'POST'),
+
+            // specific to Java SeleniumServer
+            'file' => array('POST'),
         );
     }
 
@@ -110,9 +113,6 @@ final class Session extends Container
             'speed' => array('GET', 'POST'),
             'alert' => array('GET'),
             'visible' => array('GET', 'POST'),
-
-            // specific to Java SeleniumServer
-            'file' => array('POST'),
         );
     }
 
@@ -414,12 +414,12 @@ final class Session extends Container
             if (is_string($arg)) {
                 $arg = array(
                     'type' => $arg,
-                )
+                );
             }
 
             $result = $this->curl('POST', '/log', $arg);
 
-            eeturn $result['value'];
+            return $result['value'];
         }
 
         // chaining
