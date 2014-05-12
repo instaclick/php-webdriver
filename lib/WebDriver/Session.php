@@ -113,7 +113,6 @@ final class Session extends Container
 
             // specific to Java SeleniumServer
             'file' => array('POST'),
-            'log' => array('POST'),
         );
     }
 
@@ -239,6 +238,7 @@ final class Session extends Container
 
         // set focus
         $arg = func_get_arg(0); // window handle or name attribute
+
         if (is_array($arg)) {
             $this->curl('POST', '/window', $arg);
 
@@ -286,6 +286,7 @@ final class Session extends Container
     {
         if (func_num_args() === 1) {
             $arg = func_get_arg(0); // json
+
             $this->curl('POST', '/frame', $arg);
 
             return $this;
@@ -307,6 +308,7 @@ final class Session extends Container
         // set timeouts
         if (func_num_args() === 1) {
             $arg = func_get_arg(0); // json
+
             $this->curl('POST', '/timeouts', $arg);
 
             return $this;
@@ -317,6 +319,7 @@ final class Session extends Container
                 'type' => func_get_arg(0), // 'script' or 'implicit'
                 'ms' => func_get_arg(1),   // timeout in milliseconds
             );
+
             $this->curl('POST', '/timeouts', $arg);
 
             return $this;
@@ -393,6 +396,34 @@ final class Session extends Container
     public function application_cache()
     {
         return new ApplicationCache($this->url . '/application_cache');
+    }
+
+    /**
+     * log methods: /session/:sessionId/log (POST)
+     * - $session->log($type) - get log for given log type
+     * - $session->log()->method() - chaining
+     *
+     * @return mixed
+     */
+    public function log()
+    {
+        // get log for given log type
+        if (func_num_args() === 1) {
+            $arg = func_get_arg(0);
+
+            if (is_string($arg)) {
+                $arg = array(
+                    'type' => $arg,
+                )
+            }
+
+            $this->curl('POST', '/log', $arg);
+
+            return $this;
+        }
+
+        // chaining
+        return new Log($this->url . '/log');
     }
 
     /**
