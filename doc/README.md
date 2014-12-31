@@ -108,6 +108,12 @@ The function's return value is exactly what is returned from the server as part 
         // GET /session/:sessionId/window/:windowHandle/size
         $session->window()->size();
 
+* Send keystrokes to an element with 'POST'
+
+        // POST /session/:sessionId/element/:id/value
+        // getValue() is deprecated; use postValue($json) or value($json)
+        $element->postValue(array("value" => str_split('some text to send to element')));
+
 ## Some unavoidable exceptions to direct protocol translation.
 
 *   Opening pages
