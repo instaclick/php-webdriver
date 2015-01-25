@@ -54,8 +54,11 @@ class CurlService implements CurlServiceInterface
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
                 } else {
                     $customHeaders[] = 'Content-Length: 0';
-                    $customHeaders[] = 'Expect:';
                 }
+
+                // Suppress "Expect: 100-continue" header automatically added by cURL that
+                // causes a 1 second delay if the remote server does not support Expect.
+                $customHeaders[] = 'Expect:';
 
                 curl_setopt($curl, CURLOPT_POST, true);
                 break;
@@ -69,8 +72,11 @@ class CurlService implements CurlServiceInterface
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
                 } else {
                     $customHeaders[] = 'Content-Length: 0';
-                    $customHeaders[] = 'Expect:';
                 }
+
+                // Suppress "Expect: 100-continue" header automatically added by cURL that
+                // causes a 1 second delay if the remote server does not support Expect.
+                $customHeaders[] = 'Expect:';
 
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
                 break;
