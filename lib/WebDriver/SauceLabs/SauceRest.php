@@ -69,6 +69,12 @@ class SauceRest
         $extraOptions = array(
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
             CURLOPT_USERPWD => $this->userId . ':' . $this->accessKey,
+
+            // don't verify SSL certificates
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+
+            CURLOPT_HTTPHEADER => Array ('Expect:'),
         );
 
         $url = 'https://saucelabs.com/rest/v1/' . $url;
