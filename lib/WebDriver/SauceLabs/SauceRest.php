@@ -59,7 +59,7 @@ class SauceRest
      * @param string $requestMethod HTTP request method
      * @param string $url           URL
      * @param mixed  $parameters    Parameters
-     * 
+     *
      * @return mixed
      *
      * @see http://saucelabs.com/docs/saucerest
@@ -224,6 +224,18 @@ class SauceRest
     public function stopJob($jobId)
     {
         return $this->execute('PUT', $this->userId . '/jobs/' . $jobId . '/stop');
+    }
+
+    /**
+     * Delete job: /rest/v1/:userId/jobs/:jobId (DELETE)
+     *
+     * @param string $jobId
+     *
+     * @return array
+     */
+    public function deleteJob($jobId)
+    {
+        return $this->execute('DELETE', $this->userId . '/jobs/' . $jobId);
     }
 
     /**
