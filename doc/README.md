@@ -164,4 +164,39 @@ The function's return value is exactly what is returned from the server as part 
         // DELETE /session/:sessionId/window
         $session->deleteWindow();
 
-### See also [wiki page of examples](https://github.com/facebook/php-webdriver/wiki/Example-command-reference).
+## More esoteric examples
+
+*   To set curl options (e.g., timeout and proxy settings)
+
+```
+use WebDriver\Service\CurlService;
+use WebDriver\ServiceFactory;
+
+class MyCurlService extends CurlService
+{
+    const PROXY = 'http://proxyHost:8080';
+    const AUTH = 'proxyUser:proxyPassword';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function execute($requestMethod, $url, $parameters = null, $extraOptions = null)
+    {
+        $extraOptions = array_replace(
+            $extraOptions,
+            array(
+                CURLOPT_CONNECTTIMEOUT => 30,
+                CURLOPT_TIMEOUT => 300,
+                CURLOPT_PROXY => self::PROXY,
+                CURLOPT_PROXYUSERPWD => self::AUTH,
+            )
+        );
+
+        return parent::execute($requestMethod, $url, $parameters, $extraOptions);
+    }
+}
+
+ServiceFactory::setServiceClass('service.curl', 'MyCurlService');
+```
+
+
