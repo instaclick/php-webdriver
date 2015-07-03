@@ -71,7 +71,7 @@ abstract class Container extends AbstractWebDriver
                 sprintf(
                     "Element not found with %s, %s\n\n%s",
                     $locatorJson['using'],
-		    $locatorJson['value'],
+                    $locatorJson['value'],
                     $e->getMessage()
                 ),
                 $e
@@ -81,7 +81,8 @@ abstract class Container extends AbstractWebDriver
         $element = $this->webDriverElement($result['value']);
 
         if ($element === null) {
-            throw WebDriverException::factory(WebDriverException::NO_SUCH_ELEMENT,
+            throw WebDriverException::factory(
+                WebDriverException::NO_SUCH_ELEMENT,
                 sprintf(
                     "Element not found with %s, %s\n",
                     $locatorJson['using'],
@@ -119,9 +120,12 @@ abstract class Container extends AbstractWebDriver
             return array();
         }
 
-        return array_filter(array_map(
-            array($this, 'webDriverElement'), $result['value']
-        ));
+        return array_filter(
+            array_map(
+                array($this, 'webDriverElement'),
+                $result['value']
+            )
+        );
     }
 
     /**
@@ -147,12 +151,14 @@ abstract class Container extends AbstractWebDriver
 
             case 1:
                 $arg = $argv[0];
+
                 if (is_array($arg)) {
                     $using = $arg['using'];
                     $value = $arg['value'];
                     break;
                 }
 
+                // fall through
             default:
                 throw WebDriverException::factory(
                     WebDriverException::JSON_PARAMETERS_EXPECTED,

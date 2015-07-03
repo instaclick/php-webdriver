@@ -29,5 +29,6 @@ use WebDriver\Exception as BaseException;
  *
  * @package WebDriver
  */
-final class UnableToSetCookie extends BaseException {
+final class UnableToSetCookie extends BaseException
+{
 }

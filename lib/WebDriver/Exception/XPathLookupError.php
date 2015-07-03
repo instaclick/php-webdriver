@@ -29,5 +29,6 @@ use WebDriver\Exception as BaseException;
  *
  * @package WebDriver
  */
-final class XPathLookupError extends BaseException {
+final class XPathLookupError extends BaseException
+{
 }

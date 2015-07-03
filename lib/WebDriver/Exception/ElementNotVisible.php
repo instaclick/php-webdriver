@@ -29,5 +29,6 @@ use WebDriver\Exception as BaseException;
  *
  * @package WebDriver
  */
-final class ElementNotVisible extends BaseException {
+final class ElementNotVisible extends BaseException
+{
 }

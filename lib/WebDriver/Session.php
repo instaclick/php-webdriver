@@ -138,7 +138,7 @@ final class Session extends Container
      */
     public function capabilities()
     {
-        if ( ! isset($this->capabilities)) {
+        if (! isset($this->capabilities)) {
             $result = $this->curl('GET', '');
 
             $this->capabilities = $result['value'];

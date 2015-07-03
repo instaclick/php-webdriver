@@ -55,7 +55,7 @@ final class ClassLoader
     {
         try {
             self::loadClass($class);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
         }
     }
 }

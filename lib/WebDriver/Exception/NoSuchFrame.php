@@ -29,5 +29,6 @@ use WebDriver\Exception as BaseException;
  *
  * @package WebDriver
  */
-final class NoSuchFrame extends BaseException {
+final class NoSuchFrame extends BaseException
+{
 }

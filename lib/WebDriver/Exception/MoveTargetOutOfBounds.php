@@ -29,5 +29,6 @@ use WebDriver\Exception as BaseException;
  *
  * @package WebDriver
  */
-final class MoveTargetOutOfBounds extends BaseException {
+final class MoveTargetOutOfBounds extends BaseException
+{
 }

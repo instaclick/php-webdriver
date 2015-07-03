@@ -29,5 +29,6 @@ use WebDriver\Exception as BaseException;
  *
  * @package WebDriver
  */
-final class InvalidCookieDomain extends BaseException {
+final class InvalidCookieDomain extends BaseException
+{
 }

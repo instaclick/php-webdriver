@@ -64,7 +64,7 @@ final class ServiceFactory
      *
      * @return \WebDriver\ServiceFactory
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         if (!self::$instance) {
             self::$instance = new self;

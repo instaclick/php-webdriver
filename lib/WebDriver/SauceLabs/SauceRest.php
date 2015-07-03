@@ -74,7 +74,7 @@ class SauceRest
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
 
-            CURLOPT_HTTPHEADER => Array ('Expect:'),
+            CURLOPT_HTTPHEADER => array('Expect:'),
         );
 
         $url = 'https://saucelabs.com/rest/v1/' . $url;

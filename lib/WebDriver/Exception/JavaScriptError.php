@@ -29,5 +29,6 @@ use WebDriver\Exception as BaseException;
  *
  * @package WebDriver
  */
-final class JavaScriptError extends BaseException {
+final class JavaScriptError extends BaseException
+{
 }

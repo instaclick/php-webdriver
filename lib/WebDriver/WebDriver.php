@@ -65,7 +65,7 @@ final class WebDriver extends AbstractWebDriver
         );
 
         // optional
-        if ( ! empty($requiredCapabilities)) {
+        if (! empty($requiredCapabilities)) {
             $parameters['requiredCapabilities'] = $requiredCapabilities;
         }
 

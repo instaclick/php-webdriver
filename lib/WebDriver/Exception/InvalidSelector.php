@@ -29,5 +29,6 @@ use WebDriver\Exception as BaseException;
  *
  * @package WebDriver
  */
-final class InvalidSelector extends BaseException {
+final class InvalidSelector extends BaseException
+{
 }

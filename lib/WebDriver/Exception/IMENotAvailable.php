@@ -29,5 +29,6 @@ use WebDriver\Exception as BaseException;
  *
  * @package WebDriver
  */
-final class IMENotAvailable extends BaseException {
+final class IMENotAvailable extends BaseException
+{
 }

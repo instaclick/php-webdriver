@@ -29,5 +29,6 @@ use WebDriver\Exception as BaseException;
  *
  * @package WebDriver
  */
-final class UnknownError extends BaseException {
+final class UnknownError extends BaseException
+{
 }

@@ -29,5 +29,6 @@ use WebDriver\Exception as BaseException;
  *
  * @package WebDriver
  */
-final class SessionNotCreated extends BaseException {
+final class SessionNotCreated extends BaseException
+{
 }
