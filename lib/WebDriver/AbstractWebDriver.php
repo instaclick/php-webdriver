@@ -122,15 +122,28 @@ abstract class AbstractWebDriver
 
         list($rawResult, $info) = ServiceFactory::getInstance()->getService('service.curl')->execute($requestMethod, $url, $parameters, $extraOptions);
 
-        $result = json_decode($rawResult, true);
-        $value   = null;
+        // According to https://w3c.github.io/webdriver/webdriver-spec.html all 4xx responses are to be considered an error and return plaintext,
+        // while 5xx responses are json encoded
+        if (substr($info['http_code'], 0, 1) === '4') {
+            throw WebDriverException::factory(WebDriverException::CURL_EXEC, 'Webdriver http error: ' . $info['http_code'] . ', payload :' . substr($rawResult, 0, 1000));
+        }
 
-        if (is_array($result) && array_key_exists('value', $result)) {
+        $result = json_decode($rawResult, true);
+
+        if ($result === null && json_last_error() != JSON_ERROR_NONE) {
+            throw WebDriverException::factory(WebDriverException::CURL_EXEC, 'Payload received from webdriver is not valid json: ' . substr($rawResult, 0, 1000));
+        }
+
+        if (!is_array($result) || !array_key_exists('status', $result)) {
+            throw WebDriverException::factory(WebDriverException::CURL_EXEC, 'Payload received from webdriver is valid but unexpected json: ' . substr($rawResult, 0, 1000));
+        }
+
+        $value = null;
+        if (array_key_exists('value', $result)) {
             $value = $result['value'];
         }
 
         $message = null;
-
         if (is_array($value) && array_key_exists('message', $value)) {
             $message = $value['message'];
         }

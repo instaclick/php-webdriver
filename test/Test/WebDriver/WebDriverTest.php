@@ -32,13 +32,21 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
 {
     private $driver;
     private $session;
+    private $testDocumentRootUrl = 'http://localhost';
+    private $testSeleniumRootUrl = 'http://localhost:4444/wd/hub';
 
     /**
      * {@inheritdoc}
      */
     protected function setUp()
     {
-        $this->driver  = new WebDriver();
+        if ($url = getenv('ROOT_URL')) {
+            $this->testDocumentRootUrl = $url;
+        }
+        if ($url = getenv('SELENIUM_URL')) {
+            $this->testSeleniumRootUrl = $url;
+        }
+        $this->driver  = new WebDriver($this->getTestSeleniumRootUrl());
         $this->session = null;
     }
 
@@ -53,26 +61,51 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Returns the full url to the test site (corresponding to the root dir of the library).
+     * You can set this via env var ROOT_URL
+     * @return string
+     */
+    protected function getTestDocumentRootUrl()
+    {
+        return $this->testDocumentRootUrl;
+    }
+
+    /**
+     * Returns the full url to the Selenium server used for functional tests
+     * @return string
+     *
+     * @todo make this configurable via env var
+     */
+    protected function getTestSeleniumRootUrl()
+    {
+        return $this->testSeleniumRootUrl;
+    }
+
+    protected function isSeleniumDown($exception)
+    {
+        return preg_match('/Failed to connect to .* Connection refused/', $exception->getMessage()) != false
+            || strpos($exception->getMessage(), 'couldn\'t connect to host') !== false;
+    }
+
+    /**
      * @group Functional
      */
     public function testSessions()
     {
         try {
-	    $this->assertCount(0, $this->driver->sessions());
+        $this->assertCount(0, $this->driver->sessions());
 
             $this->session = $this->driver->session();
         } catch (\Exception $e) {
-            if (strpos($e->getMessage(),'Failed connect to localhost:4444; Connection refused') !== false
-                || strpos($e->getMessage(), 'couldn\'t connect to host') !== false
-            ) {
+            if ($this->isSeleniumDown($e)) {
                 $this->markTestSkipped('selenium server not running');
             } else {
                 throw $e;
             }
         }
 
-	$this->assertCount(1, $this->driver->sessions());
-        $this->assertEquals('http://localhost:4444/wd/hub', $this->driver->getUrl());
+        $this->assertCount(1, $this->driver->sessions());
+        $this->assertEquals($this->getTestSeleniumRootUrl(), $this->driver->getUrl());
     }
 
     /**
@@ -83,9 +116,7 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         try {
             $status = $this->driver->status();
         } catch (\Exception $e) {
-            if (strpos($e->getMessage(),'Failed connect to localhost:4444; Connection refused') !== false
-                || strpos($e->getMessage(), 'couldn\'t connect to host') !== false
-            ) {
+            if ($this->isSeleniumDown($e)) {
                 $this->markTestSkipped('selenium server not running');
             } else {
                 throw $e;
@@ -96,5 +127,74 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(isset($status['java']));
         $this->assertTrue(isset($status['os']));
         $this->assertTrue(isset($status['build']));
+    }
+
+    /**
+     * Checks that an error connecting to Selenium gives back the expected exception
+     * @group Functional
+     */
+    public function testSeleniumError()
+    {
+        try {
+            $this->driver = new WebDriver($this->getTestSeleniumRootUrl().'/../invalidurl');
+            $status = $this->driver->status();
+
+            $this->fail('Exception not thrown while connecting to invalid Selenium url');
+        } catch (\Exception $e) {
+            if ($this->isSeleniumDown($e)) {
+                $this->markTestSkipped('selenium server not running');
+            } else {
+                $this->assertEquals('WebDriver\Exception\CurlExec', get_class($e));
+            }
+        }
+    }
+
+    /**
+     * Checks that a successful command to Selenium which returns an http error response gives back the expected exception
+     * @group Functional
+     */
+    public function testSeleniumErrorResponse()
+    {
+        try {
+            $status = $this->driver->status();
+        } catch (\Exception $e) {
+            if ($this->isSeleniumDown($e)) {
+                $this->markTestSkipped('selenium server not running');
+            } else {
+                throw $e;
+            }
+        }
+
+        try {
+            $this->session = $this->driver->session();
+            $this->session->open($this->getTestDocumentRootUrl().'/test/Assets/index.html');
+            $element = $this->session->element('id', 'a-quite-unlikely-html-element-id');
+
+            $this->fail('Exception not thrown while looking for missing element in page');
+        } catch (\Exception $e) {
+            $this->assertEquals('WebDriver\Exception\NoSuchElement', get_class($e));
+        }
+    }
+
+    /**
+     * Checks that a successful command to Selenium which returns 'nothing' according to spec does not raise an error
+     * @group Functional
+     */
+    public function testSeleniumNoResponse()
+    {
+        try {
+            $status = $this->driver->status();
+        } catch (\Exception $e) {
+            if ($this->isSeleniumDown($e)) {
+                $this->markTestSkipped('selenium server not running');
+            } else {
+                throw $e;
+            }
+        }
+
+        $this->session = $this->driver->session();
+        $timeouts = $this->session->timeouts();
+        $out = $timeouts->async_script(array('type' => 'implicit', 'ms' => 1000));
+        $this->assertEquals(null, $out);
     }
 }

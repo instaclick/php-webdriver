@@ -62,6 +62,8 @@ class SauceRest
      *
      * @return mixed
      *
+     * @throws \WebDriver\Service\CurlServiceException
+     *
      * @see http://saucelabs.com/docs/saucerest
      */
     protected function execute($requestMethod, $url, $parameters = null)
@@ -75,6 +77,7 @@ class SauceRest
             CURLOPT_SSL_VERIFYHOST => false,
 
             CURLOPT_HTTPHEADER => array('Expect:'),
+            CURLOPT_FAILONERROR => true,
         );
 
         $url = 'https://saucelabs.com/rest/v1/' . $url;
