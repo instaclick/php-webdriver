@@ -3,7 +3,7 @@ WebDriver for Selenium 2
 This WebDriver client implementation is based on Facebook's [php-webdriver](https://github.com/facebook/php-webdriver/) project by Justin Bishop.
 
 Distinguishing features:
-* Up-to-date with [Selenium 2 JSON Wire Protocol](http://code.google.com/p/selenium/wiki/JsonWireProtocol) (including WebDriver commands yet to be documented).
+* Up-to-date with [Selenium 2 JSON Wire Protocol](https://github.com/SeleniumHQ/selenium/wiki/JsonWireProtocol) (including WebDriver commands yet to be documented).
 * In the *master* branch, class names and file organization follow PSR-0 conventions for php 5.3+ namespaces.
 * Coding style follows PSR-1, PSR-2, and Symfony2 conventions.
 * Auto-generate API documentation via [phpDocumentor 2.x](http://phpdoc.org/).
