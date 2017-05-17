@@ -9,7 +9,10 @@
         "browser"
     ],
     "homepage": "http://instaclick.com/",
-    "license": "Apache-2.0",
+    "license": [
+        "Apache-2.0",
+        "GPL-2.0+",
+    ],
     "authors": [
         {
             "name": "Justin Bishop",
