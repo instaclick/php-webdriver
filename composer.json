@@ -27,7 +27,8 @@
         "ext-curl": "*"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "^1.0||^2.0"
+        "satooshi/php-coveralls": "^1.0||^2.0",
+        "phpunit/phpunit": "^4.8"
     },
     "autoload": {
         "psr-0": {
