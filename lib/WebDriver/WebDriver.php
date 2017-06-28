@@ -29,7 +29,7 @@ namespace WebDriver;
  *
  * @method status
  */
-final class WebDriver extends AbstractWebDriver
+final class WebDriver extends AbstractWebDriver implements WebDriverInterface
 {
     /**
      * {@inheritdoc}
