@@ -29,7 +29,7 @@ namespace WebDriver;
  *
  * @method status
  */
-final class WebDriver extends AbstractWebDriver implements WebDriverInterface
+class WebDriver extends AbstractWebDriver implements WebDriverInterface
 {
     /**
      * {@inheritdoc}
@@ -42,13 +42,7 @@ final class WebDriver extends AbstractWebDriver implements WebDriverInterface
     }
 
     /**
-     * New Session: /session (POST)
-     * Get session object for chaining
-     *
-     * @param array|string $requiredCapabilities Required capabilities (or browser name)
-     * @param array        $desiredCapabilities  Desired capabilities
-     *
-     * @return \WebDriver\Session
+     * {@inheritdoc}
      */
     public function session($requiredCapabilities = Browser::FIREFOX, $desiredCapabilities = array())
     {
@@ -80,9 +74,7 @@ final class WebDriver extends AbstractWebDriver implements WebDriverInterface
     }
 
     /**
-     * Get list of currently active sessions
-     *
-     * @return array an array of \WebDriver\Session objects
+     * {@inheritdoc}
      */
     public function sessions()
     {
