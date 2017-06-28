@@ -23,8 +23,6 @@
 
 namespace WebDriver\Service;
 
-use WebDriver\Exception as WebDriverException;
-
 /**
  * WebDriver\Service\CurlService class
  *
@@ -90,17 +88,23 @@ class CurlService implements CurlServiceInterface
 
         $rawResult = trim(curl_exec($curl));
         $info = curl_getinfo($curl);
+        // enrich the info a bit
+        $info['request_method'] = $requestMethod;
 
-        if (CURLE_GOT_NOTHING !== curl_errno($curl) && $error = curl_error($curl)) {
+        // NB: this only gets triggered when CURLOPT_FAILONERROR has been set in extraOptions.
+        // In that case, $rawResult is always empty.
+        if (CURLE_GOT_NOTHING !== ($errno = curl_errno($curl)) && $error = curl_error($curl)) {
+
+            curl_close($curl);
+
             $message = sprintf(
-                'Curl error thrown for http %s to %s%s',
+                "Curl error thrown for http %s to %s%s\n\n%s",
                 $requestMethod,
                 $url,
-                $parameters && is_array($parameters)
-                ? ' with params: ' . json_encode($parameters) : ''
+                $parameters && is_array($parameters) ? ' with params: ' . json_encode($parameters) : '',
+                $error
             );
-
-            throw WebDriverException::factory(WebDriverException::CURL_EXEC, $message . "\n\n" . $error);
+            throw new CurlServiceException($message, $errno, null, $info);
         }
 
         curl_close($curl);

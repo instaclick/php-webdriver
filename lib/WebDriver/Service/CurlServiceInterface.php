@@ -39,7 +39,7 @@ interface CurlServiceInterface
      *
      * @return array
      *
-     * @throws \WebDriver\Exception if error
+     * @throws \WebDriver\Service\CurlServiceException only if http error and CURLOPT_FAILONERROR has been set in extraOptions
      */
     public function execute($requestMethod, $url, $parameters = null, $extraOptions = array());
 }
