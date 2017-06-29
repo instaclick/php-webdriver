@@ -2,6 +2,6 @@
 
 # set up Selenium for functional tests
 
-wget http://goo.gl/cvntq5 -O selenium.jar
+wget --max-redirect=1 http://goo.gl/cvntq5 -O selenium.jar
 
 java -jar selenium.jar &
