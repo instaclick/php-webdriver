@@ -113,9 +113,11 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $e) {
             if ($this->isSeleniumDown($e)) {
                 $this->markTestSkipped('selenium server not running');
-            } else {
-                throw $e;
+
+                return;
             }
+
+            throw $e;
         }
 
         $this->assertCount(1, $this->driver->sessions());
@@ -132,9 +134,11 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $e) {
             if ($this->isSeleniumDown($e)) {
                 $this->markTestSkipped('selenium server not running');
-            } else {
-                throw $e;
+
+                return;
             }
+
+            throw $e;
         }
 
         $this->assertCount(3, $status);
@@ -149,16 +153,19 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
     public function testSeleniumError()
     {
         try {
-            $this->driver = new WebDriver($this->getTestSeleniumRootUrl().'/../invalidurl');
+            $this->driver = new WebDriver($this->getTestSeleniumRootUrl() . '/../invalidurl');
+
             $status = $this->driver->status();
 
             $this->fail('Exception not thrown while connecting to invalid Selenium url');
         } catch (\Exception $e) {
             if ($this->isSeleniumDown($e)) {
                 $this->markTestSkipped('selenium server not running');
-            } else {
-                $this->assertEquals('WebDriver\Exception\CurlExec', get_class($e));
+
+                return;
             }
+
+            $this->assertEquals('WebDriver\Exception\CurlExec', get_class($e));
         }
     }
 
@@ -172,9 +179,11 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $e) {
             if ($this->isSeleniumDown($e)) {
                 $this->markTestSkipped('selenium server not running');
-            } else {
-                throw $e;
+
+                return;
             }
+
+            throw $e;
         }
 
         try {
@@ -199,9 +208,11 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $e) {
             if ($this->isSeleniumDown($e)) {
                 $this->markTestSkipped('selenium server not running');
-            } else {
-                throw $e;
+
+                return;
             }
+
+            throw $e;
         }
 
         $this->session = $this->driver->session();
