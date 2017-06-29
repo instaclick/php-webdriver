@@ -22,7 +22,7 @@ before_install:
   - sh ./test/CI/Travis/setup_apache.sh
 
 before_script:
-  - composer install --dev --no-interaction
+  - composer install --no-interaction
 
 script:
   - mkdir -p build/logs
