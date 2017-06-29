@@ -27,13 +27,13 @@ use WebDriver\Exception;
  * Test WebDriver\Exception class
  *
  * @package WebDriver
+ *
+ * @group Unit
  */
 class ExceptionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * test factory()
-     *
-     * @group Unit
      */
     public function testFactory()
     {

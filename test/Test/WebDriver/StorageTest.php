@@ -27,13 +27,13 @@ use WebDriver\Storage;
  * Test WebDriver\Storage class
  *
  * @package WebDriver
+ *
+ * @group Unit
  */
 class StorageTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * test factory()
-     *
-     * @group Unit
      */
     public function testFactory()
     {
