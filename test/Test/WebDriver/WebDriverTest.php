@@ -155,6 +155,9 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
      */
     public function testSeleniumErrorResponse()
     {
+        $this->markTestSkipped('this test is currently broken'); // see https://github.com/instaclick/php-webdriver/issues/77
+        return;
+
         try {
             $status = $this->driver->status();
         } catch (\Exception $e) {
