@@ -27,6 +27,8 @@ use WebDriver\WebDriver;
  * Test WebDriver\WebDriver class
  *
  * @package WebDriver
+ *
+ * @group Functional
  */
 class WebDriverTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,9 +45,11 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         if ($url = getenv('ROOT_URL')) {
             $this->testDocumentRootUrl = $url;
         }
+
         if ($url = getenv('SELENIUM_URL')) {
             $this->testSeleniumRootUrl = $url;
         }
+
         $this->driver  = new WebDriver($this->getTestSeleniumRootUrl());
         $this->session = null;
     }
@@ -63,6 +67,7 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
     /**
      * Returns the full url to the test site (corresponding to the root dir of the library).
      * You can set this via env var ROOT_URL
+     *
      * @return string
      */
     protected function getTestDocumentRootUrl()
@@ -72,6 +77,7 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Returns the full url to the Selenium server used for functional tests
+     *
      * @return string
      *
      * @todo make this configurable via env var
@@ -81,19 +87,27 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         return $this->testSeleniumRootUrl;
     }
 
+    /**
+     * Is Selenium down?
+     *
+     * @param \Exception $exception
+     *
+     * @return boolean
+     */
     protected function isSeleniumDown($exception)
     {
         return preg_match('/Failed to connect to .* Connection refused/', $exception->getMessage()) != false
-            || strpos($exception->getMessage(), 'couldn\'t connect to host') !== false;
+            || strpos($exception->getMessage(), 'couldn\'t connect to host') !== false
+            || strpos($exception->getMessage(), 'Unable to connect to host') !== false;
     }
 
     /**
-     * @group Functional
+     * Test driver sessions
      */
     public function testSessions()
     {
         try {
-        $this->assertCount(0, $this->driver->sessions());
+            $this->assertCount(0, $this->driver->sessions());
 
             $this->session = $this->driver->session();
         } catch (\Exception $e) {
@@ -109,7 +123,7 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @group Functional
+     * Test driver status
      */
     public function testStatus()
     {
@@ -131,7 +145,6 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Checks that an error connecting to Selenium gives back the expected exception
-     * @group Functional
      */
     public function testSeleniumError()
     {
@@ -151,13 +164,9 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Checks that a successful command to Selenium which returns an http error response gives back the expected exception
-     * @group Functional
      */
     public function testSeleniumErrorResponse()
     {
-        $this->markTestSkipped('this test is currently broken'); // see https://github.com/instaclick/php-webdriver/issues/77
-        return;
-
         try {
             $status = $this->driver->status();
         } catch (\Exception $e) {
@@ -171,6 +180,7 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         try {
             $this->session = $this->driver->session();
             $this->session->open($this->getTestDocumentRootUrl().'/test/Assets/index.html');
+
             $element = $this->session->element('id', 'a-quite-unlikely-html-element-id');
 
             $this->fail('Exception not thrown while looking for missing element in page');
@@ -181,7 +191,6 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Checks that a successful command to Selenium which returns 'nothing' according to spec does not raise an error
-     * @group Functional
      */
     public function testSeleniumNoResponse()
     {
@@ -198,6 +207,7 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         $this->session = $this->driver->session();
         $timeouts = $this->session->timeouts();
         $out = $timeouts->async_script(array('type' => 'implicit', 'ms' => 1000));
+
         $this->assertEquals(null, $out);
     }
 }

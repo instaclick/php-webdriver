@@ -139,11 +139,13 @@ abstract class AbstractWebDriver
         }
 
         $value = null;
+
         if (array_key_exists('value', $result)) {
             $value = $result['value'];
         }
 
         $message = null;
+
         if (is_array($value) && array_key_exists('message', $value)) {
             $message = $value['message'];
         }
@@ -195,6 +197,7 @@ abstract class AbstractWebDriver
         }
 
         $methods = $this->methods();
+
         if (!in_array($requestMethod, (array) $methods[$webdriverCommand])) {
             throw WebDriverException::factory(
                 WebDriverException::INVALID_REQUEST,

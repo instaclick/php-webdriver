@@ -62,7 +62,7 @@ class SauceRest
      *
      * @return mixed
      *
-     * @throws \WebDriver\Service\CurlServiceException
+     * @throws \WebDriver\Exception\CurlExec
      *
      * @see http://saucelabs.com/docs/saucerest
      */
