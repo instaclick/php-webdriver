@@ -128,38 +128,44 @@ abstract class AbstractWebDriver
             throw WebDriverException::factory(WebDriverException::CURL_EXEC, 'Webdriver http error: ' . $info['http_code'] . ', payload :' . substr($rawResult, 0, 1000));
         }
 
-        $result = json_decode($rawResult, true);
-
-        if ($result === null && json_last_error() != JSON_ERROR_NONE) {
-            throw WebDriverException::factory(WebDriverException::CURL_EXEC, 'Payload received from webdriver is not valid json: ' . substr($rawResult, 0, 1000));
-        }
-
-        if (!is_array($result) || !array_key_exists('status', $result)) {
-            throw WebDriverException::factory(WebDriverException::CURL_EXEC, 'Payload received from webdriver is valid but unexpected json: ' . substr($rawResult, 0, 1000));
-        }
-
+        $result = [];
         $value = null;
+        if (!empty($rawResult)) {
+            $result = json_decode($rawResult, true);
 
-        if (array_key_exists('value', $result)) {
-            $value = $result['value'];
-        }
+            if ($result === null && json_last_error() != JSON_ERROR_NONE) {
+                throw WebDriverException::factory(WebDriverException::CURL_EXEC,
+                    'Payload received from webdriver is not valid json: ' . substr($rawResult, 0, 1000));
+            }
 
-        $message = null;
+            if (!is_array($result) || !array_key_exists('status', $result)) {
+                throw WebDriverException::factory(WebDriverException::CURL_EXEC,
+                    'Payload received from webdriver is valid but unexpected json: ' . substr($rawResult, 0, 1000));
+                }
 
-        if (is_array($value) && array_key_exists('message', $value)) {
-            $message = $value['message'];
-        }
+            if (array_key_exists('value', $result)) {
+                $value = $result['value'];
+            }
 
-        // if not success, throw exception
-        if ((int) $result['status'] !== 0) {
-            throw WebDriverException::factory($result['status'], $message);
+            $message = null;
+
+            if (is_array($value) && array_key_exists('message', $value)) {
+                $message = $value['message'];
+            }
+
+            // if not success, throw exception
+            if ((int) $result['status'] !== 0) {
+                throw WebDriverException::factory($result['status'], $message);
+            }
         }
 
         $sessionId = isset($result['sessionId'])
-                   ? $result['sessionId']
-                   : (isset($value['webdriver.remote.sessionid'])
+           ? $result['sessionId']
+           : (
+               isset($value['webdriver.remote.sessionid'])
                    ? $value['webdriver.remote.sessionid']
-                   : null);
+                   : null
+           );
 
         return array(
             'value'      => $value,
