@@ -103,6 +103,11 @@ final class ServiceFactory
             $className = '\\' . $className;
         }
 
+        // Flush outdated service cache
+        if (isset($this->serviceClasses[$serviceName]) && $this->serviceClasses[$serviceName] !== $className) {
+            unset($this->services[$serviceName]);
+        }
+
         $this->serviceClasses[$serviceName] = $className;
     }
 }

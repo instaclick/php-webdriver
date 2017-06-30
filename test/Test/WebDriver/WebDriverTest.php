@@ -21,6 +21,7 @@
 
 namespace Test\WebDriver;
 
+use WebDriver\ServiceFactory;
 use WebDriver\WebDriver;
 
 /**
@@ -42,6 +43,8 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
+        require_once __DIR__ . '/TestCurlService.php';
+
         if ($url = getenv('ROOT_URL')) {
             $this->testDocumentRootUrl = $url;
         }
@@ -59,6 +62,7 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+        ServiceFactory::getInstance()->setServiceClass('service.curl', '\\WebDriver\\Service\\CurlService');
         if ($this->session) {
             $this->session->close();
         }
@@ -220,5 +224,23 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         $out = $timeouts->async_script(array('type' => 'implicit', 'ms' => 1000));
 
         $this->assertEquals(null, $out);
+    }
+
+    /**
+     * Assert that empty response does not trigger exception, but invalid JSON does
+     */
+    public function testNonJsonResponse()
+    {
+        ServiceFactory::getInstance()->setServiceClass('service.curl', '\\Test\\WebDriver\\TestCurlService');
+        $result = $this->driver->status();
+        $this->assertNull($result);
+
+        // Test /session should error
+        $this->setExpectedException(
+            'WebDriver\Exception\CurlExec',
+            'Payload received from webdriver is not valid json: some invalid json'
+        );
+        $result = $this->driver->session();
+        $this->assertNull($result);
     }
 }
