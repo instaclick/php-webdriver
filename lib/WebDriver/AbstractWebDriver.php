@@ -122,49 +122,46 @@ abstract class AbstractWebDriver
 
         list($rawResult, $info) = ServiceFactory::getInstance()->getService('service.curl')->execute($requestMethod, $url, $parameters, $extraOptions);
 
-        // According to https://w3c.github.io/webdriver/webdriver-spec.html all 4xx responses are to be considered an error and return plaintext,
-        // while 5xx responses are json encoded
-        if (substr($info['http_code'], 0, 1) === '4') {
-            throw WebDriverException::factory(WebDriverException::CURL_EXEC, 'Webdriver http error: ' . $info['http_code'] . ', payload :' . substr($rawResult, 0, 1000));
+        $httpCode = $info['http_code'];
+
+        // According to https://w3c.github.io/webdriver/webdriver-spec.html all 4xx responses are to be considered
+        // an error and return plaintext, while 5xx responses are json encoded
+        if ($httpCode >= 400 && $httpCode <= 499) {
+            throw WebDriverException::factory(
+                WebDriverException::CURL_EXEC,
+                'Webdriver http error: ' . $httpCode . ', payload :' . substr($rawResult, 0, 1000)
+            );
         }
 
-        $result = [];
-        $value = null;
-        if (!empty($rawResult)) {
-            $result = json_decode($rawResult, true);
+        $result = json_decode($rawResult, true);
 
-            if ($result === null && json_last_error() != JSON_ERROR_NONE) {
-                throw WebDriverException::factory(WebDriverException::CURL_EXEC,
-                    'Payload received from webdriver is not valid json: ' . substr($rawResult, 0, 1000));
-            }
+        if ($result === null && json_last_error() != JSON_ERROR_NONE) {
+            throw WebDriverException::factory(
+                WebDriverException::CURL_EXEC,
+                'Payload received from webdriver is not valid json: ' . substr($rawResult, 0, 1000)
+            );
+        }
 
-            if (!is_array($result) || !array_key_exists('status', $result)) {
-                throw WebDriverException::factory(WebDriverException::CURL_EXEC,
-                    'Payload received from webdriver is valid but unexpected json: ' . substr($rawResult, 0, 1000));
-                }
+        if (!is_array($result) || !array_key_exists('status', $result)) {
+            throw WebDriverException::factory(
+                WebDriverException::CURL_EXEC,
+                'Payload received from webdriver is valid but unexpected json: ' . substr($rawResult, 0, 1000)
+            );
+        }
 
-            if (array_key_exists('value', $result)) {
-                $value = $result['value'];
-            }
+        $value   = array_key_exists('value', $result) ? $result['value'] : null;
+        $message = (is_array($value) && array_key_exists('message', $value)) ? $value['message'] : null;
 
-            $message = null;
-
-            if (is_array($value) && array_key_exists('message', $value)) {
-                $message = $value['message'];
-            }
-
-            // if not success, throw exception
-            if ((int) $result['status'] !== 0) {
-                throw WebDriverException::factory($result['status'], $message);
-            }
+        // if not success, throw exception
+        if ((int) $result['status'] !== 0) {
+            throw WebDriverException::factory($result['status'], $message);
         }
 
         $sessionId = isset($result['sessionId'])
            ? $result['sessionId']
-           : (
-               isset($value['webdriver.remote.sessionid'])
-                   ? $value['webdriver.remote.sessionid']
-                   : null
+           : (isset($value['webdriver.remote.sessionid'])
+               ? $value['webdriver.remote.sessionid']
+               : null
            );
 
         return array(

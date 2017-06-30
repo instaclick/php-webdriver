@@ -17,6 +17,7 @@
  * @package WebDriver
  *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
+ * @author Damian Mooyman <damian@silverstripe.com>
  */
 
 namespace Test\WebDriver;
@@ -43,7 +44,7 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        require_once __DIR__ . '/TestCurlService.php';
+        ServiceFactory::getInstance()->setServiceClass('service.curl', '\\WebDriver\\Service\\CurlService');
 
         if ($url = getenv('ROOT_URL')) {
             $this->testDocumentRootUrl = $url;
@@ -62,7 +63,6 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        ServiceFactory::getInstance()->setServiceClass('service.curl', '\\WebDriver\\Service\\CurlService');
         if ($this->session) {
             $this->session->close();
         }
@@ -231,8 +231,27 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
      */
     public function testNonJsonResponse()
     {
-        ServiceFactory::getInstance()->setServiceClass('service.curl', '\\Test\\WebDriver\\TestCurlService');
+        $mockCurlService = $this->createMock('WebDriver\Service\CurlService');
+        $mockCurlService->expects($this->once())
+            ->method('execute')
+            ->will($this->returnCallback(function ($requestMethod, $url) {
+                $info = array(
+                    'url' => $url,
+                    'request_method' => $requestMethod,
+                    'http_code' => 200,
+                );
+
+                $result = preg_match('#.*session$#', $url)
+                    ? $result = 'some invalid json'
+                    : $result = '';
+
+                return array($result, $info);
+            }));
+
+        ServiceFactory::getInstance()->setService('service.curl', $mockCurlService);
+
         $result = $this->driver->status();
+
         $this->assertNull($result);
 
         // Test /session should error
@@ -240,7 +259,9 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
             'WebDriver\Exception\CurlExec',
             'Payload received from webdriver is not valid json: some invalid json'
         );
+
         $result = $this->driver->session();
+
         $this->assertNull($result);
     }
 }

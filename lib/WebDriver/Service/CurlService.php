@@ -93,9 +93,11 @@ class CurlService implements CurlServiceInterface
         $info = curl_getinfo($curl);
         $info['request_method'] = $requestMethod;
 
-        // This only gets triggered when CURLOPT_FAILONERROR has been set in extraOptions.
-        // In that case, $rawResult is always empty.
-        if (CURLE_GOT_NOTHING !== ($errno = curl_errno($curl)) && $error = curl_error($curl)) {
+        if (array_key_exists(CURLOPT_FAILONERROR, $extraOptions) &&
+            $extraOptions[CURLOPT_FAILONERROR] &&
+            CURLE_GOT_NOTHING !== ($errno = curl_errno($curl)) &&
+            $error = curl_error($curl)
+        ) {
             curl_close($curl);
 
             throw WebDriverException::factory(

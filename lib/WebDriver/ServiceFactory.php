@@ -92,6 +92,17 @@ final class ServiceFactory
     }
 
     /**
+     * Set service
+     *
+     * @param string $serviceName Name of service
+     * @param object $service     Service instance
+     */
+    public function setService($serviceName, $service)
+    {
+        $this->services[$serviceName] = $service;
+    }
+
+    /**
      * Override default service class
      *
      * @param string $serviceName Name of service
@@ -103,11 +114,7 @@ final class ServiceFactory
             $className = '\\' . $className;
         }
 
-        // Flush outdated service cache
-        if (isset($this->serviceClasses[$serviceName]) && $this->serviceClasses[$serviceName] !== $className) {
-            unset($this->services[$serviceName]);
-        }
-
         $this->serviceClasses[$serviceName] = $className;
+        $this->services[$serviceName] = null;
     }
 }
