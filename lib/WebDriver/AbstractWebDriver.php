@@ -135,21 +135,21 @@ abstract class AbstractWebDriver
 
         $result = json_decode($rawResult, true);
 
-        if ($result === null && json_last_error() != JSON_ERROR_NONE) {
+        if (!empty($rawResult) && $result === null && json_last_error() != JSON_ERROR_NONE) {
             throw WebDriverException::factory(
                 WebDriverException::CURL_EXEC,
                 'Payload received from webdriver is not valid json: ' . substr($rawResult, 0, 1000)
             );
         }
 
-        if (!is_array($result) || !array_key_exists('status', $result)) {
+        if (is_array($result) && !array_key_exists('status', $result)) {
             throw WebDriverException::factory(
                 WebDriverException::CURL_EXEC,
                 'Payload received from webdriver is valid but unexpected json: ' . substr($rawResult, 0, 1000)
             );
         }
 
-        $value   = array_key_exists('value', $result) ? $result['value'] : null;
+        $value   = (is_array($result) && array_key_exists('value', $result)) ? $result['value'] : null;
         $message = (is_array($value) && array_key_exists('message', $value)) ? $value['message'] : null;
 
         // if not success, throw exception
