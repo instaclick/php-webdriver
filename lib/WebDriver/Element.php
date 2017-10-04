@@ -43,6 +43,10 @@ namespace WebDriver;
  * @method array location_in_view() Determine an element's location on the screen once it has been scrolled into view.
  * @method array size() Determine an element's size in pixels.
  * @method string css($propertyName) Query the value of an element's computed CSS property.
+ * @method array property($propertyName) Get Element Property
+ * @method array rect() Get Element Rect
+ * @method array active() Get Active Element
+ * @method array screenshot() Take Element Screenshot
  */
 final class Element extends Container
 {
@@ -53,7 +57,6 @@ final class Element extends Container
     {
         return array(
             'click' => array('POST'),
-            'submit' => array('POST'),
             'text' => array('GET'),
             'value' => array('POST'),
             'name' => array('GET'),
@@ -61,12 +64,19 @@ final class Element extends Container
             'selected' => array('GET'),
             'enabled' => array('GET'),
             'attribute' => array('GET'),
+            'property' => array('GET'),
+            'css' => array('GET'),
+            'rect' => array('GET'),
+            'active' => array('GET'),
+            'screenshot' => array('GET'),
+
+            // Legacy JSON Wire Protocol
+            'submit' => array('POST'),
             'equals' => array('GET'),
             'displayed' => array('GET'),
             'location' => array('GET'),
             'location_in_view' => array('GET'),
             'size' => array('GET'),
-            'css' => array('GET'),
         );
     }
 

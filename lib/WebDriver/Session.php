@@ -427,6 +427,37 @@ final class Session extends Container
     }
 
     /**
+     * alert method chaining, e.g.,
+     * - $session->alert()->text()
+     *
+     * @return mixed
+     */
+    public function alert()
+    {
+        return new Alert($this->url . '/alert');
+    }
+
+    /**
+     * script execution method chaining, e.g.,
+     * - $session->execute()->sync()
+     * - $session->execute()->async()
+     * - $session->execute() - fallback for legacy JSON Wire Protocol
+     *
+     * @return mixed
+     */
+    public function execute()
+    {
+        // execute script
+        if (func_num_args() === 0) {
+            $result = $this->curl('POST', '/execute');
+
+            return $result['value'];
+        }
+
+        return new Execute($this->url . '/execute');
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getElementPath($elementId)
