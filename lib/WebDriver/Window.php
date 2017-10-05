@@ -27,20 +27,16 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
- * @method array getSize() Get size of the window.
- * @method void postSize($json) Change the size of the window.
- * @method array getPosition() Get position of the window.
- * @method void postPosition($json) Change position of the window.
- * @method void maximize() Maximize the window if not already maximized.
+ * @method array maximize() Maximize the window if not already maximized.
+ * @method array minimize() Minimize Window
+ * @method array fullscreen() Fullscreen Window
+ * @method array getRect() Get Window Rect
+ * @method array postRect() Set Window Rect
+ * @method array handles() Get Window Handles
  */
 final class Window extends AbstractWebDriver
 {
-    /**
-     * Window handle
-     *
-     * @var string
-     */
-    private $windowHandle;
+    const WEBDRIVER_WINDOW_ID = 'window-fcc6-11e5-b4f8-330a88ab9d7f';
 
     /**
      * {@inheritdoc}
@@ -48,19 +44,11 @@ final class Window extends AbstractWebDriver
     protected function methods()
     {
         return array(
-            'size' => array('GET', 'POST'),
-            'position' => array('GET', 'POST'),
             'maximize' => array('POST'),
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function obsoleteMethods()
-    {
-        return array(
-            'restore' => array('POST'),
+            'minimize' => array('POST'),
+            'fullscreen' => array('POST'),
+            'rect' => array('GET', 'POST'),
+            'handles' => array('GET'),
         );
     }
 
@@ -71,19 +59,10 @@ final class Window extends AbstractWebDriver
      */
     public function getHandle()
     {
-        return $this->windowHandle;
-    }
+        $result = $this->curl('GET', $this->url);
 
-    /**
-     * Constructor
-     *
-     * @param string $url          URL
-     * @param string $windowHandle Window handle
-     */
-    public function __construct($url, $windowHandle)
-    {
-        $this->windowHandle = $windowHandle;
-
-        parent::__construct($url . '/' . $windowHandle);
+        return array_key_exists(self::WEBDRIVER_WINDOW_ID, $result['value'])
+            ? $result['value'][self::WEBDRIVER_WINDOW_ID]
+            : $result['value'];
     }
 }

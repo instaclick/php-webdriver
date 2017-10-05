@@ -58,6 +58,8 @@ namespace WebDriver;
  * @method void postLocation($jsonCoordinates) Set the current geo location.
  * @method boolean getBrowser_connection() Is browser online?
  * @method void postBrowser_connection($jsonState) Set browser online.
+ * @method array postActions() Perform Actions
+ * @method array deleteActions() Release Actions
  */
 final class Session extends Container
 {
@@ -72,18 +74,20 @@ final class Session extends Container
     protected function methods()
     {
         return array(
-            'window_handle' => array('GET'),
-            'window_handles' => array('GET'),
             'url' => array('GET', 'POST'), // alternate for POST, use open($url)
             'forward' => array('POST'),
             'back' => array('POST'),
             'refresh' => array('POST'),
-            'execute' => array('POST'),
-            'execute_async' => array('POST'),
             'screenshot' => array('GET'),
             'cookie' => array('GET', 'POST'), // for DELETE, use deleteAllCookies()
             'source' => array('GET'),
             'title' => array('GET'),
+            'actions' => array('POST', 'DELETE'),
+
+            // specific to Java SeleniumServer
+            'file' => array('POST'),
+
+            // Legacy JSON Wire Protocol
             'keys' => array('POST'),
             'orientation' => array('GET', 'POST'),
             'alert_text' => array('GET', 'POST'),
@@ -97,9 +101,10 @@ final class Session extends Container
             'execute_sql' => array('POST'),
             'location' => array('GET', 'POST'),
             'browser_connection' => array('GET', 'POST'),
-
-            // specific to Java SeleniumServer
-            'file' => array('POST'),
+            'window_handle' => array('GET'),
+            'window_handles' => array('GET'),
+            'execute' => array('POST'),
+            'execute_async' => array('POST'),
         );
     }
 
@@ -220,14 +225,25 @@ final class Session extends Container
     }
 
     /**
-     * window methods: /session/:sessionId/window (POST, DELETE)
-     * - $session->window() - close current window
-     * - $session->window($name) - set focus
-     * - $session->window($window_handle)->method() - chaining
+     * Window method chaining, e.g.,
+     * - $session->window($handle)->method() - chaining
      *
-     * @return \WebDriver\Window|\WebDriver\Session
+     * @return \WebDriver\Window
      */
     public function window()
+    {
+        return new Window($this->url . '/window');
+    }
+
+    /**
+     * Legacy window methods: /session/:sessionId/window (POST, DELETE)
+     * - $session->legacyWindow() - close current window
+     * - $session->legacyWindow($name) - set focus
+     * - $session->legacyWindow($window_handle)->method() - chaining
+     *
+     * @return \WebDriver\LegacyWindow|\WebDriver\Session
+     */
+    public function legacyWindow()
     {
         // close current window
         if (func_num_args() === 0) {
@@ -246,7 +262,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new Window($this->url . '/window', $arg);
+        return new LegacyWindow($this->url . '/window', $arg);
     }
 
     /**
@@ -270,7 +286,7 @@ final class Session extends Container
      */
     public function focusWindow($name)
     {
-        $this->curl('POST', '/window', array('name' => $name));
+        $this->curl('POST', '/window', array('name' => $name, 'handle' => $name));
 
         return $this;
     }
@@ -389,7 +405,7 @@ final class Session extends Container
 
     /**
      * application cache chaining, e.g.,
-     * - $session->application_cache()->status()
+     * - $session->application_cache()->method() - chaining
      *
      * @return \WebDriver\ApplicationCache
      */
@@ -428,7 +444,7 @@ final class Session extends Container
 
     /**
      * alert method chaining, e.g.,
-     * - $session->alert()->text()
+     * - $session->alert()->method() - chaining
      *
      * @return mixed
      */
@@ -439,9 +455,8 @@ final class Session extends Container
 
     /**
      * script execution method chaining, e.g.,
-     * - $session->execute()->sync()
-     * - $session->execute()->async()
      * - $session->execute() - fallback for legacy JSON Wire Protocol
+     * - $session->execute()->method() - chaining
      *
      * @return mixed
      */
