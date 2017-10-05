@@ -33,44 +33,48 @@ class Capability extends BaseCapability
     /**
      * Desired capabilities - SauceLabs
      *
-     * @see https://saucelabs.com/docs/additional-config
+     * @see https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options
      */
 
-    // Job Annotation
-    const NAME                  = 'name';                  // Name the job
-    const BUILD                 = 'build';                 // Record the build number
-    const TAGS                  = 'tags';                  // Tag your jobs
-    const PASSED                = 'passed';                // Record pass/fail status
-    const CUSTOM_DATA           = 'custom-data';           // Record custom data
-
-    // Performance improvements and data collection
-    const RECORD_VIDEO          = 'record-video';          // Video recording
-    const VIDEO_UPLOAD_ON_PASS  = 'video-upload-on-pass';  // Video upload on pass
-    const RECORD_SCREENSHOTS    = 'record-screenshots';    // Record step-by-step screenshots
-    const CAPTURE_HTML          = 'capture-html';          // HTML source capture
-    const QUIET_EXCEPTIONS      = 'webdriver.remote.quietExceptions'; // Enable Selenium 2's automatic screenshots
-    const SAUCE_ADVISOR         = 'sauce-advisor';         // Sauce Advisor
-
     // Selenium specific
-    const SELENIUM_VERSION      = 'selenium-version';      // Use a specific Selenium version
-    const SINGLE_WINDOW         = 'single-window';         // Selenium RC's single window mode
-    const USER_EXTENSIONS_URL   = 'user-extensions-url';   // Selenium RC's user extensions
-    const FIREFOX_PROFILE_URL   = 'firefox-profile-url';   // Selenium RC's custom Firefox profiles
+    const SELENIUM_VERSION      = 'seleniumVersion';                // Use a specific Selenium version
+    const CHROMEDDRIVER_VERSION = 'chromedriverVersion';            // Use a specific Chrome Driver version
+    const IEDRIVER_VERSION      = 'iedriverVersion';                // Use a specific Internet Explorer version
+
+    // Alerts
+    const AUTO_ACCEPT_ALERTS    = 'autoAcceptAlerts';               // Auto accept alerts (for iOS only)
+    // Job Annotation
+    const NAME                  = 'name';                           // Name the job
+    const BUILD                 = 'build';                          // Record the build number
+    const TAGS                  = 'tags';                           // Tag your jobs
+    const PASSED                = 'passed';                         // Record pass/fail status
+    const CUSTOM_DATA           = 'customData';                     // Record custom data
 
     // Timeouts
-    const MAX_DURATION          = 'max-duration';          // Set maximum test duration
-    const COMMAND_TIMEOUT       = 'command-timeout';       // Set command timeout
-    const IDLE_TIMEOUT          = 'idle-timeout';          // Set idle test timeout
+    const MAX_DURATION          = 'maxDuration';                    // Set maximum test duration
+    const COMMAND_TIMEOUT       = 'commandTimeout';                 // Set command timeout
+    const IDLE_TIMEOUT          = 'idleTimeout';                    // Set idle test timeout
 
     // Sauce specific
-    const PRERUN                = 'prerun';                // Prerun executables
-    const TUNNEL_IDENTIFIER     = 'tunnel-identifier';     // Use identified tunnel
-    const SCREEN_RESOLUTION     = 'screen-resolution';     // Use specific screen resolution
-    const DISABLE_POPUP_HANDLER = 'disable-popup-handler'; // Disable popup handler
-    const AVOID_PROXY           = 'avoid-proxy';           // Avoid proxy
-    const DEVICE_ORIENTATION    = 'deviceOrientation';     // Device orientation (portrait or landscape)
-    const DEVICE_TYPE           = 'deviceType';            // Device type (phone or tablet)
+    const VERSION               = 'version';                        // Browser version
+    const PRERUN                = 'prerun';                         // Prerun executables
+    const TUNNEL_IDENTIFIER     = 'tunnelIdentifier';               // Use identified tunnel
+    const PARENT_TUNNEL         = 'parentTunnel';                   // Shared tunnels
+    const SCREEN_RESOLUTION     = 'screenResolution';               // Use specific screen resolution
+    const TIME_ZONE             = 'timeZone';                       // Time zone
+    const AVOID_PROXY           = 'avoidProxy';                     // Avoid proxy
+    const DEVICE_ORIENTATION    = 'deviceOrientation';              // Device orientation (portrait or landscape)
+    const DEVICE_TYPE           = 'deviceType';                     // Device type (phone or tablet)
 
     // Job Sharing
-    const PUBLIC_RESULTS        = 'public';                // Make public, private, or share jobs
+    const PUBLIC_RESULTS        = 'public';                         // Make public, private, or share jobs
+
+    // Performance improvements and data collection
+    const RECORD_VIDEO          = 'recordVideo';                    // Video recording
+    const VIDEO_UPLOAD_ON_PASS  = 'videoUploadOnPass';              // Video upload on pass
+    const RECORD_SCREENSHOTS    = 'recordScreenshots';              // Record step-by-step screenshots
+    const RECORD_LOGS           = 'recordLogs';                     // Log recording
+    const CAPTURE_HTML          = 'captureHtml';                    // HTML source capture
+    const PRIORITY              = 'priority';                       // Prioritize jobs
+    const QUIET_EXCEPTIONS      = 'webdriverRemoteQuietExceptions'; // Enable Selenium 2's automatic screenshots
 }
