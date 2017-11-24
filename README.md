@@ -16,10 +16,11 @@ Distinguishing features:
 [![Latest Stable Version](https://poser.pugx.org/instaclick/php-webdriver/v/stable.png)](https://packagist.org/packages/instaclick/php-webdriver)
 [![Total Downloads](https://poser.pugx.org/instaclick/php-webdriver/downloads.png)](https://packagist.org/packages/instaclick/php-webdriver)
 
-Downloads
-=========
-* [Packagist (dev-master)](http://packagist.org/packages/instaclick/php-webdriver)
+Links
+=====
+* [Packagist](http://packagist.org/packages/instaclick/php-webdriver)
 * [Github](https://github.com/instaclick/php-webdriver)
+* [W3C/WebDriver](https://github.com/w3c/webdriver)
 
 Notes
 =====
