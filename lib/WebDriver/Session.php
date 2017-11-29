@@ -455,7 +455,7 @@ final class Session extends Container
 
     /**
      * script execution method chaining, e.g.,
-     * - $session->execute() - fallback for legacy JSON Wire Protocol
+     * - $session->execute($jsonScript) - fallback for legacy JSON Wire Protocol
      * - $session->execute()->method() - chaining
      *
      * @return mixed
