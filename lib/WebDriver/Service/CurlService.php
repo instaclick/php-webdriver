@@ -87,6 +87,12 @@ class CurlService implements CurlServiceInterface
         }
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, $customHeaders);
+        
+        $proxy = getenv('http_proxy');
+        if (!empty($proxy)) {
+            curl_setopt($curl, CURLOPT_PROXY, $proxy);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        }
 
         $rawResult = trim(curl_exec($curl));
 
