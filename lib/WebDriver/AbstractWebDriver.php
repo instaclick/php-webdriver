@@ -48,6 +48,13 @@ abstract class AbstractWebDriver
     private $curlService;
 
     /**
+     * Transient options
+     *
+     * @var array
+     */
+    private $transientOptions;
+
+    /**
      * Return array of supported method names and corresponding HTTP request methods
      *
      * @return array
@@ -115,6 +122,16 @@ abstract class AbstractWebDriver
     }
 
     /**
+     * Set transient options
+     *
+     * @param array $transientOptions
+     */
+    public function setTransientOptions($transientOptions)
+    {
+        $this->transientOptions = is_array($transientOptions) ? $transientOptions : array();
+    }
+
+    /**
      * Curl request to webdriver server.
      *
      * @param string $requestMethod HTTP request method, e.g., 'GET', 'POST', or 'DELETE'
@@ -147,7 +164,9 @@ abstract class AbstractWebDriver
             $url .= '/' . $parameters;
         }
 
-        list($rawResult, $info) = $this->curlService->execute($requestMethod, $url, $parameters, $extraOptions);
+        list($rawResult, $info) = $this->curlService->execute($requestMethod, $url, $parameters, array_merge($extraOptions, $this->transientOptions));
+
+        $this->transientOptions = array();
 
         $httpCode = $info['http_code'];
 

@@ -49,6 +49,13 @@ class SauceRest
     private $curlService;
 
     /**
+     * Transient options
+     *
+     * @var array
+     */
+    private $transientOptions;
+
+    /**
      * Constructor
      *
      * @param string $userId    Your Sauce user name
@@ -81,11 +88,22 @@ class SauceRest
     }
 
     /**
+     * Set transient options
+     *
+     * @param array $transientOptions
+     */
+    public function setTransientOptions($transientOptions)
+    {
+        $this->transientOptions = is_array($transientOptions) ? $transientOptions : array();
+    }
+
+    /**
      * Execute Sauce Labs REST API command
      *
      * @param string $requestMethod HTTP request method
      * @param string $url           URL
      * @param mixed  $parameters    Parameters
+     * @param array  $extraOptions  key=>value pairs of curl options to pass to curl_setopt()
      *
      * @return mixed
      *
@@ -93,7 +111,7 @@ class SauceRest
      *
      * @see http://saucelabs.com/docs/saucerest
      */
-    protected function execute($requestMethod, $url, $parameters = null)
+    protected function execute($requestMethod, $url, $parameters = null, $extraOptions = array())
     {
         $extraOptions = array(
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
@@ -109,7 +127,9 @@ class SauceRest
 
         $url = 'https://saucelabs.com/rest/v1/' . $url;
 
-        list($rawResult, $info) = $this->curlService->execute($requestMethod, $url, $parameters, $extraOptions);
+        list($rawResult, $info) = $this->curlService->execute($requestMethod, $url, $parameters, array_merge($extraOptions, $this->transientOptions));
+
+        $this->transientOptions = array();
 
         return json_decode($rawResult, true);
     }
