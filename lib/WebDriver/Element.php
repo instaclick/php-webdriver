@@ -119,6 +119,6 @@ final class Element extends Container
      */
     protected function getElementPath($elementId)
     {
-        return preg_replace(sprintf('/%s$/', $this->id), $elementId, $this->url);
+        return preg_replace(sprintf('/%s$/', preg_quote($this->id)), $elementId, $this->url);
     }
 }
