@@ -33,6 +33,21 @@ use WebDriver\Exception as WebDriverException;
 class CurlService implements CurlServiceInterface
 {
     /**
+     * @var array
+     */
+    private $defaultOptions;
+
+    /**
+     * Constructor
+     *
+     * @param array $defaultOptions
+     */
+    public function __construct($defaultOptions = array())
+    {
+        $this->defaultOptions = is_array($defaultOptions) ? $defaultOptions : array();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function execute($requestMethod, $url, $parameters = null, $extraOptions = array())
@@ -82,7 +97,7 @@ class CurlService implements CurlServiceInterface
                 break;
         }
 
-        foreach ($extraOptions as $option => $value) {
+        foreach (array_merge($this->defaultOptions, $extraOptions) as $option => $value) {
             curl_setopt($curl, $option, $value);
         }
 

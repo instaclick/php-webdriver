@@ -41,6 +41,13 @@ abstract class AbstractWebDriver
     protected $url;
 
     /**
+     * Curl service
+     *
+     * @var \WebDriver\Service\CurlService
+     */
+    private $curlService;
+
+    /**
      * Return array of supported method names and corresponding HTTP request methods
      *
      * @return array
@@ -88,6 +95,26 @@ abstract class AbstractWebDriver
     }
 
     /**
+     * Set curl service
+     *
+     * @param \WebDriver\Service\CurlService $curlService
+     */
+    public function setCurlService($curlService)
+    {
+        $this->curlService = $curlService;
+    }
+
+    /**
+     * Get curl service
+     *
+     * @return \WebDriver\Service\CurlService
+     */
+    public function getCurlService()
+    {
+        return $this->curlService ?: ServiceFactory::getInstance()->getService('service.curl');
+    }
+
+    /**
      * Curl request to webdriver server.
      *
      * @param string $requestMethod HTTP request method, e.g., 'GET', 'POST', or 'DELETE'
@@ -120,7 +147,7 @@ abstract class AbstractWebDriver
             $url .= '/' . $parameters;
         }
 
-        list($rawResult, $info) = ServiceFactory::getInstance()->getService('service.curl')->execute($requestMethod, $url, $parameters, $extraOptions);
+        list($rawResult, $info) = $this->curlService->execute($requestMethod, $url, $parameters, $extraOptions);
 
         $httpCode = $info['http_code'];
 

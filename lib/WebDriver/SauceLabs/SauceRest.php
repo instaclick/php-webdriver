@@ -42,6 +42,13 @@ class SauceRest
     private $accessKey;
 
     /**
+     * Curl service
+     *
+     * @var \WebDriver\Service\CurlService
+     */
+    private $curlService;
+
+    /**
      * Constructor
      *
      * @param string $userId    Your Sauce user name
@@ -51,6 +58,26 @@ class SauceRest
     {
         $this->userId = $userId;
         $this->accessKey = $accessKey;
+    }
+
+    /**
+     * Set curl service
+     *
+     * @param \WebDriver\Service\CurlService $curlService
+     */
+    public function setCurlService($curlService)
+    {
+        $this->curlService = $curlService;
+    }
+
+    /**
+     * Get curl service
+     *
+     * @return \WebDriver\Service\CurlService
+     */
+    public function getCurlService()
+    {
+        return $this->curlService ?: ServiceFactory::getInstance()->getService('service.curl');
     }
 
     /**
@@ -82,7 +109,7 @@ class SauceRest
 
         $url = 'https://saucelabs.com/rest/v1/' . $url;
 
-        list($rawResult, $info) = ServiceFactory::getInstance()->getService('service.curl')->execute($requestMethod, $url, $parameters, $extraOptions);
+        list($rawResult, $info) = $this->curlService->execute($requestMethod, $url, $parameters, $extraOptions);
 
         return json_decode($rawResult, true);
     }
