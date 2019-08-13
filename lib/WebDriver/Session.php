@@ -464,7 +464,7 @@ final class Session extends Container
     {
         // execute script
         if (func_num_args() > 0) {
-            $result = $this->curl('POST', '/execute', func_get_arg(1));
+            $result = $this->curl('POST', '/execute', func_get_arg(0));
 
             return $result['value'];
         }
