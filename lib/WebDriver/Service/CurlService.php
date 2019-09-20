@@ -69,6 +69,10 @@ class CurlService implements CurlServiceInterface
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
                 } else {
                     $customHeaders[] = 'Content-Length: 0';
+
+                    // Suppress "Transfer-Encoding: chunked" header automatically added by cURL that
+                    // causes a 400 bad request (bad content-length).
+                    $customHeaders[] = 'Transfer-Encoding:';
                 }
 
                 // Suppress "Expect: 100-continue" header automatically added by cURL that
@@ -87,6 +91,10 @@ class CurlService implements CurlServiceInterface
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
                 } else {
                     $customHeaders[] = 'Content-Length: 0';
+
+                    // Suppress "Transfer-Encoding: chunked" header automatically added by cURL that
+                    // causes a 400 bad request (bad content-length).
+                    $customHeaders[] = 'Transfer-Encoding:';
                 }
 
                 // Suppress "Expect: 100-continue" header automatically added by cURL that
