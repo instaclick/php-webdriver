@@ -32,11 +32,6 @@ namespace WebDriver;
 class WebDriver extends AbstractWebDriver implements WebDriverInterface
 {
     /**
-     * @var boolean
-     */
-    private $w3c;
-
-    /**
      * {@inheritdoc}
      */
     protected function methods()
@@ -76,10 +71,10 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
         );
 
         $capabilities = isset($result['value']['capabilities']) ? $result['value']['capabilities'] : null;
-        $this->w3c    = !! $capabilities;
 
         $session = new Session($result['sessionUrl']);
         $session->setCapabilities($capabilities);
+        $session->setW3c(!! $capabilities);
 
         return $session;
     }
@@ -97,15 +92,5 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
         }
 
         return $sessions;
-    }
-
-    /**
-     * Is this a W3C driver?
-     *
-     * @return boolean
-     */
-    public function isW3c()
-    {
-        return $this->w3c;
     }
 }

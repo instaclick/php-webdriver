@@ -64,6 +64,11 @@ namespace WebDriver;
 final class Session extends Container
 {
     /**
+     * @var boolean
+     */
+    private $w3c;
+
+    /**
      * @var array
      */
     private $capabilities = null;
@@ -480,6 +485,26 @@ final class Session extends Container
     public function setCapabilities($capabilities)
     {
         $this->capabilities = $capabilities;
+    }
+
+    /**
+     * Set w3c
+     *
+     * @param boolean $w3c
+     */
+    public function setW3c($w3c)
+    {
+        $this->w3c = $w3c;
+    }
+
+    /**
+     * Get w3c
+     *
+     * @return boolean
+     */
+    public function getW3c()
+    {
+        return $this->w3c;
     }
 
     /**
