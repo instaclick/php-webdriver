@@ -119,7 +119,7 @@ abstract class Container extends AbstractWebDriver
             $locatorJson
         );
 
-        if (!is_array($result['value'])) {
+        if (! is_array($result['value'])) {
             return array();
         }
 
@@ -184,7 +184,7 @@ abstract class Container extends AbstractWebDriver
      */
     public function locate($using, $value)
     {
-        if (!in_array($using, $this->strategies)) {
+        if (! in_array($using, $this->strategies)) {
             throw WebDriverException::factory(
                 WebDriverException::UNKNOWN_LOCATOR_STRATEGY,
                 sprintf('Invalid locator strategy %s', $using)

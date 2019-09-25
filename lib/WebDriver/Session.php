@@ -233,7 +233,7 @@ final class Session extends Container
     public function window()
     {
         // legacy window methods
-        if ( ! $this->w3c) {
+        if (! $this->w3c) {
             return call_user_func_array(array($this, 'legacyWindow'), func_get_args());
         }
 

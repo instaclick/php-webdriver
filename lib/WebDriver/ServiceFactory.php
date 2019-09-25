@@ -66,7 +66,7 @@ final class ServiceFactory
      */
     public static function getInstance()
     {
-        if (!self::$instance) {
+        if (! self::$instance) {
             self::$instance = new self;
         }
 
@@ -82,7 +82,7 @@ final class ServiceFactory
      */
     public function getService($serviceName)
     {
-        if (!isset($this->services[$serviceName])) {
+        if (! isset($this->services[$serviceName])) {
             $className = $this->serviceClasses[$serviceName];
 
             $this->services[$serviceName] = new $className;

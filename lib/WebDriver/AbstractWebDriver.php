@@ -198,14 +198,14 @@ abstract class AbstractWebDriver
 
         $result = json_decode($rawResult, true);
 
-        if (!empty($rawResult) && $result === null && json_last_error() != JSON_ERROR_NONE) {
+        if (! empty($rawResult) && $result === null && json_last_error() != JSON_ERROR_NONE) {
             throw WebDriverException::factory(
                 WebDriverException::CURL_EXEC,
                 'Payload received from webdriver is not valid json: ' . substr($rawResult, 0, 1000)
             );
         }
 
-        if (is_array($result) && !array_key_exists('status', $result)) {
+        if (is_array($result) && ! array_key_exists('status', $result)) {
             throw WebDriverException::factory(
                 WebDriverException::CURL_EXEC,
                 'Payload received from webdriver is valid but unexpected json: ' . substr($rawResult, 0, 1000)
@@ -264,7 +264,7 @@ abstract class AbstractWebDriver
 
         $methods = $this->methods();
 
-        if (!in_array($requestMethod, (array) $methods[$webdriverCommand])) {
+        if (! in_array($requestMethod, (array) $methods[$webdriverCommand])) {
             throw WebDriverException::factory(
                 WebDriverException::INVALID_REQUEST,
                 sprintf(
@@ -295,7 +295,7 @@ abstract class AbstractWebDriver
      */
     private function getRequestMethod($webdriverCommand)
     {
-        if (!array_key_exists($webdriverCommand, $this->methods())) {
+        if (! array_key_exists($webdriverCommand, $this->methods())) {
             throw WebDriverException::factory(
                 array_key_exists($webdriverCommand, $this->obsoleteMethods())
                 ? WebDriverException::OBSOLETE_COMMAND : WebDriverException::UNKNOWN_COMMAND,

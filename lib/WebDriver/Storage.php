@@ -136,7 +136,7 @@ abstract class Storage extends AbstractWebDriver
         $className = ucfirst(strtolower($type));
         $namespacedClassName = __CLASS__ . '\\' . $className;
 
-        if (!class_exists($namespacedClassName, false)) {
+        if (! class_exists($namespacedClassName, false)) {
             eval(
                 'namespace ' . __CLASS__ . '; final class ' . $className . ' extends \\' . __CLASS__ . '{}'
             );
