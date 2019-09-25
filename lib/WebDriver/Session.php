@@ -473,6 +473,16 @@ final class Session extends Container
     }
 
     /**
+     * Set capabilities
+     *
+     * @param array $capabilities
+     */
+    public function setCapabilities($capabilities)
+    {
+        $this->capabilities = $capabilities;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getElementPath($elementId)
