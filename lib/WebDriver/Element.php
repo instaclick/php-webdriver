@@ -130,6 +130,6 @@ final class Element extends Container
      */
     protected function getElementPath($elementId)
     {
-        return preg_replace('/' . preg_quote($this->id, '/') . '/', $elementId, $this->url);
+        return preg_replace('/' . preg_quote($this->id, '/') . '$/', $elementId, $this->url);
     }
 }
