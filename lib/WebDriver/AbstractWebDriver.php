@@ -55,6 +55,11 @@ abstract class AbstractWebDriver
     private $transientOptions;
 
     /**
+     * @var boolean
+     */
+    private $w3c;
+
+    /**
      * Return array of supported method names and corresponding HTTP request methods
      *
      * @return array
@@ -74,11 +79,13 @@ abstract class AbstractWebDriver
     /**
      * Constructor
      *
-     * @param string $url URL to Selenium server
+     * @param boolean $w3c Is w3c driver?
+     * @param string  $url URL to Selenium server
      */
-    public function __construct($url = 'http://localhost:4444/wd/hub')
+    public function __construct($w3c, $url = 'http://localhost:4444/wd/hub')
     {
         $this->url = $url;
+        $this->w3c = $w3c;
     }
 
     /**
@@ -129,6 +136,16 @@ abstract class AbstractWebDriver
     public function setTransientOptions($transientOptions)
     {
         $this->transientOptions = is_array($transientOptions) ? $transientOptions : array();
+    }
+
+    /**
+     * Is w3c driver?
+     *
+     * @return boolean
+     */
+    public function isW3c()
+    {
+        return $this->w3c;
     }
 
     /**

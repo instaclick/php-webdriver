@@ -64,11 +64,6 @@ namespace WebDriver;
 final class Session extends Container
 {
     /**
-     * @var boolean
-     */
-    private $w3c;
-
-    /**
      * @var array
      */
     private $capabilities = null;
@@ -237,7 +232,12 @@ final class Session extends Container
      */
     public function window()
     {
-        return new Window($this->url . '/window');
+        // legacy window methods
+        if ( ! $this->w3c) {
+            return call_user_func_array(array($this, 'legacyWindow'), func_get_args());
+        }
+
+        return new Window($this->w3c, $this->url . '/window');
     }
 
     /**
@@ -267,7 +267,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new LegacyWindow($this->url . '/window', $arg);
+        return new LegacyWindow($this->w3c, $this->url . '/window', $arg);
     }
 
     /**
@@ -314,7 +314,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new Frame($this->url . '/frame');
+        return new Frame($this->w3c, $this->url . '/frame');
     }
 
     /**
@@ -347,7 +347,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new Timeouts($this->url . '/timeouts');
+        return new Timeouts($this->w3c, $this->url . '/timeouts');
     }
 
     /**
@@ -358,7 +358,7 @@ final class Session extends Container
      */
     public function ime()
     {
-        return new Ime($this->url . '/ime');
+        return new Ime($this->w3c, $this->url . '/ime');
     }
 
     /**
@@ -383,7 +383,7 @@ final class Session extends Container
      */
     public function touch()
     {
-        return new Touch($this->url . '/touch');
+        return new Touch($this->w3c, $this->url . '/touch');
     }
 
     /**
@@ -416,7 +416,7 @@ final class Session extends Container
      */
     public function application_cache()
     {
-        return new ApplicationCache($this->url . '/application_cache');
+        return new ApplicationCache($this->w3c, $this->url . '/application_cache');
     }
 
     /**
@@ -444,7 +444,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new Log($this->url . '/log');
+        return new Log($this->w3c, $this->url . '/log');
     }
 
     /**
@@ -455,7 +455,7 @@ final class Session extends Container
      */
     public function alert()
     {
-        return new Alert($this->url . '/alert');
+        return new Alert($this->w3c, $this->url . '/alert');
     }
 
     /**
@@ -474,7 +474,7 @@ final class Session extends Container
             return $result['value'];
         }
 
-        return new Execute($this->url . '/execute');
+        return new Execute($this->w3c, $this->url . '/execute');
     }
 
     /**
@@ -485,26 +485,6 @@ final class Session extends Container
     public function setCapabilities($capabilities)
     {
         $this->capabilities = $capabilities;
-    }
-
-    /**
-     * Set w3c
-     *
-     * @param boolean $w3c
-     */
-    public function setW3c($w3c)
-    {
-        $this->w3c = $w3c;
-    }
-
-    /**
-     * Get w3c
-     *
-     * @return boolean
-     */
-    public function getW3c()
-    {
-        return $this->w3c;
     }
 
     /**

@@ -141,6 +141,6 @@ abstract class Storage extends AbstractWebDriver
             );
         }
 
-        return new $namespacedClassName($url);
+        return new $namespacedClassName($this->w3c, $url);
     }
 }
