@@ -124,12 +124,13 @@ abstract class Storage extends AbstractWebDriver
     /**
      * Factory method to create Storage objects
      *
-     * @param string $type 'local' or 'session' storage
-     * @param string $url  URL
+     * @param string  $type 'local' or 'session' storage
+     * @param string  $url  URL
+     * @param boolean $w3c  Is W3C?
      *
      * @return \WebDriver\Storage
      */
-    public static function factory($type, $url)
+    public static function factory($type, $url, $w3c = false)
     {
         // dynamically define custom storage classes
         $className = ucfirst(strtolower($type));
@@ -141,6 +142,6 @@ abstract class Storage extends AbstractWebDriver
             );
         }
 
-        return new $namespacedClassName($this->w3c, $url);
+        return new $namespacedClassName($url, $w3c);
     }
 }

@@ -38,9 +38,9 @@ abstract class Container extends AbstractWebDriver
     /**
      * {@inheritdoc}
      */
-    public function __construct($w3c, $url = 'http://localhost:4444/wd/hub')
+    public function __construct($url = 'http://localhost:4444/wd/hub', $w3c = false)
     {
-        parent::__construct($w3c, $url);
+        parent::__construct($url, $w3c);
 
         $locatorStrategy = new \ReflectionClass('WebDriver\LocatorStrategy');
         $this->strategies  = $locatorStrategy->getConstants();
@@ -208,17 +208,17 @@ abstract class Container extends AbstractWebDriver
     {
         if (array_key_exists(self::LEGACY_ELEMENT_ID, (array) $value)) {
             return new Element(
-                $this->w3c,
                 $this->getElementPath($value[self::LEGACY_ELEMENT_ID]), // url
-                $value[self::LEGACY_ELEMENT_ID] // id
+                $value[self::LEGACY_ELEMENT_ID], // id
+                $this->w3c
             );
         }
 
         if (array_key_exists(self::WEBDRIVER_ELEMENT_ID, (array) $value)) {
             return new Element(
-                $this->w3c,
                 $this->getElementPath($value[self::WEBDRIVER_ELEMENT_ID]), // url
-                $value[self::WEBDRIVER_ELEMENT_ID] // id
+                $value[self::WEBDRIVER_ELEMENT_ID], // id
+                $this->w3c
             );
         }
     }

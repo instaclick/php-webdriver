@@ -78,14 +78,14 @@ final class LegacyWindow extends AbstractWebDriver
     /**
      * Constructor
      *
-     * @param boolean $w3c          Is W3C?
      * @param string  $url          URL
      * @param string  $windowHandle Window handle
+     * @param boolean $w3c          Is W3C?
      */
-    public function __construct($w3c, $url, $windowHandle)
+    public function __construct($url, $windowHandle, $w3c = false)
     {
         $this->windowHandle = $windowHandle;
 
-        parent::__construct($w3c, $url . '/' . $windowHandle);
+        parent::__construct($url . '/' . $windowHandle, $w3c);
     }
 }

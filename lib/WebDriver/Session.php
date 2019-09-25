@@ -237,7 +237,7 @@ final class Session extends Container
             return call_user_func_array(array($this, 'legacyWindow'), func_get_args());
         }
 
-        return new Window($this->w3c, $this->url . '/window');
+        return new Window($this->url . '/window', $this->w3c);
     }
 
     /**
@@ -267,7 +267,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new LegacyWindow($this->w3c, $this->url . '/window', $arg);
+        return new LegacyWindow($this->url . '/window', $arg, $this->w3c);
     }
 
     /**
@@ -314,7 +314,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new Frame($this->w3c, $this->url . '/frame');
+        return new Frame($this->url . '/frame', $this->w3c);
     }
 
     /**
@@ -347,7 +347,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new Timeouts($this->w3c, $this->url . '/timeouts');
+        return new Timeouts($this->url . '/timeouts', $this->w3c);
     }
 
     /**
@@ -358,7 +358,7 @@ final class Session extends Container
      */
     public function ime()
     {
-        return new Ime($this->w3c, $this->url . '/ime');
+        return new Ime($this->url . '/ime', $this->w3c);
     }
 
     /**
@@ -383,7 +383,7 @@ final class Session extends Container
      */
     public function touch()
     {
-        return new Touch($this->w3c, $this->url . '/touch');
+        return new Touch($this->url . '/touch', $this->w3c);
     }
 
     /**
@@ -394,7 +394,7 @@ final class Session extends Container
      */
     public function local_storage()
     {
-        return Storage::factory('local', $this->url . '/local_storage');
+        return Storage::factory('local', $this->url . '/local_storage', $this->w3c);
     }
 
     /**
@@ -405,7 +405,7 @@ final class Session extends Container
      */
     public function session_storage()
     {
-        return Storage::factory('session', $this->url . '/session_storage');
+        return Storage::factory('session', $this->url . '/session_storage', $this->w3c);
     }
 
     /**
@@ -416,7 +416,7 @@ final class Session extends Container
      */
     public function application_cache()
     {
-        return new ApplicationCache($this->w3c, $this->url . '/application_cache');
+        return new ApplicationCache($this->url . '/application_cache', $this->w3c);
     }
 
     /**
@@ -444,7 +444,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new Log($this->w3c, $this->url . '/log');
+        return new Log($this->url . '/log', $this->w3c);
     }
 
     /**
@@ -455,7 +455,7 @@ final class Session extends Container
      */
     public function alert()
     {
-        return new Alert($this->w3c, $this->url . '/alert');
+        return new Alert($this->url . '/alert', $this->w3c);
     }
 
     /**
@@ -474,7 +474,7 @@ final class Session extends Container
             return $result['value'];
         }
 
-        return new Execute($this->w3c, $this->url . '/execute');
+        return new Execute($this->url . '/execute', $this->w3c);
     }
 
     /**

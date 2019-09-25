@@ -104,13 +104,13 @@ final class Element extends Container
     /**
      * Constructor
      *
-     * @param boolean $w3c Is w3c?
      * @param string  $url URL
      * @param string  $id  element ID
+     * @param boolean $w3c Is w3c?
      */
-    public function __construct($w3c, $url, $id)
+    public function __construct($url, $id, $w3c = false)
     {
-        parent::__construct($w3c, $url);
+        parent::__construct($url, $w3c);
 
         $this->id = $id;
     }

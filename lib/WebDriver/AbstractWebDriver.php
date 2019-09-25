@@ -41,6 +41,11 @@ abstract class AbstractWebDriver
     protected $url;
 
     /**
+     * @var boolean
+     */
+    private $w3c;
+
+    /**
      * Curl service
      *
      * @var \WebDriver\Service\CurlService
@@ -53,11 +58,6 @@ abstract class AbstractWebDriver
      * @var array
      */
     private $transientOptions;
-
-    /**
-     * @var boolean
-     */
-    private $w3c;
 
     /**
      * Return array of supported method names and corresponding HTTP request methods
@@ -79,10 +79,10 @@ abstract class AbstractWebDriver
     /**
      * Constructor
      *
-     * @param boolean $w3c Is w3c driver?
      * @param string  $url URL to Selenium server
+     * @param boolean $w3c Is w3c driver?
      */
-    public function __construct($w3c, $url = 'http://localhost:4444/wd/hub')
+    public function __construct($url = 'http://localhost:4444/wd/hub', $w3c = false)
     {
         $this->url = $url;
         $this->w3c = $w3c;
