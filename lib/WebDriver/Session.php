@@ -336,10 +336,14 @@ final class Session extends Container
         }
 
         if (func_num_args() === 2) {
-            $arg = array(
-                'type' => func_get_arg(0), // 'script' or 'implicit'
-                'ms' => func_get_arg(1),   // timeout in milliseconds
-            );
+            $arg = $this->w3c
+                ? array(
+                    func_get_arg(0) => func_get_arg(1),  // 'script' or 'implicit' => timeout in milliseconds
+                  )
+                : array(
+                    'type' => func_get_arg(0), // 'script' or 'implicit'
+                    'ms' => func_get_arg(1),   // timeout in milliseconds
+                  );
 
             $this->curl('POST', '/timeouts', $arg);
 
