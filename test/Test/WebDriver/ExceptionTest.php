@@ -38,12 +38,12 @@ class ExceptionTest extends \PHPUnit_Framework_TestCase
     public function testFactory()
     {
         $out = Exception::factory(255, 'wtf');
-        $this->assertTrue(get_class($out) === 'Exception');
-        $this->assertTrue($out->getMessage() === 'wtf');
+        $this->assertTrue($out instanceof Exception\UnknownError);
+        $this->assertTrue($out->getMessage() === 'An unknown server-side error occurred while processing the command.');
 
         $out = Exception::factory(Exception::SUCCESS);
-        $this->assertTrue(get_class($out) === 'Exception');
-        $this->assertTrue($out->getMessage() === 'Unknown Error');
+        $this->assertTrue($out instanceof Exception\UnknownError);
+        $this->assertTrue($out->getMessage() === 'An unknown server-side error occurred while processing the command.');
 
         $out = Exception::factory(Exception::CURL_EXEC);
         $this->assertTrue($out instanceof Exception\CurlExec);
