@@ -65,4 +65,16 @@ final class Window extends AbstractWebDriver
             ? $result['value'][self::WEBDRIVER_WINDOW_ID]
             : $result['value'];
     }
+
+    /**
+     * New window: /session/:sessionId/window/new (POST)
+     *
+     * @return \WebDriver\Session
+     */
+    public function focusWindow($name)
+    {
+        $this->curl('POST', '/new');
+
+        return $this;
+    }
 }
