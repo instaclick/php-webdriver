@@ -43,7 +43,7 @@ abstract class AbstractWebDriver
     /**
      * @var boolean
      */
-    private $w3c;
+    protected $w3c;
 
     /**
      * Curl service
@@ -86,6 +86,7 @@ abstract class AbstractWebDriver
     {
         $this->url = $url;
         $this->w3c = $w3c;
+        $this->transientOptions = array();
     }
 
     /**
@@ -139,6 +140,14 @@ abstract class AbstractWebDriver
     }
 
     /**
+     * @return array
+     */
+    public function getTransientOptions()
+    {
+        return $this->transientOptions;
+    }
+
+    /**
      * Is w3c driver?
      *
      * @return boolean
@@ -181,7 +190,7 @@ abstract class AbstractWebDriver
             $url .= '/' . $parameters;
         }
 
-        list($rawResult, $info) = $this->curlService->execute($requestMethod, $url, $parameters, array_merge($extraOptions, $this->transientOptions));
+        list($rawResult, $info) = $this->curlService->execute($requestMethod, $url, $parameters, array_replace($extraOptions, $this->transientOptions));
 
         $this->transientOptions = array();
 

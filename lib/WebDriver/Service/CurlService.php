@@ -105,7 +105,7 @@ class CurlService implements CurlServiceInterface
                 break;
         }
 
-        foreach (array_merge($this->defaultOptions, $extraOptions) as $option => $value) {
+        foreach (array_replace($this->defaultOptions, $extraOptions) as $option => $value) {
             curl_setopt($curl, $option, $value);
         }
 
