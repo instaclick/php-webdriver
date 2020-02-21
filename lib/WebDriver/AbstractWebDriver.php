@@ -25,6 +25,7 @@
 namespace WebDriver;
 
 use WebDriver\Exception as WebDriverException;
+use WebDriver\Service\CurlService;
 
 /**
  * Abstract WebDriver\AbstractWebDriver class
@@ -43,12 +44,12 @@ abstract class AbstractWebDriver
     /**
      * @var boolean
      */
-    private $w3c;
+    protected $w3c;
 
     /**
      * Curl service
      *
-     * @var \WebDriver\Service\CurlService
+     * @var CurlService
      */
     private $curlService;
 
@@ -111,7 +112,7 @@ abstract class AbstractWebDriver
     /**
      * Set curl service
      *
-     * @param \WebDriver\Service\CurlService $curlService
+     * @param CurlService $curlService
      */
     public function setCurlService($curlService)
     {
@@ -121,7 +122,7 @@ abstract class AbstractWebDriver
     /**
      * Get curl service
      *
-     * @return \WebDriver\Service\CurlService
+     * @return CurlService
      */
     public function getCurlService()
     {
@@ -136,6 +137,14 @@ abstract class AbstractWebDriver
     public function setTransientOptions($transientOptions)
     {
         $this->transientOptions = is_array($transientOptions) ? $transientOptions : array();
+    }
+
+    /**
+     * @return array
+     */
+    public function getTransientOptions()
+    {
+        return $this->transientOptions ?: array();
     }
 
     /**
@@ -159,7 +168,7 @@ abstract class AbstractWebDriver
      *
      * @return array array('value' => ..., 'info' => ...)
      *
-     * @throws \WebDriver\Exception if error
+     * @throws Exception if error
      */
     protected function curl($requestMethod, $command, $parameters = null, $extraOptions = array())
     {
@@ -181,7 +190,7 @@ abstract class AbstractWebDriver
             $url .= '/' . $parameters;
         }
 
-        list($rawResult, $info) = $this->curlService->execute($requestMethod, $url, $parameters, array_merge($extraOptions, $this->transientOptions));
+        list($rawResult, $info) = $this->getCurlService()->execute($requestMethod, $url, $parameters, array_replace($extraOptions, $this->getTransientOptions()));
 
         $this->transientOptions = array();
 
@@ -243,7 +252,7 @@ abstract class AbstractWebDriver
      *
      * @return mixed
      *
-     * @throws \WebDriver\Exception if invalid WebDriver command
+     * @throws Exception if invalid WebDriver command
      */
     public function __call($name, $arguments)
     {
@@ -291,7 +300,7 @@ abstract class AbstractWebDriver
      *
      * @return string
      *
-     * @throws \WebDriver\Exception if invalid WebDriver command
+     * @throws Exception if invalid WebDriver command
      */
     private function getRequestMethod($webdriverCommand)
     {
