@@ -48,7 +48,7 @@ abstract class AbstractWebDriver
     /**
      * Curl service
      *
-     * @var \WebDriver\Service\CurlService
+     * @var \WebDriver\Service\CurlServiceInterface
      */
     private $curlService;
 
@@ -113,7 +113,7 @@ abstract class AbstractWebDriver
     /**
      * Set curl service
      *
-     * @param \WebDriver\Service\CurlService $curlService
+     * @param \WebDriver\Service\CurlServiceInterface $curlService
      */
     public function setCurlService($curlService)
     {
@@ -123,7 +123,7 @@ abstract class AbstractWebDriver
     /**
      * Get curl service
      *
-     * @return \WebDriver\Service\CurlService
+     * @return \WebDriver\Service\CurlServiceInterface
      */
     public function getCurlService()
     {
