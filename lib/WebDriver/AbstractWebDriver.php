@@ -87,6 +87,7 @@ abstract class AbstractWebDriver
         $this->url = $url;
         $this->w3c = $w3c;
         $this->transientOptions = array();
+        $this->curlService = ServiceFactory::getInstance()->getService('service.curl');
     }
 
     /**
@@ -126,7 +127,7 @@ abstract class AbstractWebDriver
      */
     public function getCurlService()
     {
-        return $this->curlService ?: ServiceFactory::getInstance()->getService('service.curl');
+        return $this->curlService;
     }
 
     /**
