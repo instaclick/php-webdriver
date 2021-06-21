@@ -10,7 +10,6 @@ Distinguishing features:
 
 [![Build Status](https://travis-ci.org/instaclick/php-webdriver.png)](https://travis-ci.org/instaclick/php-webdriver)
 [![Coverage Status](https://coveralls.io/repos/instaclick/php-webdriver/badge.png)](https://coveralls.io/r/instaclick/php-webdriver)
-[![Dependency Status](https://www.versioneye.com/php/instaclick:php-webdriver/badge.png)](https://www.versioneye.com/php/instaclick:php-webdriver/)
 
 [![Latest Stable Version](https://poser.pugx.org/instaclick/php-webdriver/v/stable.png)](https://packagist.org/packages/instaclick/php-webdriver)
 [![Total Downloads](https://poser.pugx.org/instaclick/php-webdriver/downloads.png)](https://packagist.org/packages/instaclick/php-webdriver)
