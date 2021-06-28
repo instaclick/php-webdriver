@@ -43,7 +43,7 @@ abstract class Container extends AbstractWebDriver
     /**
      * {@inheritdoc}
      */
-    public function __construct($url = 'http://localhost:4444/wd/hub')
+    public function __construct($url)
     {
         parent::__construct($url);
 
