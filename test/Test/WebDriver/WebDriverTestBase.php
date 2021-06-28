@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2014-2017 Anthon Pang. All Rights Reserved.
  *
@@ -22,6 +23,10 @@
 
 namespace Test\WebDriver;
 
+use PHPUnit\Framework\TestCase;
+use WebDriver\Exception\CurlExec;
+use WebDriver\Exception\NoSuchElement;
+use WebDriver\Service\CurlService;
 use WebDriver\ServiceFactory;
 use WebDriver\WebDriver;
 
@@ -32,36 +37,37 @@ use WebDriver\WebDriver;
  *
  * @group Functional
  */
-class WebDriverTest extends \PHPUnit_Framework_TestCase
+abstract class WebDriverTestBase extends TestCase
 {
     private $driver;
     private $session;
     private $testDocumentRootUrl = 'http://localhost';
-    private $testSeleniumRootUrl = 'http://localhost:4444/wd/hub';
+    protected $testWebDriverName;
+    protected $testWebDriverRootUrl;
 
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
-        ServiceFactory::getInstance()->setServiceClass('service.curl', '\\WebDriver\\Service\\CurlService');
+        ServiceFactory::getInstance()->setServiceClass('service.curl', CurlService::class);
 
         if ($url = getenv('ROOT_URL')) {
             $this->testDocumentRootUrl = $url;
         }
 
         if ($url = getenv('SELENIUM_URL')) {
-            $this->testSeleniumRootUrl = $url;
+            $this->testWebDriverRootUrl = $url;
         }
 
-        $this->driver  = new WebDriver($this->getTestSeleniumRootUrl());
+        $this->driver  = new WebDriver($this->getTestWebDriverRootUrl());
         $this->session = null;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ($this->session) {
             $this->session->close();
@@ -80,25 +86,25 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Returns the full url to the Selenium server used for functional tests
+     * Returns the full url to the WebDriver server used for functional tests
      *
      * @return string
      *
      * @todo make this configurable via env var
      */
-    protected function getTestSeleniumRootUrl()
+    protected function getTestWebDriverRootUrl()
     {
-        return $this->testSeleniumRootUrl;
+        return $this->testWebDriverRootUrl;
     }
 
     /**
-     * Is Selenium down?
+     * Is WebDriver down?
      *
      * @param \Exception $exception
      *
      * @return boolean
      */
-    protected function isSeleniumDown($exception)
+    protected function isWebDriverDown($exception)
     {
         return preg_match('/Failed to connect to .* Connection refused/', $exception->getMessage()) != false
             || strpos($exception->getMessage(), 'couldn\'t connect to host') !== false
@@ -115,8 +121,8 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
 
             $this->session = $this->driver->session();
         } catch (\Exception $e) {
-            if ($this->isSeleniumDown($e)) {
-                $this->markTestSkipped('selenium server not running');
+            if ($this->isWebDriverDown($e)) {
+                $this->markTestSkipped("{$this->testWebDriverName} server not running");
 
                 return;
             }
@@ -125,7 +131,7 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertCount(1, $this->driver->sessions());
-        $this->assertEquals($this->getTestSeleniumRootUrl(), $this->driver->getUrl());
+        $this->assertEquals($this->getTestWebDriverRootUrl(), $this->driver->getUrl());
     }
 
     /**
@@ -136,8 +142,8 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
         try {
             $status = $this->driver->status();
         } catch (\Exception $e) {
-            if ($this->isSeleniumDown($e)) {
-                $this->markTestSkipped('selenium server not running');
+            if ($this->isWebDriverDown($e)) {
+                $this->markTestSkipped("{$this->testWebDriverName} server not running");
 
                 return;
             }
@@ -145,44 +151,53 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
             throw $e;
         }
 
-        $this->assertCount(3, $status);
-        $this->assertTrue(isset($status['java']));
-        $this->assertTrue(isset($status['os']));
-        $this->assertTrue(isset($status['build']));
-    }
-
-    /**
-     * Checks that an error connecting to Selenium gives back the expected exception
-     */
-    public function testSeleniumError()
-    {
-        try {
-            $this->driver = new WebDriver($this->getTestSeleniumRootUrl() . '/../invalidurl');
-
-            $status = $this->driver->status();
-
-            $this->fail('Exception not thrown while connecting to invalid Selenium url');
-        } catch (\Exception $e) {
-            if ($this->isSeleniumDown($e)) {
-                $this->markTestSkipped('selenium server not running');
-
-                return;
-            }
-
-            $this->assertEquals('WebDriver\Exception\CurlExec', get_class($e));
+        if (isset($status['java'])) {
+            // Selenium
+            $this->assertCount(3, $status);
+            $this->assertTrue(isset($status['os']));
+            $this->assertTrue(isset($status['build']));
+        } else {
+            // ChromeDriver
+            $this->assertCount(4, $status);
+            $this->assertTrue(isset($status['build']));
+            $this->assertTrue(isset($status['message']));
+            $this->assertTrue(isset($status['os']));
+            $this->assertTrue(isset($status['ready']));
         }
     }
 
     /**
-     * Checks that a successful command to Selenium which returns an http error response gives back the expected exception
+     * Checks that an error connecting to WebDriver gives back the expected exception
      */
-    public function testSeleniumErrorResponse()
+    public function testWebDriverError()
+    {
+        try {
+            $this->driver = new WebDriver($this->getTestWebDriverRootUrl() . '/../invalidurl');
+
+            $status = $this->driver->status();
+
+            $this->fail('Exception not thrown while connecting to invalid WebDriver url');
+        } catch (\Exception $e) {
+            if ($this->isWebDriverDown($e)) {
+                $this->markTestSkipped("{$this->testWebDriverName} server not running");
+
+                return;
+            }
+
+            $this->assertEquals(CurlExec::class, get_class($e));
+        }
+    }
+
+    /**
+     * Checks that a successful command to WebDriver which returns an http error response gives back the expected exception
+     */
+    public function testWebDriverErrorResponse()
     {
         try {
             $status = $this->driver->status();
         } catch (\Exception $e) {
-            if ($this->isSeleniumDown($e)) {
-                $this->markTestSkipped('selenium server not running');
+            if ($this->isWebDriverDown($e)) {
+                $this->markTestSkipped("{$this->testWebDriverName} server not running");
 
                 return;
             }
@@ -192,26 +207,26 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
 
         try {
             $this->session = $this->driver->session();
-            $this->session->open($this->getTestDocumentRootUrl().'/test/Assets/index.html');
+            $this->session->open($this->getTestDocumentRootUrl() . '/test/Assets/index.html');
 
             $element = $this->session->element('id', 'a-quite-unlikely-html-element-id');
 
             $this->fail('Exception not thrown while looking for missing element in page');
         } catch (\Exception $e) {
-            $this->assertEquals('WebDriver\Exception\NoSuchElement', get_class($e));
+            $this->assertEquals(NoSuchElement::class, get_class($e));
         }
     }
 
     /**
-     * Checks that a successful command to Selenium which returns 'nothing' according to spec does not raise an error
+     * Checks that a successful command to WebDriver which returns 'nothing' according to spec does not raise an error
      */
-    public function testSeleniumNoResponse()
+    public function testWebDriverNoResponse()
     {
         try {
             $status = $this->driver->status();
         } catch (\Exception $e) {
-            if ($this->isSeleniumDown($e)) {
-                $this->markTestSkipped('selenium server not running');
+            if ($this->isWebDriverDown($e)) {
+                $this->markTestSkipped("{$this->testWebDriverName} server not running");
 
                 return;
             }
@@ -231,8 +246,8 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
      */
     public function testNonJsonResponse()
     {
-        $mockCurlService = $this->createMock('WebDriver\Service\CurlService');
-        $mockCurlService->expects($this->once())
+        $mockCurlService = $this->createMock(CurlService::class);
+        $mockCurlService->expects($this->any())
             ->method('execute')
             ->will($this->returnCallback(function ($requestMethod, $url) {
                 $info = array(
@@ -250,15 +265,14 @@ class WebDriverTest extends \PHPUnit_Framework_TestCase
 
         ServiceFactory::getInstance()->setService('service.curl', $mockCurlService);
 
+        $this->driver  = new WebDriver($this->getTestWebDriverRootUrl());
         $result = $this->driver->status();
 
         $this->assertNull($result);
 
         // Test /session should error
-        $this->setExpectedException(
-            'WebDriver\Exception\CurlExec',
-            'Payload received from webdriver is not valid json: some invalid json'
-        );
+        $this->expectException(\WebDriver\Exception\CurlExec::class);
+        $this->expectExceptionMessage('Payload received from webdriver is not valid json: some invalid json');
 
         $result = $this->driver->session();
 

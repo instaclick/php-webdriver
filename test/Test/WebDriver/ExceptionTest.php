@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2011-2017 Anthon Pang. All Rights Reserved.
  *
@@ -21,6 +22,7 @@
 
 namespace Test\WebDriver;
 
+use PHPUnit\Framework\TestCase;
 use WebDriver\Exception;
 
 /**
@@ -30,7 +32,7 @@ use WebDriver\Exception;
  *
  * @group Unit
  */
-class ExceptionTest extends \PHPUnit_Framework_TestCase
+class ExceptionTest extends TestCase
 {
     /**
      * test factory()
