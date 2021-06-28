@@ -48,6 +48,8 @@ namespace WebDriver;
  * @method array rect() Get Element Rect
  * @method array active() Get Active Element
  * @method array screenshot() Take Element Screenshot
+ * @method array computedrole() Get Computed Role
+ * @method array computedlabel() Get Computed Label
  */
 final class Element extends Container
 {
@@ -70,6 +72,8 @@ final class Element extends Container
             'rect' => array('GET'),
             'active' => array('GET'),
             'screenshot' => array('GET'),
+            'computedrole' => array('GET'),
+            'computedlabel' => array('GET'),
 
             // Legacy JSON Wire Protocol
             'submit' => array('POST'),
@@ -124,6 +128,20 @@ final class Element extends Container
     public function getID()
     {
         return $this->id;
+    }
+
+    /**
+     * Get element shadow root: /session/:sessionId/element/:elementId/shadow
+     *
+     * shadow root method chaining, e.g.,
+     * - $element->method()
+     *
+     * @return \WebDriver\Shadow
+     *
+     */
+    public function shadow()
+    {
+        return new Shadow($this->url . '/shadow', $this->w3c);
     }
 
     /**

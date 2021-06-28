@@ -61,6 +61,7 @@ namespace WebDriver;
  * @method void postBrowser_connection($jsonState) Set browser online.
  * @method array postActions() Perform Actions
  * @method array deleteActions() Release Actions
+ * @method array print() Print Page
  */
 final class Session extends Container
 {
@@ -84,6 +85,7 @@ final class Session extends Container
             'source' => array('GET'),
             'title' => array('GET'),
             'actions' => array('POST', 'DELETE'),
+            'print' => array('POST'),
 
             // specific to Java SeleniumServer
             'file' => array('POST'),

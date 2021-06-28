@@ -125,6 +125,7 @@ abstract class Exception extends \Exception
         self::UNKNOWN_LOCATOR_STRATEGY => array('UnknownLocatorStrategy', 'This locator strategy is not supported.'),
 
         //  @link https://w3c.github.io/webdriver/#errors
+        'detached shadow root' => array('DetachedShadowRoot', 'A command failed because the referenced shadow root is no longer attached to the DOM.'),
         'element click intercepted' => array('ElementClickIntercepted', 'The Element Click command could not be completed because the element receiving the events is obscuring the element that was requested clicked.'),
         'element not interactable' => array('ElementNotInteractable', 'A command could not be completed because the element is not pointer- or keyboard interactable.'),
         'insecure certificate' => array('InsecureCertificate', 'Navigation caused the user agent to hit a certificate warning, which is usually the result of an expired or invalid TLS certificate.'),
@@ -139,6 +140,7 @@ abstract class Exception extends \Exception
         'no such cookie' => array('NoSuchCookie', 'No cookie matching the given path name was found amongst the associated cookies of the current browsing context\'s active document.'),
         'no such element' => array('NoSuchElement', 'An element could not be located on the page using the given search parameters.'),
         'no such frame' => array('NoSuchFrame', 'A command to switch to a frame could not be satisfied because the frame could not be found.'),
+        'no such shadow root' => array('NoSuchShadowRoot', 'The element does not have a shadow root.'),
         'no such window' => array('NoSuchWindow', 'A command to switch to a window could not be satisfied because the window could not be found.'),
         'script timeout' => array('ScriptTimeout', 'A script did not complete before its timeout expired.'),
         'script timeout error' => array('ScriptTimeout', 'A script did not complete before its timeout expired.'),
