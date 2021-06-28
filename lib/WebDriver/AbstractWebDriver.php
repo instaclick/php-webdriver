@@ -215,7 +215,7 @@ abstract class AbstractWebDriver
             );
         }
 
-        if (is_array($result) && ! array_key_exists('status', $result)) {
+        if (is_array($result) && ! array_key_exists('status', $result) && ! isset($result['value']['ready']) && ! isset($result['value']['error'])) {
             throw WebDriverException::factory(
                 WebDriverException::CURL_EXEC,
                 'Payload received from webdriver is valid but unexpected json: ' . substr($rawResult, 0, 1000)
@@ -226,8 +226,25 @@ abstract class AbstractWebDriver
         $message = (is_array($value) && array_key_exists('message', $value)) ? $value['message'] : null;
 
         // if not success, throw exception
-        if ((int) $result['status'] !== 0) {
-            throw WebDriverException::factory($result['status'], $message);
+        if (isset($result['status']) && (int) $result['status'] !== 0) {
+            throw WebDriverException::factory(
+                $result['status'],
+                'WebDriver response "status"'
+            );
+        }
+
+        if (isset($value['error'])) {
+            throw WebDriverException::factory(
+                $value['error'],
+                $message ?: 'WebDriver response "error"'
+            );
+        }
+
+        if (isset($value['ready']) && $value['ready'] !== true) {
+            throw WebDriverException::factory(
+                WebDriverException::CURL_EXEC,
+                $message ?: 'WebDriver session not "ready"'
+            );
         }
 
         $sessionId = isset($result['sessionId'])
