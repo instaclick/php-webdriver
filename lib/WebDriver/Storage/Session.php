@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2011-2017 Anthon Pang. All Rights Reserved.
+ * Copyright 2021-2021 Anthon Pang. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,28 +20,13 @@
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
-namespace Test\WebDriver;
-
-use WebDriver\Storage;
+namespace WebDriver\Storage;
 
 /**
- * Test WebDriver\Storage class
+ * WebDriver\Storage\Session class
  *
  * @package WebDriver
- *
- * @group Unit
  */
-class StorageTest extends \PHPUnit_Framework_TestCase
+final class Session extends AbstractStorage
 {
-    /**
-     * test factory()
-     */
-    public function testFactory()
-    {
-        $out = Storage::factory('Local', '/');
-        $this->assertTrue($out instanceof Storage\Local);
-
-        $out = Storage::factory('sEsSiOn', '/');
-        $this->assertTrue($out instanceof Storage\Session);
-    }
 }

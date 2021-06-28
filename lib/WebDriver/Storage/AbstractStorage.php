@@ -20,12 +20,13 @@
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
-namespace WebDriver;
+namespace WebDriver\Storage;
 
+use WebDriver\AbstractWebDriver;
 use WebDriver\Exception as WebDriverException;
 
 /**
- * WebDriver\Storage class
+ * WebDriver\AbstractStorage class
  *
  * @package WebDriver
  *
@@ -33,7 +34,7 @@ use WebDriver\Exception as WebDriverException;
  * @method void deleteKey($key) Delete a specific key.
  * @method integer size() Get the number of items in the storage.
  */
-abstract class Storage extends AbstractWebDriver
+abstract class AbstractStorage extends AbstractWebDriver
 {
     /**
      * {@inheritdoc}
@@ -71,7 +72,7 @@ abstract class Storage extends AbstractWebDriver
     /**
      * Set specific key/value pair
      *
-     * @return \WebDriver\Storage
+     * @return \WebDriver\AbstractStorage
      *
      * @throw \WebDriver\Exception\UnexpectedParameters if unexpected parameters
      */
@@ -102,7 +103,7 @@ abstract class Storage extends AbstractWebDriver
     /**
      * Delete storage or a specific key
      *
-     * @return \WebDriver\Storage
+     * @return \WebDriver\AbstractStorage
      *
      * @throw \WebDriver\Exception\UnexpectedParameters if unexpected parameters
      */
@@ -123,29 +124,5 @@ abstract class Storage extends AbstractWebDriver
         }
 
         throw WebDriverException::factory(WebDriverException::UNEXPECTED_PARAMETERS);
-    }
-
-    /**
-     * Factory method to create Storage objects
-     *
-     * @param string  $type 'local' or 'session' storage
-     * @param string  $url  URL
-     * @param boolean $w3c  Is W3C?
-     *
-     * @return \WebDriver\Storage
-     */
-    public static function factory($type, $url, $w3c = false)
-    {
-        // dynamically define custom storage classes
-        $className = ucfirst(strtolower($type));
-        $namespacedClassName = __CLASS__ . '\\' . $className;
-
-        if (! class_exists($namespacedClassName, false)) {
-            eval(
-                'namespace ' . __CLASS__ . '; final class ' . $className . ' extends \\' . __CLASS__ . '{}'
-            );
-        }
-
-        return new $namespacedClassName($url, $w3c);
     }
 }

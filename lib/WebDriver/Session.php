@@ -401,7 +401,7 @@ final class Session extends Container
      */
     public function localStorage()
     {
-        return Storage::factory('local', $this->url . '/local_storage', $this->w3c);
+        return new Storage\Local($this->url . '/local_storage', $this->w3c);
     }
 
     /**
@@ -412,7 +412,7 @@ final class Session extends Container
      */
     public function sessionStorage()
     {
-        return Storage::factory('session', $this->url . '/session_storage', $this->w3c);
+        return new Storage\Session($this->url . '/session_storage', $this->w3c);
     }
 
     /**
