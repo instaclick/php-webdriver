@@ -163,21 +163,21 @@ abstract class AbstractWebDriver
         if (isset($result['status']) && (int) $result['status'] !== 0) {
             throw WebDriverException::factory(
                 $result['status'],
-                'WebDriver response "status"'
+                $message
             );
         }
 
         if (isset($value['error'])) {
             throw WebDriverException::factory(
                 $value['error'],
-                $message ?: 'WebDriver response "error"'
+                $message
             );
         }
 
         if (isset($value['ready']) && $value['ready'] !== true) {
             throw WebDriverException::factory(
                 WebDriverException::CURL_EXEC,
-                $message ?: 'WebDriver session not "ready"'
+                $message
             );
         }
 
