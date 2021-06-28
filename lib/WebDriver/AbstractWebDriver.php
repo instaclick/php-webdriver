@@ -124,6 +124,13 @@ abstract class AbstractWebDriver
 
         $httpCode = $info['http_code'];
 
+        if ($httpCode === 0) {
+            throw WebDriverException::factory(
+                WebDriverException::CURL_EXEC,
+                $info['error']
+            );
+        }
+
         // According to https://w3c.github.io/webdriver/webdriver-spec.html all 4xx responses are to be considered
         // an error and return plaintext, while 5xx responses are json encoded
         if ($httpCode >= 400 && $httpCode <= 499) {

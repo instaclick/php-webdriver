@@ -100,6 +100,8 @@ class CurlService implements CurlServiceInterface
 
         $info = curl_getinfo($curl);
         $info['request_method'] = $requestMethod;
+        $info['errno'] = curl_errno($curl);
+        $info['error'] = curl_error($curl);
 
         if (array_key_exists(CURLOPT_FAILONERROR, $extraOptions) &&
             $extraOptions[CURLOPT_FAILONERROR] &&
