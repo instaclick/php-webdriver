@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2012-2021 Anthon Pang. All Rights Reserved.
  *
@@ -67,7 +68,7 @@ final class ServiceFactory
     public static function getInstance()
     {
         if (! self::$instance) {
-            self::$instance = new self;
+            self::$instance = new self();
         }
 
         return self::$instance;
@@ -85,7 +86,7 @@ final class ServiceFactory
         if (! isset($this->services[$serviceName])) {
             $className = $this->serviceClasses[$serviceName];
 
-            $this->services[$serviceName] = new $className;
+            $this->services[$serviceName] = new $className();
         }
 
         return $this->services[$serviceName];

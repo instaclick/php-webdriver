@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2012-2021 Anthon Pang. All Rights Reserved.
  *
@@ -127,7 +128,12 @@ class SauceRest
 
         $url = 'https://saucelabs.com/rest/v1/' . $url;
 
-        list($rawResult, $info) = $this->curlService->execute($requestMethod, $url, $parameters, array_replace($extraOptions, $this->transientOptions));
+        list($rawResult, $info) = $this->curlService->execute(
+            $requestMethod,
+            $url,
+            $parameters,
+            array_replace($extraOptions, $this->transientOptions)
+        );
 
         $this->transientOptions = array();
 

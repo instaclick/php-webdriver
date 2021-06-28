@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2011-2021 Anthon Pang. All Rights Reserved.
  *
@@ -76,7 +77,8 @@ abstract class Storage extends AbstractWebDriver
      */
     public function set()
     {
-        if (func_num_args() === 1
+        if (
+            func_num_args() === 1
             && is_array($arg = func_get_arg(0))
         ) {
             $this->curl('POST', '', $arg);

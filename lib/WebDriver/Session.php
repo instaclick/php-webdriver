@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2004-2021 Facebook. All Rights Reserved.
  *
@@ -396,7 +397,7 @@ final class Session extends Container
      *
      * @return \WebDriver\Storage
      */
-    public function local_storage()
+    public function localStorage()
     {
         return Storage::factory('local', $this->url . '/local_storage', $this->w3c);
     }
@@ -407,7 +408,7 @@ final class Session extends Container
      *
      * @return \WebDriver\Storage
      */
-    public function session_storage()
+    public function sessionStorage()
     {
         return Storage::factory('session', $this->url . '/session_storage', $this->w3c);
     }
@@ -418,7 +419,7 @@ final class Session extends Container
      *
      * @return \WebDriver\ApplicationCache
      */
-    public function application_cache()
+    public function applicationCache()
     {
         return new ApplicationCache($this->url . '/application_cache', $this->w3c);
     }
@@ -497,5 +498,24 @@ final class Session extends Container
     protected function getElementPath($elementId)
     {
         return sprintf('%s/element/%s', $this->url, $elementId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __call($name, $arguments)
+    {
+        $map = [
+            'local_storage' => 'localStorage',
+            'session_storage' => 'sessionStorage',
+            'application_cache' => 'applicationCache',
+        ];
+
+        if (array_key_exists($name, $map)) {
+            $name = $map[$name];
+        }
+
+        // fallback to executing WebDriver commands
+        return parent::__call($name, $arguments);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2004-2021 Facebook. All Rights Reserved.
  *
@@ -191,7 +192,12 @@ abstract class AbstractWebDriver
             $url .= '/' . $parameters;
         }
 
-        list($rawResult, $info) = $this->curlService->execute($requestMethod, $url, $parameters, array_replace($extraOptions, $this->transientOptions));
+        list($rawResult, $info) = $this->curlService->execute(
+            $requestMethod,
+            $url,
+            $parameters,
+            array_replace($extraOptions, $this->transientOptions)
+        );
 
         $this->transientOptions = array();
 

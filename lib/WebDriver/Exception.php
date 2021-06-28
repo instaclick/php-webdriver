@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2004-2021 Facebook. All Rights Reserved.
  *
@@ -132,8 +133,8 @@ abstract class Exception extends \Exception
         'invalid element state' => array('InvalidElementState', 'A command could not be completed because the element is in an invalid state, e.g. attempting to clear an element that isn\'t both editable and resettable.'),
         'invalid selector' => array('InvalidSelector', 'Argument was an invalid selector.'),
         'invalid session id' => array('InvalidSessionID', 'Occurs if the given session id is not in the list of active sessions, meaning the session either does not exist or that it\'s not active.'),
-	'javascript error' => array('JavaScriptError', 'An error occurred while executing JavaScript supplied by the user.'),
-	'move target out of bounds' => array('MoveTargetOutOfBounds', 'The target for mouse interaction is not in the browser\'s viewport and cannot be brought into that viewport.'),
+        'javascript error' => array('JavaScriptError', 'An error occurred while executing JavaScript supplied by the user.'),
+        'move target out of bounds' => array('MoveTargetOutOfBounds', 'The target for mouse interaction is not in the browser\'s viewport and cannot be brought into that viewport.'),
         'no such alert' => array('NoSuchAlert', 'An attempt was made to operate on a modal dialog when one was not open.'),
         'no such cookie' => array('NoSuchCookie', 'No cookie matching the given path name was found amongst the associated cookies of the current browsing context\'s active document.'),
         'no such element' => array('NoSuchElement', 'An element could not be located on the page using the given search parameters.'),

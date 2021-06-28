@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2004-2021 Facebook. All Rights Reserved.
  *
@@ -116,7 +117,8 @@ class CurlService implements CurlServiceInterface
         $info = curl_getinfo($curl);
         $info['request_method'] = $requestMethod;
 
-        if (array_key_exists(CURLOPT_FAILONERROR, $extraOptions) &&
+        if (
+            array_key_exists(CURLOPT_FAILONERROR, $extraOptions) &&
             $extraOptions[CURLOPT_FAILONERROR] &&
             CURLE_GOT_NOTHING !== ($errno = curl_errno($curl)) &&
             $error = curl_error($curl)
