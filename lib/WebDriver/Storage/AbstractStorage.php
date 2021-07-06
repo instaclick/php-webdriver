@@ -78,10 +78,7 @@ abstract class AbstractStorage extends AbstractWebDriver
      */
     public function set()
     {
-        if (
-            func_num_args() === 1
-            && is_array($arg = func_get_arg(0))
-        ) {
+        if (func_num_args() === 1 && is_array($arg = func_get_arg(0))) {
             $this->curl('POST', '', $arg);
 
             return $this;
