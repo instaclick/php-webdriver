@@ -32,22 +32,24 @@ final class Browser
 {
     /**
      * Check browser names used in static functions in the selenium source:
-     * @see http://code.google.com/p/selenium/source/browse/java/client/src/org/openqa/selenium/remote/DesiredCapabilities.java
-     *
-     * Note: Capability array takes these browserNames and not the "browserTypes"
+     * @see https://github.com/SeleniumHQ/selenium/blob/trunk/java/client/src/org/openqa/selenium/remote/BrowserType.java
      *
      * Also check
      * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Capabilities_JSON_Object
      */
     const ANDROID           = 'android';
     const CHROME            = 'chrome';
+    const EDGE              = 'edge';
+    const EDGEHTML          = 'EdgeHTML';
     const FIREFOX           = 'firefox';
     const HTMLUNIT          = 'htmlunit';
     const IE                = 'internet explorer';
     const INTERNET_EXPLORER = 'internet explorer';
     const IPHONE            = 'iPhone';
     const IPAD              = 'iPad';
+    const MSEDGE            = 'MicrosoftEdge';
     const OPERA             = 'opera';
+    const OPERA_BLINK       = 'operablink';
     const PHANTOMJS         = 'phantomjs';
     const SAFARI            = 'safari';
 }

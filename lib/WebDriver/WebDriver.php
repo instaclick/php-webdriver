@@ -47,21 +47,34 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
      */
     public function session($requiredCapabilities = Browser::FIREFOX, $desiredCapabilities = array())
     {
-        // for backwards compatibility when the only required capability was browser name
-        if (! is_array($requiredCapabilities)) {
-            $desiredCapabilities[Capability::BROWSER_NAME] = $requiredCapabilities ?: Browser::FIREFOX;
+        if ($this->legacy) {
+            // for backwards compatibility when the only required capability was browser name
+            if (! is_array($requiredCapabilities)) {
+                $desiredCapabilities[Capability::BROWSER_NAME] = $requiredCapabilities ?: Browser::FIREFOX;
 
-            $requiredCapabilities = array();
-        }
+                $requiredCapabilities = array();
+            }
 
-        // required
-        $parameters = array(
-            'desiredCapabilities' => array_merge($desiredCapabilities, $requiredCapabilities)
-        );
+            // required
+            $parameters = array(
+                'desiredCapabilities' => array_merge($desiredCapabilities, $requiredCapabilities)
+            );
 
-        // optional
-        if (! empty($requiredCapabilities)) {
-            $parameters['requiredCapabilities'] = $requiredCapabilities;
+            // optional
+            if (! empty($requiredCapabilities)) {
+                $parameters['requiredCapabilities'] = $requiredCapabilities;
+            }
+        } else {
+            if (! is_array($requiredCapabilities)) {
+                $parameters = array(
+                    'capabilities' => array(
+                        'firstMatch' => array(
+                            array('browserName' => Browser::CHROME),
+                            array('browserName' => Browser::FIREFOX)
+                        )
+                    )
+                );
+            }
         }
 
         $result = $this->curl(
@@ -85,10 +98,9 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
      */
     public function sessions()
     {
-        $result   = $this->curl('GET', '/sessions');
+        $result = $this->curl('GET', '/sessions');
         $sessions = array();
 
-        // @todo initialize $this->legacy if sessions() is called before session()
         foreach ($result['value'] as $session) {
             $sessions[] = new Session($this->url . '/session/' . $session['id'], $this->legacy);
         }

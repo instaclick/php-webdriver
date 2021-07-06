@@ -42,7 +42,10 @@ interface WebDriverInterface
     public function session($requiredCapabilities = Browser::FIREFOX, $desiredCapabilities = array());
 
     /**
+     * Get Sessions: /sessions (GET)
      * Get list of currently active sessions
+     *
+     * @deprecated
      *
      * @return array an array of \WebDriver\Session objects
      */

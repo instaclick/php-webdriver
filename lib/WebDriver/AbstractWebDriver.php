@@ -255,9 +255,12 @@ abstract class AbstractWebDriver
 
         $sessionId = isset($result['sessionId'])
            ? $result['sessionId']
-           : (isset($value['webdriver.remote.sessionid'])
-               ? $value['webdriver.remote.sessionid']
-               : null
+           : (isset($value['sessionId'])
+               ? $value['sessionId']
+               : (isset($value['webdriver.remote.sessionid'])
+                   ? $value['webdriver.remote.sessionid']
+                   : null
+               )
            );
 
         return array(

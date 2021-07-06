@@ -249,6 +249,8 @@ final class Session extends Container
      * - $session->legacyWindow($name) - set focus
      * - $session->legacyWindow($window_handle)->method() - chaining
      *
+     * @deprecated
+     *
      * @return \WebDriver\LegacyWindow|\WebDriver\Session
      */
     public function legacyWindow()
