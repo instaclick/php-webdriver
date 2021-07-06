@@ -45,44 +45,47 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
     /**
      * {@inheritdoc}
      */
-    public function session($requiredCapabilities = Browser::FIREFOX, $desiredCapabilities = array())
+    public function session($browserName = Browser::FIREFOX, $desiredCapabilities = null, $requiredCapabilities = null)
     {
-        if ($this->legacy) {
-            // for backwards compatibility when the only required capability was browser name
-            if (! is_array($requiredCapabilities)) {
-                $desiredCapabilities[Capability::BROWSER_NAME] = $requiredCapabilities ?: Browser::FIREFOX;
+        // default to W3C WebDriver API
+        $firstMatch = $desiredCapabilities ?: array();
+        $firstMatch[] = array('browserName' => Browser::CHROME);
 
-                $requiredCapabilities = array();
-            }
-
-            // required
-            $parameters = array(
-                'desiredCapabilities' => array_merge($desiredCapabilities, $requiredCapabilities)
-            );
-
-            // optional
-            if (! empty($requiredCapabilities)) {
-                $parameters['requiredCapabilities'] = $requiredCapabilities;
-            }
-        } else {
-            if (! is_array($requiredCapabilities)) {
-                $parameters = array(
-                    'capabilities' => array(
-                        'firstMatch' => array(
-                            array('browserName' => Browser::CHROME),
-                            array('browserName' => Browser::FIREFOX)
-                        )
-                    )
-                );
-            }
+        if ($browserName !== Browser::CHROME) {
+            $firstMatch[] = array('browserName' => $browserName);
         }
 
-        $result = $this->curl(
-            'POST',
-            '/session',
-            $parameters,
-            array(CURLOPT_FOLLOWLOCATION => true)
-        );
+        $parameters = array('capabilities' => array('firstMatch' => $firstMatch));
+
+        if (is_array($requiredCapabilities) && count($requiredCapabilities)) {
+            $parameters['capabilities']['alwaysMatch'] = $requiredCapabilities;
+        }
+
+        try {
+            $result = $this->curl(
+                'POST',
+                '/session',
+                $parameters,
+                array(CURLOPT_FOLLOWLOCATION => true)
+            );
+        } catch (\Exception $e) {
+            // fallback to legacy JSON Wire Protocol
+            $capabilities = $desiredCapabilities ?: array();
+            $capabilities[Capability::BROWSER_NAME] = $browserName;
+
+            $parameters = array('desiredCapabilities' => $capabilities);
+
+            if (is_array($requiredCapabilities) && count($requiredCapabilities)) {
+                $parameters['requiredCapabilities'] = $requiredCapabilities;
+            }
+
+            $result = $this->curl(
+                'POST',
+                '/session',
+                $parameters,
+                array(CURLOPT_FOLLOWLOCATION => true)
+            );
+        }
 
         $capabilities = isset($result['value']['capabilities']) ? $result['value']['capabilities'] : null;
         $this->legacy = ! $capabilities;
@@ -94,7 +97,12 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get Sessions: /sessions (GET)
+     * Get list of currently active sessions
+     *
+     * @deprecated
+     *
+     * @return array an array of \WebDriver\Session objects
      */
     public function sessions()
     {

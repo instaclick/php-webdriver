@@ -34,20 +34,11 @@ interface WebDriverInterface
      * New Session: /session (POST)
      * Get session object for chaining
      *
-     * @param array|string $requiredCapabilities Required capabilities (or browser name)
-     * @param array        $desiredCapabilities  Desired capabilities
+     * @param string $browserName          Preferred browser
+     * @param array  $desiredCapabilities  Optional desired capabilities
+     * @param array  $requiredCapabilities Optional required capabilities
      *
      * @return \WebDriver\Session
      */
-    public function session($requiredCapabilities = Browser::FIREFOX, $desiredCapabilities = array());
-
-    /**
-     * Get Sessions: /sessions (GET)
-     * Get list of currently active sessions
-     *
-     * @deprecated
-     *
-     * @return array an array of \WebDriver\Session objects
-     */
-    public function sessions();
+    public function session($browserName = Browser::FIREFOX, $desiredCapabilities = null, $requiredCapabilities = null);
 }
