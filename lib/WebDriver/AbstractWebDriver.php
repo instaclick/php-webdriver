@@ -228,7 +228,7 @@ abstract class AbstractWebDriver
             );
         }
 
-        if (is_array($result) && ! array_key_exists('status', $result) && ! isset($result['value']['ready']) && ! isset($result['value']['error'])) {
+        if (is_array($result) && ! array_key_exists('status', $result) && ! array_key_exists('value', $result)) {
             throw WebDriverException::factory(
                 WebDriverException::CURL_EXEC,
                 'Payload received from webdriver is valid but unexpected json: ' . substr($rawResult, 0, 1000)
@@ -249,13 +249,6 @@ abstract class AbstractWebDriver
         if (isset($value['error'])) {
             throw WebDriverException::factory(
                 $value['error'],
-                $message
-            );
-        }
-
-        if (isset($value['ready']) && $value['ready'] !== true) {
-            throw WebDriverException::factory(
-                WebDriverException::CURL_EXEC,
                 $message
             );
         }
