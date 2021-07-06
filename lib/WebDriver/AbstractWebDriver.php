@@ -44,7 +44,7 @@ abstract class AbstractWebDriver
     /**
      * @var boolean
      */
-    protected $w3c;
+    protected $legacy = false;
 
     /**
      * Curl service
@@ -80,13 +80,13 @@ abstract class AbstractWebDriver
     /**
      * Constructor
      *
-     * @param string  $url URL to Selenium server
-     * @param boolean $w3c Is w3c driver?
+     * @param string  $url    URL to Selenium server
+     * @param boolean $legacy Is legacy driver?
      */
-    public function __construct($url = 'http://localhost:4444/wd/hub', $w3c = false)
+    public function __construct($url = 'http://localhost:4444/wd/hub', $legacy = false)
     {
         $this->url = $url;
-        $this->w3c = $w3c;
+        $this->legacy = $legacy;
         $this->transientOptions = array();
         $this->curlService = ServiceFactory::getInstance()->getService('service.curl');
     }
@@ -150,13 +150,13 @@ abstract class AbstractWebDriver
     }
 
     /**
-     * Is w3c driver?
+     * Is legacy driver?
      *
      * @return boolean
      */
-    public function isW3c()
+    public function isLegacy()
     {
-        return $this->w3c;
+        return $this->legacy;
     }
 
     /**

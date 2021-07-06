@@ -109,13 +109,13 @@ final class Element extends Container
     /**
      * Constructor
      *
-     * @param string  $url URL
-     * @param string  $id  element ID
-     * @param boolean $w3c Is w3c?
+     * @param string  $url    URL
+     * @param string  $id     element ID
+     * @param boolean $legacy Is legacy?
      */
-    public function __construct($url, $id, $w3c = false)
+    public function __construct($url, $id, $legacy)
     {
-        parent::__construct($url, $w3c);
+        parent::__construct($url, $legacy);
 
         $this->id = $id;
     }
@@ -141,7 +141,7 @@ final class Element extends Container
      */
     public function shadow()
     {
-        return new Shadow($this->url . '/shadow', $this->w3c);
+        return new Shadow($this->url . '/shadow', $this->legacy);
     }
 
     /**

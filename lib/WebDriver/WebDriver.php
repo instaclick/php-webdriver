@@ -72,9 +72,9 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
         );
 
         $capabilities = isset($result['value']['capabilities']) ? $result['value']['capabilities'] : null;
-        $this->w3c    = !! $capabilities;
+        $this->legacy = ! $capabilities;
 
-        $session = new Session($result['sessionUrl'], $this->w3c);
+        $session = new Session($result['sessionUrl'], $this->legacy);
         $session->setCapabilities($capabilities);
 
         return $session;
@@ -88,9 +88,9 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
         $result   = $this->curl('GET', '/sessions');
         $sessions = array();
 
-        // @todo initialize $this->w3c if sessions() is called before session()
+        // @todo initialize $this->legacy if sessions() is called before session()
         foreach ($result['value'] as $session) {
-            $sessions[] = new Session($this->url . '/session/' . $session['id'], $this->w3c);
+            $sessions[] = new Session($this->url . '/session/' . $session['id'], $this->legacy);
         }
 
         return $sessions;
