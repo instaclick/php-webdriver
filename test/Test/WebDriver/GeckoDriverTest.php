@@ -26,16 +26,16 @@ use Test\WebDriver\WebDriverTestBase;
 use WebDriver\Session;
 
 /**
- * ChromeDriver
+ * GeckoDriver
  *
  * @package WebDriver
  *
  * @group Functional
  */
-class ChromeDriverTest extends WebDriverTestBase
+class GeckoDriverTest extends WebDriverTestBase
 {
-    protected $testWebDriverRootUrl = 'http://localhost:9515';
-    protected $testWebDriverName    = 'chromedriver';
+    protected $testWebDriverRootUrl = 'http://localhost:4444';
+    protected $testWebDriverName    = 'geckodriver';
 
     /**
      * Test driver session
@@ -58,7 +58,6 @@ class ChromeDriverTest extends WebDriverTestBase
     }
 
     /**
-    /**
      * Test driver status
      */
     public function testStatus()
@@ -75,10 +74,8 @@ class ChromeDriverTest extends WebDriverTestBase
             throw $e;
         }
 
-        $this->assertCount(4, $status);
-        $this->assertTrue(isset($status['build']));
+        $this->assertCount(2, $status);
         $this->assertTrue(isset($status['message']));
-        $this->assertTrue(isset($status['os']));
         $this->assertTrue(isset($status['ready']));
     }
 }

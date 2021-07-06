@@ -47,6 +47,10 @@ class ExceptionTest extends TestCase
         $this->assertTrue($out instanceof Exception\UnknownError);
         $this->assertTrue($out->getMessage() === 'An unknown server-side error occurred while processing the command.');
 
+        $out = Exception::factory(Exception::SESSION_NOT_CREATED);
+        $this->assertTrue($out instanceof Exception\SessionNotCreated);
+        $this->assertTrue(strpos($out->getMessage(), 'A new session could not be created') !== false);
+
         $out = Exception::factory(Exception::CURL_EXEC);
         $this->assertTrue($out instanceof Exception\CurlExec);
         $this->assertTrue($out->getMessage() === 'curl_exec() error.');
