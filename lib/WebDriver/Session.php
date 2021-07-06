@@ -341,14 +341,10 @@ final class Session extends Container
         }
 
         if (func_num_args() === 2) {
-            $arg = $this->legacy
-                ? array(
-                    'type' => func_get_arg(0), // 'script' or 'implicit'
-                    'ms' => func_get_arg(1),   // timeout in milliseconds
-                  )
-                : array(
-                    func_get_arg(0) => func_get_arg(1),  // 'script' or 'implicit' => timeout in milliseconds
-                  );
+            $type    = func_get_arg(0); // 'script', 'implicit', or 'pageLoad'
+            $timeout = func_get_arg(1); // timeout in milliseconds
+
+            $arg = $this->legacy ? array('type' => $type, 'ms' => $timeout) : array($type => $timeout);
 
             $this->curl('POST', '/timeouts', $arg);
 

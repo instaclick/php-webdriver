@@ -60,6 +60,15 @@ abstract class Exception extends \Exception
     const INVALID_SELECTOR = 32;
     const SESSION_NOT_CREATED = 33;
     const MOVE_TARGET_OUT_OF_BOUNDS = 34;
+    const INVALID_XPATH_SELECTOR = 51;
+    const INVALID_XPATH_SELECTOR_RETURN_TYPER = 52;
+    const ELEMENT_NOT_INTERACTABLE = 60;
+    const INVALID_ARGUMENT = 61;
+    const NO_SUCH_COOKIE = 62;
+    const UNABLE_TO_CAPTURE_SCREEN = 63;
+    const ELEMENT_CLICK_INTERCEPTED = 64;
+    const NO_SUCH_SHADOW_ROOT = 65;
+    const METHOD_NOT_ALLOWED = 405;
 
     // obsolete
     const INDEX_OUT_OF_BOUNDS = 1;
@@ -124,6 +133,15 @@ abstract class Exception extends \Exception
         self::UNEXPECTED_PARAMETERS => array('UnexpectedParameters', 'This command does not expect this number of parameters.'),
         self::INVALID_REQUEST => array('InvalidRequest', 'This command does not support this HTTP request method.'),
         self::UNKNOWN_LOCATOR_STRATEGY => array('UnknownLocatorStrategy', 'This locator strategy is not supported.'),
+        self::INVALID_XPATH_SELECTOR => array('InvalidSelector', 'Argument was an invalid selector.'),
+        self::INVALID_XPATH_SELECTOR_RETURN_TYPER => array('InvalidSelector', 'Argument was an invalid selector.'),
+        self::ELEMENT_NOT_INTERACTABLE => array('ElementNotInteractable', 'A command could not be completed because the element is not pointer- or keyboard interactable.'),
+        self::INVALID_ARGUMENT => array('InvalidArgument', 'The arguments passed to a command are either invalid or malformed.'),
+        self::NO_SUCH_COOKIE => array('NoSuchCookie', 'No cookie matching the given path name was found amongst the associated cookies of the current browsing context\'s active document.'),
+        self::UNABLE_TO_CAPTURE_SCREEN => array('UnableToCaptureScreen', 'A screen capture was made impossible.'),
+        self::ELEMENT_CLICK_INTERCEPTED => array('ElementClickIntercepted', 'The Element Click command could not be completed because the element receiving the events is obscuring the element that was requested clicked.'),
+        self::NO_SUCH_SHADOW_ROOT => array('NoSuchShadowRoot', 'The element does not have a shadow root.'),
+        self::METHOD_NOT_ALLOWED => array('UnsupportedOperation', 'Indicates that a command that should have executed properly cannot be supported for some reason.'),
 
         //  @link https://w3c.github.io/webdriver/#errors
         'detached shadow root' => array('DetachedShadowRoot', 'A command failed because the referenced shadow root is no longer attached to the DOM.'),
