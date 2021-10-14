@@ -149,7 +149,7 @@ abstract class AbstractWebDriver
             );
         }
 
-        if (is_array($result) && !array_key_exists('status', $result) && !isset($result['value']['ready']) && ! isset($result['value']['error'])) {
+        if (is_array($result) && ! array_key_exists('status', $result) && ! array_key_exists('value', $result)) {
             throw WebDriverException::factory(
                 WebDriverException::CURL_EXEC,
                 'Payload received from webdriver is valid but unexpected json: ' . substr($rawResult, 0, 1000)
@@ -183,9 +183,12 @@ abstract class AbstractWebDriver
 
         $sessionId = isset($result['sessionId'])
            ? $result['sessionId']
-           : (isset($value['webdriver.remote.sessionid'])
-               ? $value['webdriver.remote.sessionid']
-               : null
+           : (isset($value['sessionId'])
+               ? $value['sessionId']
+               : (isset($value['webdriver.remote.sessionid'])
+                   ? $value['webdriver.remote.sessionid']
+                   : null
+               )
            );
 
         return array(
