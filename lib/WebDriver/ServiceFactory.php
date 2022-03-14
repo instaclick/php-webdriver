@@ -67,7 +67,7 @@ final class ServiceFactory
      */
     public static function getInstance()
     {
-        if (! self::$instance) {
+        if (self::$instance === null) {
             self::$instance = new self();
         }
 

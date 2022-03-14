@@ -70,7 +70,7 @@ final class Window extends AbstractWebDriver
     /**
      * New window: /session/:sessionId/window/new (POST)
      *
-     * @return \WebDriver\Session
+     * @return \WebDriver\Window
      */
     public function focusWindow($name)
     {

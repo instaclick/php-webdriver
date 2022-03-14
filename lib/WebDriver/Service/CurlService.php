@@ -24,7 +24,7 @@
 
 namespace WebDriver\Service;
 
-use WebDriver\Exception as WebDriverException;
+use WebDriver\Exception\CurlExec as CurlExecException;
 
 /**
  * WebDriver\Service\CurlService class
@@ -41,7 +41,7 @@ class CurlService implements CurlServiceInterface
     /**
      * Constructor
      *
-     * @param array $defaultOptions
+     * @param mixed $defaultOptions
      */
     public function __construct($defaultOptions = array())
     {
@@ -126,8 +126,7 @@ class CurlService implements CurlServiceInterface
         ) {
             curl_close($curl);
 
-            throw WebDriverException::factory(
-                WebDriverException::CURL_EXEC,
+            $e = new CurlExecException(
                 sprintf(
                     "Curl error thrown for http %s to %s%s\n\n%s",
                     $requestMethod,
@@ -135,10 +134,12 @@ class CurlService implements CurlServiceInterface
                     $parameters && is_array($parameters) ? ' with params: ' . json_encode($parameters) : '',
                     $error
                 ),
-                $errno,
-                null,
-                $info
+                $errno
             );
+
+            $e->setCurlInfo($info);
+
+            throw $e;
         }
 
         curl_close($curl);

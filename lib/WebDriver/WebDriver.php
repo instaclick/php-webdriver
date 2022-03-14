@@ -28,7 +28,7 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
- * @method status
+ * @method array status()
  */
 class WebDriver extends AbstractWebDriver implements WebDriverInterface
 {

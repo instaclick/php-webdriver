@@ -72,7 +72,7 @@ abstract class AbstractStorage extends AbstractWebDriver
     /**
      * Set specific key/value pair
      *
-     * @return \WebDriver\AbstractStorage
+     * @return \WebDriver\Storage\AbstractStorage
      *
      * @throw \WebDriver\Exception\UnexpectedParameters if unexpected parameters
      */
@@ -100,7 +100,7 @@ abstract class AbstractStorage extends AbstractWebDriver
     /**
      * Delete storage or a specific key
      *
-     * @return \WebDriver\AbstractStorage
+     * @return \WebDriver\Storage\AbstractStorage
      *
      * @throw \WebDriver\Exception\UnexpectedParameters if unexpected parameters
      */

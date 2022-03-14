@@ -227,6 +227,8 @@ abstract class Container extends AbstractWebDriver
                 $this->legacy
             );
         }
+
+        return null;
     }
 
     /**

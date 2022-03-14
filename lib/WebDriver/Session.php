@@ -395,7 +395,7 @@ final class Session extends Container
      * local_storage method chaining, e.g.,
      * - $session->local_storage()->method()
      *
-     * @return \WebDriver\Storage
+     * @return \WebDriver\Storage\Local
      */
     public function localStorage()
     {
@@ -406,7 +406,7 @@ final class Session extends Container
      * session_storage method chaining, e.g.,
      * - $session->session_storage()->method()
      *
-     * @return \WebDriver\Storage
+     * @return \WebDriver\Storage\Session
      */
     public function sessionStorage()
     {
