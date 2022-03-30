@@ -32,7 +32,7 @@ final class LogType
     /**
      * Log Type
      *
-     * @see https://code.google.com/p/selenium/source/browse/java/client/src/org/openqa/selenium/logging/LogType.java
+     * @see https://github.com/SeleniumHQ/selenium/blob/trunk/java/src/org/openqa/selenium/logging/LogType.java
      */
     const BROWSER     = 'browser';
     const CLIENT      = 'client';

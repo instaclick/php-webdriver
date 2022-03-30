@@ -60,20 +60,17 @@ final class Element extends Container
     {
         return array(
             'click' => array('POST'),
-            'text' => array('GET'),
-            'value' => array('POST'),
-            'name' => array('GET'),
             'clear' => array('POST'),
-            'selected' => array('GET'),
+            'value' => array('POST'),
+            'text' => array('GET'),
+            'name' => array('GET'),
+            'rect' => array('GET'),
             'enabled' => array('GET'),
+            'selected' => array('GET'),
             'attribute' => array('GET'),
             'property' => array('GET'),
             'css' => array('GET'),
-            'rect' => array('GET'),
-            'active' => array('GET'),
             'screenshot' => array('GET'),
-            'computedrole' => array('GET'),
-            'computedlabel' => array('GET'),
 
             // Legacy JSON Wire Protocol
             'submit' => array('POST'),
@@ -96,6 +93,10 @@ final class Element extends Container
             'toggle' => array('POST'),
             'hover' => array('POST'),
             'drag' => array('POST'),
+            'active' => array('GET'),
+            'computedrole' => array('GET'),
+            'computedlabel' => array('GET'),
+
         );
     }
 

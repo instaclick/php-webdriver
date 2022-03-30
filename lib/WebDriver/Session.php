@@ -77,13 +77,13 @@ final class Session extends Container
     {
         return array(
             'url' => array('GET', 'POST'), // alternate for POST, use open($url)
-            'forward' => array('POST'),
             'back' => array('POST'),
+            'forward' => array('POST'),
             'refresh' => array('POST'),
+            'title' => array('GET'),
             'screenshot' => array('GET'),
             'cookie' => array('GET', 'POST'), // for DELETE, use deleteAllCookies()
             'source' => array('GET'),
-            'title' => array('GET'),
             'actions' => array('POST', 'DELETE'),
             'print' => array('POST'),
 
@@ -341,7 +341,7 @@ final class Session extends Container
         }
 
         if (func_num_args() === 2) {
-            $type    = func_get_arg(0); // 'script', 'implicit', or 'pageLoad'
+            $type    = func_get_arg(0); // 'script', 'implicit', or 'page load' (legacy: 'pageLoad')
             $timeout = func_get_arg(1); // timeout in milliseconds
 
             $arg = $this->legacy ? array('type' => $type, 'ms' => $timeout) : array($type => $timeout);

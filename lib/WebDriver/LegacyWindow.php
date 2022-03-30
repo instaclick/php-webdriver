@@ -28,11 +28,11 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
- * @method array getSize() Get size of the window.
- * @method void postSize($json) Change the size of the window.
+ * @method void maximize() Maximize the window if not already maximized.
  * @method array getPosition() Get position of the window.
  * @method void postPosition($json) Change position of the window.
- * @method void maximize() Maximize the window if not already maximized.
+ * @method array getSize() Get size of the window.
+ * @method void postSize($json) Change the size of the window.
  */
 final class LegacyWindow extends AbstractWebDriver
 {
@@ -50,9 +50,9 @@ final class LegacyWindow extends AbstractWebDriver
     {
         return array(
             // Legacy JSON Wire Protocol
-            'size' => array('GET', 'POST'),
-            'position' => array('GET', 'POST'),
             'maximize' => array('POST'),
+            'position' => array('GET', 'POST'),
+            'size' => array('GET', 'POST'),
         );
     }
 

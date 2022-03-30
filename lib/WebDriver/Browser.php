@@ -32,10 +32,7 @@ final class Browser
 {
     /**
      * Check browser names used in static functions in the selenium source:
-     * @see https://github.com/SeleniumHQ/selenium/blob/trunk/java/client/src/org/openqa/selenium/remote/BrowserType.java
-     *
-     * Also check
-     * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Capabilities_JSON_Object
+     * @see https://github.com/SeleniumHQ/selenium/blob/trunk/java/src/org/openqa/selenium/remote/BrowserType.java
      */
     const ANDROID           = 'android';
     const CHROME            = 'chrome';

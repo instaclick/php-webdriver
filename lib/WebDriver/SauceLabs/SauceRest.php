@@ -110,7 +110,7 @@ class SauceRest
      *
      * @throws \WebDriver\Exception\CurlExec
      *
-     * @see http://saucelabs.com/docs/saucerest
+     * @see https://docs.saucelabs.com/secure-connections/sauce-connect/system-requirements/#rest-api-endpoints
      */
     protected function execute($requestMethod, $url, $parameters = null, $extraOptions = array())
     {

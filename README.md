@@ -4,13 +4,10 @@ This WebDriver client implementation is based on Facebook's [php-webdriver](http
 
 Distinguishing features:
 * Up-to-date with [WebDriver: W3C Editor's Draft 15 March 2022](https://w3c.github.io/webdriver/)
-* Up-to-date with [Selenium 2 JSON Wire Protocol](https://github.com/SeleniumHQ/selenium/wiki/JsonWireProtocol) (including WebDriver commands yet to be documented).
+* Up-to-date with [Selenium 2 JSON Wire Protocol](https://github.com/SeleniumHQ/selenium/blob/trunk/java/src/org/openqa/selenium/remote/DriverCommand.java) (including WebDriver commands yet to be documented).
 * In the *master* branch, class names and file organization follow PSR-0 conventions for namespaces.
 * Coding style follows PSR-1, PSR-2, and Symfony2 conventions.
 * Auto-generate API documentation via [phpDocumentor 2.x](http://phpdoc.org/).
-
-[![Build Status](https://travis-ci.org/instaclick/php-webdriver.png)](https://travis-ci.org/instaclick/php-webdriver)
-[![Coverage Status](https://coveralls.io/repos/instaclick/php-webdriver/badge.png)](https://coveralls.io/r/instaclick/php-webdriver)
 
 [![Latest Stable Version](https://poser.pugx.org/instaclick/php-webdriver/v/stable.png)](https://packagist.org/packages/instaclick/php-webdriver)
 [![Total Downloads](https://poser.pugx.org/instaclick/php-webdriver/downloads.png)](https://packagist.org/packages/instaclick/php-webdriver)

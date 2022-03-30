@@ -25,6 +25,8 @@ namespace WebDriver;
 /**
  * WebDriver\AppCacheStatus class
  *
+ * @deprecated
+ *
  * @package WebDriver
  */
 final class AppCacheStatus
@@ -32,7 +34,7 @@ final class AppCacheStatus
     /**
      * Application cache status
      *
-     * @see https://code.google.com/p/selenium/source/browse/java/client/src/org/openqa/selenium/html5/AppCacheStatus.java
+     * @see https://github.com/SeleniumHQ/selenium/blob/trunk/java/src/org/openqa/selenium/html5/AppCacheStatus.java
      */
     const UNCACHED     = 0;
     const IDLE         = 1;

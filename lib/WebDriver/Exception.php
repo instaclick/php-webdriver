@@ -33,7 +33,7 @@ abstract class Exception extends \Exception
     /**
      * Response status codes
      *
-     * @link http://code.google.com/p/selenium/wiki/JsonWireProtocol#Response_Status_Codes
+     * @see https://github.com/SeleniumHQ/selenium/blob/trunk/java/src/org/openqa/selenium/remote/ErrorCodes.java
      */
     const SUCCESS = 0;
     const NO_SUCH_DRIVER = 6;
@@ -41,10 +41,8 @@ abstract class Exception extends \Exception
     const NO_SUCH_FRAME = 8;
     const UNKNOWN_COMMAND = 9;
     const STALE_ELEMENT_REFERENCE = 10;
-    const ELEMENT_NOT_VISIBLE = 11;
     const INVALID_ELEMENT_STATE = 12;
     const UNKNOWN_ERROR = 13;
-    const ELEMENT_IS_NOT_SELECTABLE = 15;
     const JAVASCRIPT_ERROR = 17;
     const XPATH_LOOKUP_ERROR = 19;
     const TIMEOUT = 21;
@@ -78,8 +76,10 @@ abstract class Exception extends \Exception
     const NO_STRING_WRAPPER = 5;
     const OBSOLETE_ELEMENT = 10;
     const ELEMENT_NOT_DISPLAYED = 11;
+    const ELEMENT_NOT_VISIBLE = 11;
     const UNHANDLED = 13;
     const EXPECTED = 14;
+    const ELEMENT_IS_NOT_SELECTABLE = 15;
     const ELEMENT_NOT_SELECTABLE = 15;
     const NO_SUCH_DOCUMENT = 16;
     const UNEXPECTED_JAVASCRIPT = 17;
@@ -143,13 +143,13 @@ abstract class Exception extends \Exception
         self::NO_SUCH_SHADOW_ROOT => array('NoSuchShadowRoot', 'The element does not have a shadow root.'),
         self::METHOD_NOT_ALLOWED => array('UnsupportedOperation', 'Indicates that a command that should have executed properly cannot be supported for some reason.'),
 
-        //  @link https://w3c.github.io/webdriver/#errors
-        'detached shadow root' => array('DetachedShadowRoot', 'A command failed because the referenced shadow root is no longer attached to the DOM.'),
-        'element click intercepted' => array('ElementClickIntercepted', 'The Element Click command could not be completed because the element receiving the events is obscuring the element that was requested clicked.'),
+        // @ss https://w3c.github.io/webdriver/#errors
         'element not interactable' => array('ElementNotInteractable', 'A command could not be completed because the element is not pointer- or keyboard interactable.'),
+        'element not selectable' => array('ElementIsNotSelectable', 'An attempt was made to select an element that cannot be selected.'),
         'insecure certificate' => array('InsecureCertificate', 'Navigation caused the user agent to hit a certificate warning, which is usually the result of an expired or invalid TLS certificate.'),
         'invalid argument' => array('InvalidArgument', 'The arguments passed to a command are either invalid or malformed.'),
         'invalid cookie domain' => array('InvalidCookieDomain', 'An illegal attempt was made to set a cookie under a different domain than the current page.'),
+        'invalid coordinates' => array('InvalidCoordinates', 'The coordinates provided to an interactions operation are invalid.'),
         'invalid element state' => array('InvalidElementState', 'A command could not be completed because the element is in an invalid state, e.g. attempting to clear an element that isn\'t both editable and resettable.'),
         'invalid selector' => array('InvalidSelector', 'Argument was an invalid selector.'),
         'invalid session id' => array('InvalidSessionID', 'Occurs if the given session id is not in the list of active sessions, meaning the session either does not exist or that it\'s not active.'),
@@ -159,10 +159,8 @@ abstract class Exception extends \Exception
         'no such cookie' => array('NoSuchCookie', 'No cookie matching the given path name was found amongst the associated cookies of the current browsing context\'s active document.'),
         'no such element' => array('NoSuchElement', 'An element could not be located on the page using the given search parameters.'),
         'no such frame' => array('NoSuchFrame', 'A command to switch to a frame could not be satisfied because the frame could not be found.'),
-        'no such shadow root' => array('NoSuchShadowRoot', 'The element does not have a shadow root.'),
         'no such window' => array('NoSuchWindow', 'A command to switch to a window could not be satisfied because the window could not be found.'),
         'script timeout' => array('ScriptTimeout', 'A script did not complete before its timeout expired.'),
-        'script timeout error' => array('ScriptTimeout', 'A script did not complete before its timeout expired.'),
         'session not created' => array('SessionNotCreated', 'A new session could not be created.'),
         'stale element reference' => array('StaleElementReference', 'A command failed because the referenced element is no longer attached to the DOM.'),
         'timeout' => array('Timeout', 'An operation did not complete before its timeout expired.'),
@@ -173,6 +171,12 @@ abstract class Exception extends \Exception
         'unknown error' => array('UnknownError', 'An unknown error occurred in the remote end while processing the command.'),
         'unknown method' => array('UnknownMethod', 'The requested command matched a known URL but did not match an method for that URL.'),
         'unsupported operation' => array('UnsupportedOperation', 'Indicates that a command that should have executed properly cannot be supported for some reason.'),
+
+        // obsolete
+        'detached shadow root' => array('DetachedShadowRoot', 'A command failed because the referenced shadow root is no longer attached to the DOM.'),
+        'element click intercepted' => array('ElementClickIntercepted', 'The Element Click command could not be completed because the element receiving the events is obscuring the element that was requested clicked.'),
+        'no such shadow root' => array('NoSuchShadowRoot', 'The element does not have a shadow root.'),
+        'script timeout error' => array('ScriptTimeout', 'A script did not complete before its timeout expired.'),
     );
 
     /**

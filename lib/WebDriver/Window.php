@@ -28,12 +28,16 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
+ * @method array handles() Get Window Handles
+ * @method array fullscreen() Fullscreen Window
  * @method array maximize() Maximize the window if not already maximized.
  * @method array minimize() Minimize Window
- * @method array fullscreen() Fullscreen Window
+ * @method array getPosition() Get position of the window.
+ * @method void postPosition($json) Change position of the window.
  * @method array getRect() Get Window Rect
  * @method array postRect() Set Window Rect
- * @method array handles() Get Window Handles
+ * @method array getSize() Get Window Size
+ * @method array postSize() Set Window Size
  */
 final class Window extends AbstractWebDriver
 {
@@ -45,11 +49,15 @@ final class Window extends AbstractWebDriver
     protected function methods()
     {
         return array(
-            'maximize' => array('POST'),
-            'minimize' => array('POST'),
-            'fullscreen' => array('POST'),
-            'rect' => array('GET', 'POST'),
             'handles' => array('GET'),
+            'fullscreen' => array('POST'),
+            'maximize' => array('POST'),
+            'position' => array('GET', 'POST'),
+            'size' => array('GET', 'POST'),
+
+            // obsolete
+            'minimize' => array('POST'),
+            'rect' => array('GET', 'POST'),
         );
     }
 
@@ -69,6 +77,8 @@ final class Window extends AbstractWebDriver
 
     /**
      * New window: /session/:sessionId/window/new (POST)
+     *
+     * @deprecated
      *
      * @return \WebDriver\Window
      */

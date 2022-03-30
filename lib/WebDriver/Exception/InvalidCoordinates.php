@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2021-2022 Anthon Pang. All Rights Reserved.
+ * Copyright 2022-2022 Facebook. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,32 +20,15 @@
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
-namespace WebDriver;
+namespace WebDriver\Exception;
+
+use WebDriver\Exception as BaseException;
 
 /**
- * WebDriver\Shadow class
- *
- * @deprecated
+ * WebDriver\Exception\InvalidCoordinates class
  *
  * @package WebDriver
  */
-final class Shadow extends Container
+final class InvalidCoordinates extends BaseException
 {
-    const SHADOW_ROOT_ID = 'shadow-6066-11e4-a52e-4f735466cecf';
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function methods()
-    {
-        return array();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getElementPath($elementId)
-    {
-        return sprintf('%s/element/%s', $this->url, $elementId);
-    }
 }
