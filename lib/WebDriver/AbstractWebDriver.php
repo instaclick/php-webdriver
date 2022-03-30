@@ -157,7 +157,12 @@ abstract class AbstractWebDriver
         }
 
         $value   = (is_array($result) && array_key_exists('value', $result)) ? $result['value'] : null;
-        $message = (is_array($value) && array_key_exists('message', $value)) ? $value['message'] : null;
+        $message = (is_array($result) && array_key_exists('message', $result))
+            ? $result['message']
+            : ((is_array($value) && array_key_exists('message', $value)) ? $value['message'] : null);
+        $error   = (is_array($result) && array_key_exists('error', $result))
+            ? $result['error']
+            : ((is_array($value) && array_key_exists('error', $value)) ? $value['error'] : null);
 
         // if not success, throw exception
         if (isset($result['status']) && (int) $result['status'] !== 0) {
@@ -167,16 +172,9 @@ abstract class AbstractWebDriver
             );
         }
 
-        if (isset($value['error'])) {
+        if (isset($error)) {
             throw WebDriverException::factory(
-                $value['error'],
-                $message
-            );
-        }
-
-        if (isset($value['ready']) && $value['ready'] !== true) {
-            throw WebDriverException::factory(
-                WebDriverException::CURL_EXEC,
+                $error,
                 $message
             );
         }
