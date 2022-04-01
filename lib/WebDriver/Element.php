@@ -29,27 +29,23 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
+ * @method string attribute($attributeName) Get the value of an element's attribute.
+ * @method void clear() Clear a TEXTAREA or text INPUT element's value.
  * @method void click() Click on an element.
+ * @method string css($propertyName) Query the value of an element's computed CSS property.
+ * @method boolean displayed() Determine if an element is currently displayed.
+ * @method boolean enabled() Determine if an element is currently enabled.
+ * @method boolean equals($otherId) Test if two element IDs refer to the same DOM element.
+ * @method array location() Determine an element's location on the page.
+ * @method array location_in_view() Determine an element's location on the screen once it has been scrolled into view.
+ * @method string name() Query for an element's tag name.
+ * @method array property($propertyName) Get Element Property
+ * @method array rect() Get Element Rect
+ * @method array screenshot() Take Element Screenshot
+ * @method array size() Determine an element's size in pixels.
  * @method void submit() Submit a FORM element.
  * @method string text() Returns the visible text for the element.
  * @method void postValue($json) Send a sequence of key strokes to an element.
- * @method string name() Query for an element's tag name.
- * @method void clear() Clear a TEXTAREA or text INPUT element's value.
- * @method boolean selected() Determine if an OPTION element, or an INPUT element of type checkbox or radiobutton is currently selected.
- * @method boolean enabled() Determine if an element is currently enabled.
- * @method string attribute($attributeName) Get the value of an element's attribute.
- * @method boolean equals($otherId) Test if two element IDs refer to the same DOM element.
- * @method boolean displayed() Determine if an element is currently displayed.
- * @method array location() Determine an element's location on the page.
- * @method array location_in_view() Determine an element's location on the screen once it has been scrolled into view.
- * @method array size() Determine an element's size in pixels.
- * @method string css($propertyName) Query the value of an element's computed CSS property.
- * @method array property($propertyName) Get Element Property
- * @method array rect() Get Element Rect
- * @method array active() Get Active Element
- * @method array screenshot() Take Element Screenshot
- * @method array computedrole() Get Computed Role
- * @method array computedlabel() Get Computed Label
  */
 final class Element extends Container
 {
@@ -59,26 +55,26 @@ final class Element extends Container
     protected function methods()
     {
         return array(
-            'click' => array('POST'),
-            'clear' => array('POST'),
-            'value' => array('POST'),
-            'text' => array('GET'),
-            'name' => array('GET'),
-            'rect' => array('GET'),
-            'enabled' => array('GET'),
-            'selected' => array('GET'),
             'attribute' => array('GET'),
-            'property' => array('GET'),
+            'clear' => array('POST'),
+            'click' => array('POST'),
             'css' => array('GET'),
+            'enabled' => array('GET'),
+            'name' => array('GET'),
+            'property' => array('GET'),
+            'rect' => array('GET'),
             'screenshot' => array('GET'),
+            'selected' => array('GET'),
+            'text' => array('GET'),
+            'value' => array('POST'),
 
             // Legacy JSON Wire Protocol
-            'submit' => array('POST'),
-            'equals' => array('GET'),
             'displayed' => array('GET'),
+            'equals' => array('GET'),
             'location' => array('GET'),
             'location_in_view' => array('GET'),
             'size' => array('GET'),
+            'submit' => array('POST'),
         );
     }
 
@@ -88,15 +84,14 @@ final class Element extends Container
     protected function obsoleteMethods()
     {
         return array(
-            'value' => array('GET'),
+            'active' => array('GET'),
+            'computedlabel' => array('GET'),
+            'computedrole' => array('GET'),
+            'drag' => array('POST'),
+            'hover' => array('POST'),
             'selected' => array('POST'),
             'toggle' => array('POST'),
-            'hover' => array('POST'),
-            'drag' => array('POST'),
-            'active' => array('GET'),
-            'computedrole' => array('GET'),
-            'computedlabel' => array('GET'),
-
+            'value' => array('GET'),
         );
     }
 

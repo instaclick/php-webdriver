@@ -27,8 +27,8 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
- * @method array sync() Execute Script
  * @method array async() Execute Async Script
+ * @method array sync() Execute Script
  */
 final class Execute extends AbstractWebDriver
 {
@@ -38,8 +38,8 @@ final class Execute extends AbstractWebDriver
     protected function methods()
     {
         return array(
-            'sync' => array('POST'),
             'async' => array('POST'),
+            'sync' => array('POST'),
         );
     }
 }

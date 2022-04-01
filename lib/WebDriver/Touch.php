@@ -28,13 +28,13 @@ namespace WebDriver;
  * @package WebDriver
  *
  * @method void click($jsonElement) Single tap on the touch enabled device.
+ * @method void doubleclick($jsonElement) Double tap on the touch screen using finger motion events.
  * @method void down($jsonCoordinates) Finger down on the screen.
- * @method void up($jsonCoordinates) Finger up on the screen.
+ * @method void flick($json) Flick on the touch screen using finger motion events.
+ * @method void longclick($jsonElement) Long press on the touch screen using finger motion events.
  * @method void move($jsonCoordinates) Finger move on the screen.
  * @method void scroll($jsonCoordinates) Scroll on the touch screen using finger based motion events.  Coordinates are either absolute, or relative to a element (if specified).
- * @method void doubleclick($jsonElement) Double tap on the touch screen using finger motion events.
- * @method void longclick($jsonElement) Long press on the touch screen using finger motion events.
- * @method void flick($json) Flick on the touch screen using finger motion events.
+ * @method void up($jsonCoordinates) Finger up on the screen.
  */
 final class Touch extends AbstractWebDriver
 {
@@ -45,13 +45,13 @@ final class Touch extends AbstractWebDriver
     {
         return array(
             'click' => array('POST'),
+            'doubleclick' => array('POST'),
             'down' => array('POST'),
-            'up' => array('POST'),
+            'flick' => array('POST'),
+            'longclick' => array('POST'),
             'move' => array('POST'),
             'scroll' => array('POST'),
-            'doubleclick' => array('POST'),
-            'longclick' => array('POST'),
-            'flick' => array('POST'),
+            'up' => array('POST'),
         );
     }
 }

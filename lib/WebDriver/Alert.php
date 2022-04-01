@@ -27,8 +27,8 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
- * @method array dismiss() Dismiss Alert
  * @method array accept() Accept Alert
+ * @method array dismiss() Dismiss Alert
  * @method array getText() Get Alert Text
  * @method array postText() Send Alert Text
  */
@@ -40,8 +40,8 @@ final class Alert extends AbstractWebDriver
     protected function methods()
     {
         return array(
-            'dismiss' => array('POST'),
             'accept' => array('POST'),
+            'dismiss' => array('POST'),
             'text' => array('GET', 'POST'),
         );
     }

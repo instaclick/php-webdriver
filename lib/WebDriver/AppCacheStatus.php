@@ -25,9 +25,9 @@ namespace WebDriver;
 /**
  * WebDriver\AppCacheStatus class
  *
- * @deprecated
- *
  * @package WebDriver
+ *
+ * @deprecated by W3C WebDriver
  */
 final class AppCacheStatus
 {

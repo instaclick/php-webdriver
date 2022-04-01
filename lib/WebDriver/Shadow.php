@@ -25,9 +25,9 @@ namespace WebDriver;
 /**
  * WebDriver\Shadow class
  *
- * @deprecated
- *
  * @package WebDriver
+ *
+ * @deprecated by W3C WebDriver
  */
 final class Shadow extends Container
 {

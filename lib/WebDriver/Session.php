@@ -28,40 +28,41 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
- * @method string window_handle() Retrieve the current window handle.
- * @method array window_handles() Retrieve the list of all window handles available to the session.
- * @method string url() Retrieve the URL of the current page
- * @method void postUrl($jsonUrl) Navigate to a new URL
- * @method void forward() Navigates forward in the browser history, if possible.
- * @method void back() Navigates backward in the browser history, if possible.
- * @method void refresh() Refresh the current page.
- * @method mixed execute($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (synchronous)
- * @method mixed execute_async($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (asynchronous)
- * @method string screenshot() Take a screenshot of the current page.
- * @method array getCookie() Retrieve all cookies visible to the current page.
- * @method array postCookie($jsonCookie) Set a cookie.
- * @method string source() Get the current page source.
- * @method string title() Get the current page title.
- * @method void keys($jsonKeys) Send a sequence of key strokes to the active element.
- * @method string getOrientation() Get the current browser orientation.
- * @method void postOrientation($jsonOrientation) Set the current browser orientation.
+ * @method void accept_alert() Accepts the currently displayed alert dialog.
+ * @method array deleteActions() Release Actions
+ * @method array postActions() Perform Actions
  * @method string getAlert_text() Gets the text of the currently displayed JavaScript alert(), confirm(), or prompt() dialog.
  * @method void postAlert_text($jsonText) Sends keystrokes to a JavaScript prompt() dialog.
- * @method void accept_alert() Accepts the currently displayed alert dialog.
- * @method void dismiss_alert() Dismisses the currently displayed alert dialog.
- * @method void moveto($jsonCoordinates) Move the mouse by an offset of the specified element (or current mouse cursor).
- * @method void click($jsonButton) Click any mouse button (at the coordinates set by the last moveto command).
- * @method void buttondown() Click and hold the left mouse button (at the coordinates set by the last moveto command).
- * @method void buttonup() Releases the mouse button previously held (where the mouse is currently at).
- * @method void doubleclick() Double-clicks at the current mouse coordinates (set by moveto).
- * @method array execute_sql($jsonQuery) Execute SQL.
- * @method array getLocation() Get the current geo location.
- * @method void postLocation($jsonCoordinates) Set the current geo location.
+ * @method void back() Navigates backward in the browser history, if possible.
  * @method boolean getBrowser_connection() Is browser online?
  * @method void postBrowser_connection($jsonState) Set browser online.
- * @method array postActions() Perform Actions
- * @method array deleteActions() Release Actions
+ * @method void buttondown() Click and hold the left mouse button (at the coordinates set by the last moveto command).
+ * @method void buttonup() Releases the mouse button previously held (where the mouse is currently at).
+ * @method void click($jsonButton) Click any mouse button (at the coordinates set by the last moveto command).
+ * @method array getCookie() Retrieve all cookies visible to the current page.
+ * @method array postCookie($jsonCookie) Set a cookie.
+ * @method void dismiss_alert() Dismisses the currently displayed alert dialog.
+ * @method void doubleclick() Double-clicks at the current mouse coordinates (set by moveto).
+ * @method mixed execute($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (synchronous)
+ * @method mixed execute_async($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (asynchronous)
+ * @method array execute_sql($jsonQuery) Execute SQL.
+ * @method array file($jsonFile) Upload file.
+ * @method void forward() Navigates forward in the browser history, if possible.
+ * @method void keys($jsonKeys) Send a sequence of key strokes to the active element.
+ * @method array getLocation() Get the current geo location.
+ * @method void postLocation($jsonCoordinates) Set the current geo location.
+ * @method void moveto($jsonCoordinates) Move the mouse by an offset of the specified element (or current mouse cursor).
+ * @method string getOrientation() Get the current browser orientation.
+ * @method void postOrientation($jsonOrientation) Set the current browser orientation.
  * @method array print() Print Page
+ * @method void refresh() Refresh the current page.
+ * @method string screenshot() Take a screenshot of the current page.
+ * @method string source() Get the current page source.
+ * @method string title() Get the current page title.
+ * @method string url() Retrieve the URL of the current page
+ * @method void postUrl($jsonUrl) Navigate to a new URL
+ * @method string window_handle() Retrieve the current window handle.
+ * @method array window_handles() Retrieve the list of all window handles available to the session.
  */
 final class Session extends Container
 {
@@ -76,38 +77,38 @@ final class Session extends Container
     protected function methods()
     {
         return array(
-            'url' => array('GET', 'POST'), // alternate for POST, use open($url)
-            'back' => array('POST'),
-            'forward' => array('POST'),
-            'refresh' => array('POST'),
-            'title' => array('GET'),
-            'screenshot' => array('GET'),
-            'cookie' => array('GET', 'POST'), // for DELETE, use deleteAllCookies()
-            'source' => array('GET'),
             'actions' => array('POST', 'DELETE'),
+            'back' => array('POST'),
+            'cookie' => array('GET', 'POST'), // for DELETE, use deleteAllCookies()
+            'forward' => array('POST'),
             'print' => array('POST'),
+            'refresh' => array('POST'),
+            'screenshot' => array('GET'),
+            'source' => array('GET'),
+            'title' => array('GET'),
+            'url' => array('GET', 'POST'), // alternate for POST, use open($url)
 
             // specific to Java SeleniumServer
             'file' => array('POST'),
 
             // Legacy JSON Wire Protocol
-            'keys' => array('POST'),
-            'orientation' => array('GET', 'POST'),
-            'alert_text' => array('GET', 'POST'),
             'accept_alert' => array('POST'),
-            'dismiss_alert' => array('POST'),
-            'moveto' => array('POST'),
-            'click' => array('POST'),
+            'alert_text' => array('GET', 'POST'),
+            'browser_connection' => array('GET', 'POST'),
             'buttondown' => 'POST',
             'buttonup' => array('POST'),
+            'click' => array('POST'),
+            'dismiss_alert' => array('POST'),
             'doubleclick' => array('POST'),
-            'execute_sql' => array('POST'),
-            'location' => array('GET', 'POST'),
-            'browser_connection' => array('GET', 'POST'),
-            'window_handle' => array('GET'),
-            'window_handles' => array('GET'),
             'execute' => array('POST'),
             'execute_async' => array('POST'),
+            'execute_sql' => array('POST'),
+            'keys' => array('POST'),
+            'location' => array('GET', 'POST'),
+            'moveto' => array('POST'),
+            'orientation' => array('GET', 'POST'),
+            'window_handle' => array('GET'),
+            'window_handles' => array('GET'),
         );
     }
 
@@ -117,9 +118,9 @@ final class Session extends Container
     protected function obsoleteMethods()
     {
         return array(
+            'alert' => array('GET'),
             'modifier' => array('POST'),
             'speed' => array('GET', 'POST'),
-            'alert' => array('GET'),
             'visible' => array('GET', 'POST'),
         );
     }

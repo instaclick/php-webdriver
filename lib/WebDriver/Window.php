@@ -80,6 +80,8 @@ final class Window extends AbstractWebDriver
      *
      * @deprecated
      *
+     * @param string $name
+     *
      * @return \WebDriver\Window
      */
     public function focusWindow($name)

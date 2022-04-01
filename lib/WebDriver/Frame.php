@@ -27,7 +27,7 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
- * @method void parentt() Change focus to the parent context.
+ * @method void parent() Change focus to the parent context.
  */
 final class Frame extends AbstractWebDriver
 {
