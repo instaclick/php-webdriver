@@ -34,8 +34,6 @@ namespace WebDriver;
  * @method void forward() Navigates forward in the browser history, if possible.
  * @method void back() Navigates backward in the browser history, if possible.
  * @method void refresh() Refresh the current page.
- * @method mixed execute($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (synchronous)
- * @method mixed execute_async($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (asynchronous)
  * @method string screenshot() Take a screenshot of the current page.
  * @method array getCookie() Retrieve all cookies visible to the current page.
  * @method array postCookie($jsonCookie) Set a cookie.
@@ -432,5 +430,44 @@ final class Session extends Container
     protected function getElementPath($elementId)
     {
         return sprintf('%s/element/%s', $this->url, $elementId);
+    }
+
+    /**
+     * @param mixed $data
+     *
+     * @return mixed
+     */
+    private function webDriverElementMulti($data)
+    {
+        $element = $this->webDriverElement($data);
+        if ($element !== null) {
+            return $element;
+        } elseif (is_array($data)) {
+            foreach ($data as $k => $v) {
+                $data[$k] = $this->webDriverElementMulti($v);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (synchronous)
+     */
+    public function execute($jsonScript)
+    {
+        $result = parent::execute($jsonScript);
+
+        return $this->webDriverElementMulti($result);
+    }
+
+    /**
+     * Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (asynchronous)
+     */
+    public function execute_async($jsonScript)
+    {
+        $result = parent::execute_async($jsonScript);
+
+        return $this->webDriverElementMulti($result);
     }
 }
