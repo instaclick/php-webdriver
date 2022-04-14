@@ -38,16 +38,6 @@ final class CurlExec extends BaseException
     private $curlInfo = array();
 
     /**
-     * {@inheritdoc}
-     */
-    public function __construct($message = null, $code = 0, \Exception $previous = null, $curlInfo = array())
-    {
-        parent::__construct($message, $code, $previous);
-
-        $this->curlInfo = $curlInfo;
-    }
-
-    /**
      * Get curl info
      *
      * @return array
@@ -55,5 +45,15 @@ final class CurlExec extends BaseException
     public function getCurlInfo()
     {
         return $this->curlInfo;
+    }
+
+    /**
+     * Set curl info
+     *
+     * @param array $curlInfo
+     */
+    public function setCurlInfo($curlInfo)
+    {
+        $this->curlInfo = $curlInfo;
     }
 }

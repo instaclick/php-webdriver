@@ -224,6 +224,8 @@ abstract class Container extends AbstractWebDriver
                 $value[self::WEBDRIVER_ELEMENT_ID] // id
             );
         }
+
+        return null;
     }
 
     /**

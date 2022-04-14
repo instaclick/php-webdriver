@@ -292,7 +292,7 @@ class SauceRest
      *
      * @return array
      */
-    public function getBrowsers($termination = false)
+    public function getBrowsers($termination = '')
     {
         if ($termination) {
             return $this->execute('GET', 'info/browsers/' . $termination);

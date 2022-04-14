@@ -47,7 +47,7 @@ final class Timeouts extends AbstractWebDriver
     /**
      * helper method to wait until user-defined condition is met
      *
-     * @param function $callback      callback which returns non-false result if wait condition was met
+     * @param callable $callback      callback which returns non-false result if wait condition was met
      * @param integer  $maxIterations maximum number of iterations
      * @param integer  $sleep         sleep duration in seconds between iterations
      * @param array    $args          optional args; if the callback needs $this, then pass it here
