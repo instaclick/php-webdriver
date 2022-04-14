@@ -433,18 +433,36 @@ final class Session extends Container
     }
 
     /**
+     * @param array $args
+     *
+     * @return array
+     */
+    private function prepareScriptArguments(array $args)
+    {
+        foreach ($args as $k => $v) {
+            if ($v instanceof Element) {
+                $args[$k] = [Container::WEBDRIVER_ELEMENT_ID => $v->getID()];
+            } elseif (is_array($v)) {
+                $args[$k] = $this->prepareScriptArguments($v);
+            }
+        }
+
+        return $args;
+    }
+
+    /**
      * @param mixed $data
      *
      * @return mixed
      */
-    private function webDriverElementMulti($data)
+    private function webDriverElementRecursive($data)
     {
         $element = $this->webDriverElement($data);
         if ($element !== null) {
             return $element;
         } elseif (is_array($data)) {
             foreach ($data as $k => $v) {
-                $data[$k] = $this->webDriverElementMulti($v);
+                $data[$k] = $this->webDriverElementRecursive($v);
             }
         }
 
@@ -453,21 +471,37 @@ final class Session extends Container
 
     /**
      * Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (synchronous)
+     *
+     * @param array{script: string, args: array} $jsonScript
+     *
+     * @return mixed
      */
-    public function execute($jsonScript)
+    public function execute(array $jsonScript)
     {
+        if (isset($jsonScript['args'])) {
+            $jsonScript['args'] = $this->prepareScriptArguments($jsonScript['args']);
+        }
+
         $result = parent::execute($jsonScript);
 
-        return $this->webDriverElementMulti($result);
+        return $this->webDriverElementRecursive($result);
     }
 
     /**
      * Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (asynchronous)
+     *
+     * @param array{script: string, args: array} $jsonScript
+     *
+     * @return mixed
      */
-    public function execute_async($jsonScript)
+    public function execute_async(array $jsonScript)
     {
+        if (isset($jsonScript['args'])) {
+            $jsonScript['args'] = $this->prepareScriptArguments($jsonScript['args']);
+        }
+
         $result = parent::execute_async($jsonScript);
 
-        return $this->webDriverElementMulti($result);
+        return $this->webDriverElementRecursive($result);
     }
 }
