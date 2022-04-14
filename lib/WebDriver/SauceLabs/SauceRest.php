@@ -45,7 +45,7 @@ class SauceRest
     /**
      * Curl service
      *
-     * @var \WebDriver\Service\CurlService
+     * @var \WebDriver\Service\CurlService|null
      */
     private $curlService;
 
@@ -64,8 +64,9 @@ class SauceRest
      */
     public function __construct($userId, $accessKey)
     {
-        $this->userId = $userId;
-        $this->accessKey = $accessKey;
+        $this->userId      = $userId;
+        $this->accessKey   = $accessKey;
+        $this->curlService = null;
     }
 
     /**
