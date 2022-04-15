@@ -112,7 +112,7 @@ class Execute extends AbstractWebDriver
      */
     protected function unserializeResult($result)
     {
-        $element = is_array($result) ? $this->webDriverElement($result) : null;
+        $element = is_array($result) ? $this->makeElement($result) : null;
 
         if ($element !== null) {
             return $element;
@@ -128,13 +128,13 @@ class Execute extends AbstractWebDriver
     }
 
     /**
-     * Return WebDriver\Element wrapper for $value
+     * Factory method for elements
      *
      * @param array $value
      *
      * @return \WebDriver\Element|\WebDriver\Shadow|null
      */
-    protected function webDriverElement($value)
+    protected function makeElement($value)
     {
         if (array_key_exists(LegacyElement::LEGACY_ELEMENT_ID, $value)) {
             $identifier = $value[LegacyElement::LEGACY_ELEMENT_ID];

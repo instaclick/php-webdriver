@@ -378,7 +378,7 @@ final class Session extends Container
     {
         $result = $this->curl('POST', '/element/active');
 
-        return $this->webDriverElement($result['value']);
+        return $this->makeElement($result['value']);
     }
 
     /**

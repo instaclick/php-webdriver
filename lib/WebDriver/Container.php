@@ -84,7 +84,7 @@ abstract class Container extends AbstractWebDriver
             );
         }
 
-        $element = $this->webDriverElement($result['value']);
+        $element = $this->makeElement($result['value']);
 
         if ($element === null) {
             throw WebDriverException::factory(
@@ -128,7 +128,7 @@ abstract class Container extends AbstractWebDriver
 
         return array_filter(
             array_map(
-                array($this, 'webDriverElement'),
+                array($this, 'makeElement'),
                 $result['value']
             )
         );
@@ -201,13 +201,13 @@ abstract class Container extends AbstractWebDriver
     }
 
     /**
-     * Return WebDriver\Element wrapper for $value
+     * Factory method for elements
      *
      * @param mixed $value
      *
      * @return \WebDriver\Element|null
      */
-    protected function webDriverElement($value)
+    protected function makeElement($value)
     {
         if (array_key_exists(LegacyElement::LEGACY_ELEMENT_ID, (array) $value)) {
             $identifier = $value[LegacyElement::LEGACY_ELEMENT_ID];
