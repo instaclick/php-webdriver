@@ -140,7 +140,7 @@ class Execute extends AbstractWebDriver
             $identifier = $value[LegacyElement::LEGACY_ELEMENT_ID];
 
             return new LegacyElement(
-                $this->getElementPath('/element/' . $identifier),
+                $this->getIdentifierPath('/element/' . $identifier),
                 $identifier
             );
         }
@@ -149,7 +149,7 @@ class Execute extends AbstractWebDriver
             $identifier = $value[Element::WEB_ELEMENT_ID];
 
             return new Element(
-                $this->getElementPath('/element/' . $identifier),
+                $this->getIdentifierPath('/element/' . $identifier),
                 $identifier
             );
         }
@@ -158,7 +158,7 @@ class Execute extends AbstractWebDriver
             $identifier = $value[Shadow::SHADOW_ROOT_ID];
 
             return new Shadow(
-                $this->getElementPath('/shadow/' . $identifier),
+                $this->getIdentifierPath('/shadow/' . $identifier),
                 $identifier
             );
         }
@@ -169,8 +169,8 @@ class Execute extends AbstractWebDriver
     /**
      * {@inheritdoc}
      */
-    protected function getElementPath($identifier)
+    protected function getIdentifierPath($identifier)
     {
-        return preg_replace('~/execute$~', '', $this->url) . $identifier;
+        return preg_replace('~/execute$~', '', $this->url) . $identifier; // remove /execute from path
     }
 }

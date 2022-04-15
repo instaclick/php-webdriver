@@ -213,7 +213,7 @@ abstract class Container extends AbstractWebDriver
             $identifier = $value[LegacyElement::LEGACY_ELEMENT_ID];
 
             return new LegacyElement(
-                $this->getElementPath($identifier),
+                $this->getIdentifierPath($identifier),
                 $identifier
             );
         }
@@ -222,7 +222,7 @@ abstract class Container extends AbstractWebDriver
             $identifier = $value[Element::WEB_ELEMENT_ID];
 
             return new Element(
-                $this->getElementPath($identifier),
+                $this->getIdentifierPath($identifier),
                 $identifier
             );
         }
@@ -244,11 +244,11 @@ abstract class Container extends AbstractWebDriver
     }
 
     /**
-     * Get wire protocol URL for an element
+     * Get wire protocol URL for an identifier
      *
-     * @param string $elementId
+     * @param string $identifier
      *
      * @return string
      */
-    abstract protected function getElementPath($elementId);
+    abstract protected function getIdentifierPath($identifier);
 }

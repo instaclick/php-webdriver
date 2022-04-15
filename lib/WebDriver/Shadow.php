@@ -74,8 +74,8 @@ final class Shadow extends Container
     /**
      * {@inheritdoc}
      */
-    protected function getElementPath($elementId)
+    protected function getIdentifierPath($identifier)
     {
-        return sprintf('%s/element/%s', $this->url, $elementId);
+        return sprintf('%s/element/%s', $this->url, $identifier);
     }
 }

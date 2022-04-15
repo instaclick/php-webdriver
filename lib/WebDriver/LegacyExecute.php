@@ -72,7 +72,7 @@ class LegacyExecute extends Execute
     /**
      * {@inheritdoc}
      */
-    protected function getElementPath($identifier)
+    protected function getIdentifierPath($identifier)
     {
         return $this->url . $identifier;
     }

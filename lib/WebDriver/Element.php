@@ -145,7 +145,7 @@ class Element extends Container
             $shadowRootReference = $value[Shadow::SHADOW_ROOT_ID];
 
             return new Shadow(
-                preg_replace('/element/' . preg_quote($this->id, '/') . '$/', '/', $this->url), // remove /element/:elementid
+                preg_replace('/' . preg_quote('element/' . $this->id, '/') . '$/', '/', $this->url), // remove /element/:elementid
                 $shadowRootReference
             );
         }
@@ -156,8 +156,8 @@ class Element extends Container
     /**
      * {@inheritdoc}
      */
-    protected function getElementPath($elementId)
+    protected function getIdentifierPath($identifier)
     {
-        return preg_replace('/' . preg_quote($this->id, '/') . '$/', $elementId, $this->url);
+        return preg_replace('/' . preg_quote($this->id) . '$/', $identifier, $this->url);
     }
 }
