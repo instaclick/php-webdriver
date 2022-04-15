@@ -41,7 +41,7 @@ namespace WebDriver;
  */
 final class Window extends AbstractWebDriver
 {
-    const WEBDRIVER_WINDOW_ID = 'window-fcc6-11e5-b4f8-330a88ab9d7f';
+    const WEB_WINDOW_ID = 'window-fcc6-11e5-b4f8-330a88ab9d7f';
 
     /**
      * {@inheritdoc}
@@ -70,8 +70,8 @@ final class Window extends AbstractWebDriver
     {
         $result = $this->curl('GET', $this->url);
 
-        return array_key_exists(self::WEBDRIVER_WINDOW_ID, $result['value'])
-            ? $result['value'][self::WEBDRIVER_WINDOW_ID]
+        return array_key_exists(self::WEB_WINDOW_ID, $result['value'])
+            ? $result['value'][self::WEB_WINDOW_ID]
             : $result['value'];
     }
 

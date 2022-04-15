@@ -31,7 +31,7 @@ namespace WebDriver;
  */
 final class Frame extends AbstractWebDriver
 {
-    const WEBDRIVER_FRAME_ID = 'frame-075b-4da1-b6ba-e579c2d3230a';
+    const WEB_FRAME_ID = 'frame-075b-4da1-b6ba-e579c2d3230a';
 
     /**
      * {@inheritdoc}

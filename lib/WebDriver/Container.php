@@ -34,7 +34,7 @@ use WebDriver\Exception as WebDriverException;
 abstract class Container extends AbstractWebDriver
 {
     const LEGACY_ELEMENT_ID = 'ELEMENT';
-    const WEBDRIVER_ELEMENT_ID = 'element-6066-11e4-a52e-4f735466cecf';
+    const WEB_ELEMENT_ID    = 'element-6066-11e4-a52e-4f735466cecf';
 
     /**
      * @var array
@@ -213,6 +213,8 @@ abstract class Container extends AbstractWebDriver
     protected function webDriverElement($value)
     {
         if (array_key_exists(self::LEGACY_ELEMENT_ID, (array) $value)) {
+            assert($this->legacy === false);
+
             return new Element(
                 $this->getElementPath($value[self::LEGACY_ELEMENT_ID]), // url
                 $value[self::LEGACY_ELEMENT_ID], // id
@@ -220,10 +222,12 @@ abstract class Container extends AbstractWebDriver
             );
         }
 
-        if (array_key_exists(self::WEBDRIVER_ELEMENT_ID, (array) $value)) {
+        if (array_key_exists(self::WEB_ELEMENT_ID, (array) $value)) {
+            assert($this->legacy === true);
+
             return new Element(
-                $this->getElementPath($value[self::WEBDRIVER_ELEMENT_ID]), // url
-                $value[self::WEBDRIVER_ELEMENT_ID], // id
+                $this->getElementPath($value[self::WEB_ELEMENT_ID]), // url
+                $value[self::WEB_ELEMENT_ID], // id
                 $this->legacy
             );
         }
