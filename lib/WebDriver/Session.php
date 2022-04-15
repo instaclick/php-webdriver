@@ -76,8 +76,6 @@ final class Session extends Container
             'forward' => array('POST'),
             'back' => array('POST'),
             'refresh' => array('POST'),
-            'execute' => array('POST'),
-            'execute_async' => array('POST'),
             'screenshot' => array('GET'),
             'cookie' => array('GET', 'POST'), // for DELETE, use deleteAllCookies()
             'source' => array('GET'),
@@ -433,13 +431,11 @@ final class Session extends Container
      */
     public function execute(array $jsonScript)
     {
-        if (isset($jsonScript['args'])) {
-            $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
-        }
+        $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
 
         $result = $this->curl('POST', '/execute', $jsonScript);
 
-        return $this->unserializeResult($result);
+        return $this->unserializeResult($result['value']);
     }
 
     /**
@@ -451,13 +447,11 @@ final class Session extends Container
      */
     public function execute_async(array $jsonScript)
     {
-        if (isset($jsonScript['args'])) {
-            $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
-        }
+        $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
 
         $result = $this->curl('POST', '/execute_async', $jsonScript);
 
-        return $this->unserializeResult($result);
+        return $this->unserializeResult($result['value']);
     }
 
     /**
