@@ -26,9 +26,6 @@ namespace WebDriver;
  * WebDriver\Execute class
  *
  * @package WebDriver
- *
- * @method array async() Execute Async Script
- * @method array sync() Execute Script
  */
 final class Execute extends AbstractWebDriver
 {
@@ -37,9 +34,138 @@ final class Execute extends AbstractWebDriver
      */
     protected function methods()
     {
-        return array(
-            'async' => array('POST'),
-            'sync' => array('POST'),
-        );
+        return array();
+    }
+
+    /**
+     * Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (asynchronous)
+     *
+     * @param array{script: string, args: array} $jsonScript
+     *
+     * @return mixed
+     */
+    public function async(array $jsonScript)
+    {
+        $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
+
+        $result = $this->curl('POST', '/execute_async', $jsonScript);
+
+        return $this->unserializeResult($result['value']);
+    }
+
+    /**
+     * Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (synchronous)
+     *
+     * @param array{script: string, args: array} $jsonScript
+     *
+     * @return mixed
+     */
+    public function sync(array $jsonScript)
+    {
+        $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
+
+        $result = $this->curl('POST', '/execute', $jsonScript);
+
+        return $this->unserializeResult($result['value']);
+    }
+
+    /**
+     * Serialize script arguments (containing web elements and/or shadow roots)
+     *
+     * @see https://w3c.github.io/webdriver/#executing-script
+     *
+     * @param array $arguments
+     *
+     * @return array
+     */
+    private function serializeArguments(array $arguments)
+    {
+        foreach ($arguments as $key => $value) {
+            switch (true) {
+                case $value instanceof Element:
+                    $arguments[$key] = [$this->isLegacy() ? Container::LEGACY_ELEMENT_ID : Container::WEB_ELEMENT_ID => $value->getID()];
+                    break;
+
+                case $value instanceof Shadow:
+                    $arguments[$key] = [Shadow::SHADOW_ROOT_ID => $value->getID()];
+                    break;
+
+                case is_array($value):
+                    $arguments[$key] = $this->serializeArguments($value);
+                    break;
+            }
+        }
+
+        return $arguments;
+    }
+
+    /**
+     * Unserialize result (containing web elements and/or shadow roots)
+     *
+     * @param mixed $result
+     *
+     * @return mixed
+     */
+    private function unserializeResult($result)
+    {
+        $element = is_array($result) ? $this->webDriverElement($result) : null;
+
+        if ($element !== null) {
+            return $element;
+        }
+
+        if (is_array($result)) {
+            foreach ($result as $key => $value) {
+                $result[$key] = $this->unserializeResult($value);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return WebDriver\Element wrapper for $value
+     *
+     * @param array $value
+     *
+     * @return \WebDriver\Element|\WebDriver\Shadow|null
+     */
+    protected function webDriverElement($value)
+    {
+        $basePath = preg_replace('~/execute$~', '', $this->url);
+
+        if (array_key_exists(Container::LEGACY_ELEMENT_ID, $value)) {
+            return new Element(
+                $basePath . '/element/' . $value[Container::LEGACY_ELEMENT_ID], // url
+                $value[Container::LEGACY_ELEMENT_ID], // id
+                $this->legacy
+            );
+        }
+
+        if (array_key_exists(Container::WEB_ELEMENT_ID, $value)) {
+            return new Element(
+                $basePath . '/element/' . $value[Container::WEB_ELEMENT_ID], // url
+                $value[Container::WEB_ELEMENT_ID], // id
+                $this->legacy
+            );
+        }
+
+        if (array_key_exists(Shadow::SHADOW_ROOT_ID, $value)) {
+            return new Shadow(
+                $basePath . '/shadow/' . $value[Shadow::SHADOW_ROOT_ID], // url
+                $value[Shadow::SHADOW_ROOT_ID], // id
+                $this->legacy
+            );
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getElementPath($unused)
+    {
+        return $this->url;
     }
 }
