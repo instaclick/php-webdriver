@@ -8,9 +8,6 @@ Distinguishing features:
 * Coding style follows PSR-1, PSR-2, and Symfony2 conventions.
 * Auto-generate API documentation via [phpDocumentor 2.x](http://phpdoc.org/).
 
-[![Build Status](https://travis-ci.org/instaclick/php-webdriver.png)](https://travis-ci.org/instaclick/php-webdriver)
-[![Coverage Status](https://coveralls.io/repos/instaclick/php-webdriver/badge.png)](https://coveralls.io/r/instaclick/php-webdriver)
-
 [![Latest Stable Version](https://poser.pugx.org/instaclick/php-webdriver/v/stable.png)](https://packagist.org/packages/instaclick/php-webdriver)
 [![Total Downloads](https://poser.pugx.org/instaclick/php-webdriver/downloads.png)](https://packagist.org/packages/instaclick/php-webdriver)
 
