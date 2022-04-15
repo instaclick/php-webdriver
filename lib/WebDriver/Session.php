@@ -425,51 +425,6 @@ final class Session extends Container
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function getElementPath($elementId)
-    {
-        return sprintf('%s/element/%s', $this->url, $elementId);
-    }
-
-    /**
-     * @param array $args
-     *
-     * @return array
-     */
-    private function prepareScriptArguments(array $args)
-    {
-        foreach ($args as $k => $v) {
-            if ($v instanceof Element) {
-                $args[$k] = [Container::WEBDRIVER_ELEMENT_ID => $v->getID()];
-            } elseif (is_array($v)) {
-                $args[$k] = $this->prepareScriptArguments($v);
-            }
-        }
-
-        return $args;
-    }
-
-    /**
-     * @param mixed $data
-     *
-     * @return mixed
-     */
-    private function webDriverElementRecursive($data)
-    {
-        $element = $this->webDriverElement($data);
-        if ($element !== null) {
-            return $element;
-        } elseif (is_array($data)) {
-            foreach ($data as $k => $v) {
-                $data[$k] = $this->webDriverElementRecursive($v);
-            }
-        }
-
-        return $data;
-    }
-
-    /**
      * Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (synchronous)
      *
      * @param array{script: string, args: array} $jsonScript
@@ -479,12 +434,12 @@ final class Session extends Container
     public function execute(array $jsonScript)
     {
         if (isset($jsonScript['args'])) {
-            $jsonScript['args'] = $this->prepareScriptArguments($jsonScript['args']);
+            $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
         }
 
-        $result = parent::execute($jsonScript);
+        $result = $this->curl('POST', '/execute', $jsonScript);
 
-        return $this->webDriverElementRecursive($result);
+        return $this->unserializeResult($result);
     }
 
     /**
@@ -497,11 +452,69 @@ final class Session extends Container
     public function execute_async(array $jsonScript)
     {
         if (isset($jsonScript['args'])) {
-            $jsonScript['args'] = $this->prepareScriptArguments($jsonScript['args']);
+            $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
         }
 
-        $result = parent::execute_async($jsonScript);
+        $result = $this->curl('POST', '/execute_async', $jsonScript);
 
-        return $this->webDriverElementRecursive($result);
+        return $this->unserializeResult($result);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getElementPath($elementId)
+    {
+        return sprintf('%s/element/%s', $this->url, $elementId);
+    }
+
+    /**
+     * Serialize script arguments (containing web elements)
+     *
+     * @see https://w3c.github.io/webdriver/#executing-script
+     *
+     * @param array $arguments
+     *
+     * @return array
+     */
+    private function serializeArguments(array $arguments)
+    {
+        foreach ($arguments as $key => $value) {
+            // Potential compat-buster, i.e., W3C-specific
+            if ($value instanceof Element) {
+                $arguments[$key] = [Container::WEBDRIVER_ELEMENT_ID => $value->getID()];
+                continue;
+            }
+
+            if (is_array($value)) {
+                $arguments[$key] = $this->serializeArguments($value);
+            }
+        }
+
+        return $arguments;
+    }
+
+    /**
+     * Unserialize result (containing web elements)
+     *
+     * @param mixed $result
+     *
+     * @return mixed
+     */
+    private function unserializeResult($result)
+    {
+        $element = $this->webDriverElement($result);
+
+        if ($element !== null) {
+            return $element;
+        }
+
+        if (is_array($result)) {
+            foreach ($result as $key => $value) {
+                $result[$key] = $this->unserializeResult($value);
+            }
+        }
+
+        return $result;
     }
 }
