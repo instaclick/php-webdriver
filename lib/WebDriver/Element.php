@@ -132,12 +132,25 @@ final class Element extends Container
      * shadow root method chaining, e.g.,
      * - $element->method()
      *
-     * @return \WebDriver\Shadow
+     * @return \WebDriver\Shadow|null
      *
      */
     public function shadow()
     {
-        return new Shadow($this->url . '/shadow', $this->legacy);
+        $result = $this->curl('POST', '/shadow');
+        $value  = $result['value'];
+
+        if (array_key_exists(Shadow::SHADOW_ROOT_ID, (array) $value)) {
+            $shadowRootReference = $value[Shadow::SHADOW_ROOT_ID];
+
+            return new Shadow(
+                preg_replace('/element/' . preg_quote($this->id, '/') . '$/', '/', $this->url), // remove /element/:elementid
+                $shadowRootReference,
+                $this->legacy
+            );
+        }
+
+        return null;
     }
 
     /**

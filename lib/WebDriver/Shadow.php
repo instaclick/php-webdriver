@@ -42,10 +42,41 @@ final class Shadow extends Container
     }
 
     /**
+     * Shadow ID
+     *
+     * @var string
+     */
+    private $id;
+
+    /**
+     * Constructor
+     *
+     * @param string  $url    URL
+     * @param string  $id     shadow ID
+     * @param boolean $legacy Is legacy?
+     */
+    public function __construct($url, $id, $legacy)
+    {
+        parent::__construct($url, $legacy);
+
+        $this->id = $id;
+    }
+
+    /**
+     * Get shadow ID
+     *
+     * @return string
+     */
+    public function getID()
+    {
+        return $this->id;
+    }
+
+    /**
      * {@inheritdoc}
      */
-    protected function getElementPath($elementId)
+    protected function getElementPath($shadowId)
     {
-        return sprintf('%s/element/%s', $this->url, $elementId);
+        return sprintf('%s/shadow/%s', $this->url, $shadowId);
     }
 }
