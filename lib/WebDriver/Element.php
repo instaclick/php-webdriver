@@ -47,8 +47,10 @@ namespace WebDriver;
  * @method string text() Returns the visible text for the element.
  * @method void postValue($json) Send a sequence of key strokes to an element.
  */
-final class Element extends Container
+class Element extends Container
 {
+    const WEB_ELEMENT_ID = 'element-6066-11e4-a52e-4f735466cecf';
+
     /**
      * {@inheritdoc}
      */

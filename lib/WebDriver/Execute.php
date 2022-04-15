@@ -82,8 +82,12 @@ final class Execute extends AbstractWebDriver
     {
         foreach ($arguments as $key => $value) {
             switch (true) {
+                case $value instanceof LegacyElement:
+                    $arguments[$key] = [LegacyElement::LEGACY_ELEMENT_ID => $value->getID()];
+                    break;
+
                 case $value instanceof Element:
-                    $arguments[$key] = [$this->isLegacy() ? Container::LEGACY_ELEMENT_ID : Container::WEB_ELEMENT_ID => $value->getID()];
+                    $arguments[$key] = [Element::WEB_ELEMENT_ID => $value->getID()];
                     break;
 
                 case $value instanceof Shadow:
@@ -134,18 +138,18 @@ final class Execute extends AbstractWebDriver
     {
         $basePath = preg_replace('~/execute$~', '', $this->url);
 
-        if (array_key_exists(Container::LEGACY_ELEMENT_ID, $value)) {
-            return new Element(
-                $basePath . '/element/' . $value[Container::LEGACY_ELEMENT_ID], // url
-                $value[Container::LEGACY_ELEMENT_ID], // id
+        if (array_key_exists(LegacyElement::LEGACY_ELEMENT_ID, $value)) {
+            return new LegacyElement(
+                $basePath . '/element/' . $value[LegacyElement::LEGACY_ELEMENT_ID], // url
+                $value[LegacyElement::LEGACY_ELEMENT_ID], // id
                 $this->legacy
             );
         }
 
-        if (array_key_exists(Container::WEB_ELEMENT_ID, $value)) {
+        if (array_key_exists(Element::WEB_ELEMENT_ID, $value)) {
             return new Element(
-                $basePath . '/element/' . $value[Container::WEB_ELEMENT_ID], // url
-                $value[Container::WEB_ELEMENT_ID], // id
+                $basePath . '/element/' . $value[Element::WEB_ELEMENT_ID], // url
+                $value[Element::WEB_ELEMENT_ID], // id
                 $this->legacy
             );
         }
