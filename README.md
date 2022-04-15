@@ -1,6 +1,7 @@
 WebDriver for Selenium 2
 ========================
-This WebDriver client implementation is based on Facebook's [php-webdriver](https://github.com/facebook/php-webdriver/) project by Justin Bishop.
+This WebDriver client implementation is based on Meta/Facebook's original [php-webdriver](https://github.com/instaclick/php-webdriver/tree/upstream)
+project by Justin Bishop. Meta/Facebook's current [php-webdriver](https://github.com/php-webdriver/php-webdriver) is a complete rewrite.
 
 Distinguishing features:
 * Up-to-date with [WebDriver: W3C Editor's Draft 1 April 2022](https://w3c.github.io/webdriver/)
