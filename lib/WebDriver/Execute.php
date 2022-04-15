@@ -27,7 +27,7 @@ namespace WebDriver;
  *
  * @package WebDriver
  */
-final class Execute extends AbstractWebDriver
+class Execute extends AbstractWebDriver
 {
     /**
      * {@inheritdoc}
@@ -48,7 +48,7 @@ final class Execute extends AbstractWebDriver
     {
         $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
 
-        $result = $this->curl('POST', '/execute_async', $jsonScript);
+        $result = $this->curl('POST', '/async', $jsonScript);
 
         return $this->unserializeResult($result['value']);
     }
@@ -64,7 +64,7 @@ final class Execute extends AbstractWebDriver
     {
         $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
 
-        $result = $this->curl('POST', '/execute', $jsonScript);
+        $result = $this->curl('POST', '/sync', $jsonScript);
 
         return $this->unserializeResult($result['value']);
     }
@@ -78,7 +78,7 @@ final class Execute extends AbstractWebDriver
      *
      * @return array
      */
-    private function serializeArguments(array $arguments)
+    protected function serializeArguments(array $arguments)
     {
         foreach ($arguments as $key => $value) {
             switch (true) {
@@ -110,7 +110,7 @@ final class Execute extends AbstractWebDriver
      *
      * @return mixed
      */
-    private function unserializeResult($result)
+    protected function unserializeResult($result)
     {
         $element = is_array($result) ? $this->webDriverElement($result) : null;
 
@@ -136,29 +136,30 @@ final class Execute extends AbstractWebDriver
      */
     protected function webDriverElement($value)
     {
-        $basePath = preg_replace('~/execute$~', '', $this->url);
-
         if (array_key_exists(LegacyElement::LEGACY_ELEMENT_ID, $value)) {
+            $identifier = $value[LegacyElement::LEGACY_ELEMENT_ID];
+
             return new LegacyElement(
-                $basePath . '/element/' . $value[LegacyElement::LEGACY_ELEMENT_ID], // url
-                $value[LegacyElement::LEGACY_ELEMENT_ID], // id
-                $this->legacy
+                $this->getElementPath('/element/' . $identifier),
+                $identifier
             );
         }
 
         if (array_key_exists(Element::WEB_ELEMENT_ID, $value)) {
+            $identifier = $value[Element::WEB_ELEMENT_ID];
+
             return new Element(
-                $basePath . '/element/' . $value[Element::WEB_ELEMENT_ID], // url
-                $value[Element::WEB_ELEMENT_ID], // id
-                $this->legacy
+                $this->getElementPath('/element/' . $identifier),
+                $identifier
             );
         }
 
         if (array_key_exists(Shadow::SHADOW_ROOT_ID, $value)) {
+            $identifier = $value[Shadow::SHADOW_ROOT_ID];
+
             return new Shadow(
-                $basePath . '/shadow/' . $value[Shadow::SHADOW_ROOT_ID], // url
-                $value[Shadow::SHADOW_ROOT_ID], // id
-                $this->legacy
+                $this->getElementPath('/shadow/' . $identifier),
+                $identifier
             );
         }
 
@@ -168,8 +169,8 @@ final class Execute extends AbstractWebDriver
     /**
      * {@inheritdoc}
      */
-    protected function getElementPath($unused)
+    protected function getElementPath($identifier)
     {
-        return $this->url;
+        return preg_replace('~/execute$~', '', $this->url) . $identifier;
     }
 }

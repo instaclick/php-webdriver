@@ -42,11 +42,6 @@ abstract class AbstractWebDriver
     protected $url;
 
     /**
-     * @var boolean
-     */
-    protected $legacy = false;
-
-    /**
      * Curl service
      *
      * @var \WebDriver\Service\CurlServiceInterface
@@ -80,13 +75,11 @@ abstract class AbstractWebDriver
     /**
      * Constructor
      *
-     * @param string  $url    URL to Selenium server
-     * @param boolean $legacy Is legacy driver?
+     * @param string $url URL to Selenium server
      */
-    public function __construct($url = 'http://localhost:4444/wd/hub', $legacy = false)
+    public function __construct($url = 'http://localhost:4444/wd/hub')
     {
         $this->url = $url;
-        $this->legacy = $legacy;
         $this->transientOptions = array();
         $this->curlService = ServiceFactory::getInstance()->getService('service.curl');
     }
@@ -147,16 +140,6 @@ abstract class AbstractWebDriver
     public function getTransientOptions()
     {
         return $this->transientOptions;
-    }
-
-    /**
-     * Is legacy driver?
-     *
-     * @return boolean
-     */
-    public function isLegacy()
-    {
-        return $this->legacy;
     }
 
     /**

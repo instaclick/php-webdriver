@@ -41,9 +41,9 @@ abstract class Container extends AbstractWebDriver
     /**
      * {@inheritdoc}
      */
-    public function __construct($url, $legacy)
+    public function __construct($url)
     {
-        parent::__construct($url, $legacy);
+        parent::__construct($url);
 
         $locatorStrategy = new \ReflectionClass('WebDriver\LocatorStrategy');
         $this->strategies  = $locatorStrategy->getConstants();
@@ -210,18 +210,20 @@ abstract class Container extends AbstractWebDriver
     protected function webDriverElement($value)
     {
         if (array_key_exists(LegacyElement::LEGACY_ELEMENT_ID, (array) $value)) {
+            $identifier = $value[LegacyElement::LEGACY_ELEMENT_ID];
+
             return new LegacyElement(
-                $this->getElementPath($value[LegacyElement::LEGACY_ELEMENT_ID]), // url
-                $value[LegacyElement::LEGACY_ELEMENT_ID], // id
-                $this->legacy
+                $this->getElementPath($identifier),
+                $identifier
             );
         }
 
         if (array_key_exists(Element::WEB_ELEMENT_ID, (array) $value)) {
+            $identifier = $value[Element::WEB_ELEMENT_ID];
+
             return new Element(
-                $this->getElementPath($value[Element::WEB_ELEMENT_ID]), // url
-                $value[Element::WEB_ELEMENT_ID], // id
-                $this->legacy
+                $this->getElementPath($identifier),
+                $identifier
             );
         }
 

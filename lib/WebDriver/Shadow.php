@@ -34,6 +34,13 @@ final class Shadow extends Container
     const SHADOW_ROOT_ID = 'shadow-6066-11e4-a52e-4f735466cecf';
 
     /**
+     * Shadow ID
+     *
+     * @var string
+     */
+    private $id;
+
+    /**
      * {@inheritdoc}
      */
     protected function methods()
@@ -42,22 +49,14 @@ final class Shadow extends Container
     }
 
     /**
-     * Shadow ID
-     *
-     * @var string
-     */
-    private $id;
-
-    /**
      * Constructor
      *
-     * @param string  $url    URL
-     * @param string  $id     shadow ID
-     * @param boolean $legacy Is legacy?
+     * @param string $url URL
+     * @param string $id  shadow ID
      */
-    public function __construct($url, $id, $legacy)
+    public function __construct($url, $id)
     {
-        parent::__construct($url, $legacy);
+        parent::__construct($url);
 
         $this->id = $id;
     }

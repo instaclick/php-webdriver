@@ -52,6 +52,13 @@ class Element extends Container
     const WEB_ELEMENT_ID = 'element-6066-11e4-a52e-4f735466cecf';
 
     /**
+     * Element ID
+     *
+     * @var string
+     */
+    private $id;
+
+    /**
      * {@inheritdoc}
      */
     protected function methods()
@@ -98,22 +105,14 @@ class Element extends Container
     }
 
     /**
-     * Element ID
-     *
-     * @var string
-     */
-    private $id;
-
-    /**
      * Constructor
      *
-     * @param string  $url    URL
-     * @param string  $id     element ID
-     * @param boolean $legacy Is legacy?
+     * @param string $url URL
+     * @param string $id  element ID
      */
-    public function __construct($url, $id, $legacy)
+    public function __construct($url, $id)
     {
-        parent::__construct($url, $legacy);
+        parent::__construct($url);
 
         $this->id = $id;
     }
@@ -147,8 +146,7 @@ class Element extends Container
 
             return new Shadow(
                 preg_replace('/element/' . preg_quote($this->id, '/') . '$/', '/', $this->url), // remove /element/:elementid
-                $shadowRootReference,
-                $this->legacy
+                $shadowRootReference
             );
         }
 

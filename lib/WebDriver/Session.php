@@ -43,8 +43,6 @@ namespace WebDriver;
  * @method array postCookie($jsonCookie) Set a cookie.
  * @method void dismiss_alert() Dismisses the currently displayed alert dialog.
  * @method void doubleclick() Double-clicks at the current mouse coordinates (set by moveto).
- * @method mixed execute($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (synchronous)
- * @method mixed execute_async($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (asynchronous)
  * @method array execute_sql($jsonQuery) Execute SQL.
  * @method array file($jsonFile) Upload file.
  * @method void forward() Navigates forward in the browser history, if possible.
@@ -70,6 +68,11 @@ final class Session extends Container
      * @var array
      */
     private $capabilities = null;
+
+    /**
+     * @var boolean
+     */
+    private $legacy = null;
 
     /**
      * {@inheritdoc}
@@ -100,8 +103,6 @@ final class Session extends Container
             'click' => array('POST'),
             'dismiss_alert' => array('POST'),
             'doubleclick' => array('POST'),
-            'execute' => array('POST'),
-            'execute_async' => array('POST'),
             'execute_sql' => array('POST'),
             'keys' => array('POST'),
             'location' => array('GET', 'POST'),
@@ -241,7 +242,7 @@ final class Session extends Container
             return call_user_func_array(array($this, 'legacyWindow'), func_get_args());
         }
 
-        return new Window($this->url . '/window', $this->legacy);
+        return new Window($this->url . '/window');
     }
 
     /**
@@ -273,7 +274,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new LegacyWindow($this->url . '/window', $arg, $this->legacy);
+        return new LegacyWindow($this->url . '/window', $arg);
     }
 
     /**
@@ -320,7 +321,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new Frame($this->url . '/frame', $this->legacy);
+        return new Frame($this->url . '/frame');
     }
 
     /**
@@ -353,7 +354,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new Timeouts($this->url . '/timeouts', $this->legacy);
+        return new Timeouts($this->url . '/timeouts');
     }
 
     /**
@@ -364,7 +365,7 @@ final class Session extends Container
      */
     public function ime()
     {
-        return new Ime($this->url . '/ime', $this->legacy);
+        return new Ime($this->url . '/ime');
     }
 
     /**
@@ -389,7 +390,7 @@ final class Session extends Container
      */
     public function touch()
     {
-        return new Touch($this->url . '/touch', $this->legacy);
+        return new Touch($this->url . '/touch');
     }
 
     /**
@@ -400,7 +401,7 @@ final class Session extends Container
      */
     public function localStorage()
     {
-        return new Storage\Local($this->url . '/local_storage', $this->legacy);
+        return new Storage\Local($this->url . '/local_storage');
     }
 
     /**
@@ -411,7 +412,7 @@ final class Session extends Container
      */
     public function sessionStorage()
     {
-        return new Storage\Session($this->url . '/session_storage', $this->legacy);
+        return new Storage\Session($this->url . '/session_storage');
     }
 
     /**
@@ -422,7 +423,7 @@ final class Session extends Container
      */
     public function applicationCache()
     {
-        return new ApplicationCache($this->url . '/application_cache', $this->legacy);
+        return new ApplicationCache($this->url . '/application_cache');
     }
 
     /**
@@ -450,7 +451,7 @@ final class Session extends Container
         }
 
         // chaining
-        return new Log($this->url . '/log', $this->legacy);
+        return new Log($this->url . '/log');
     }
 
     /**
@@ -461,7 +462,7 @@ final class Session extends Container
      */
     public function alert()
     {
-        return new Alert($this->url . '/alert', $this->legacy);
+        return new Alert($this->url . '/alert');
     }
 
     /**
@@ -475,12 +476,28 @@ final class Session extends Container
     {
         // execute script
         if (func_num_args() > 0) {
-            $result = $this->curl('POST', '/execute', func_get_arg(0));
+            $execute = $this->legacy ? new LegacyExecute($this->url) : new Execute($this->url . '/execute');
+            $result  = $execute->sync(func_get_arg(0));
 
-            return $result['value'];
+            return $result;
         }
 
-        return new Execute($this->url . '/execute', $this->legacy);
+        // W3C method chaining
+        return new Execute($this->url . '/execute');
+    }
+
+    /**
+     * async script execution
+     * - $session->execute_async($jsonScript)
+     *
+     * @return mixed
+     */
+    public function execute_async()
+    {
+        $execute = $this->legacy ? new LegacyExecute($this->url) : new Execute($this->url . '/execute');
+        $result  = $execute->async(func_get_arg(0));
+
+        return $result;
     }
 
     /**
@@ -491,6 +508,16 @@ final class Session extends Container
     public function setCapabilities($capabilities)
     {
         $this->capabilities = $capabilities;
+    }
+
+    /**
+     * Set legacy
+     *
+     * @param boolean $legacy
+     */
+    public function setLegacy($legacy)
+    {
+        $this->legacy = $legacy;
     }
 
     /**

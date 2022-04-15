@@ -33,6 +33,16 @@ namespace WebDriver;
 class WebDriver extends AbstractWebDriver implements WebDriverInterface
 {
     /**
+     * @var array
+     */
+    private $capabilities;
+
+    /**
+     * @var boolean
+     */
+    private $legacy;
+
+    /**
      * {@inheritdoc}
      */
     protected function methods()
@@ -87,11 +97,12 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
             );
         }
 
-        $capabilities = isset($result['value']['capabilities']) ? $result['value']['capabilities'] : null;
-        $this->legacy = ! $capabilities;
+        $this->capabilities = isset($result['value']['capabilities']) ? $result['value']['capabilities'] : null;
+        $this->legacy       = ! $this->capabilities; // initially
 
-        $session = new Session($result['sessionUrl'], $this->legacy);
-        $session->setCapabilities($capabilities);
+        $session = new Session($result['sessionUrl']);
+        $session->setCapabilities($this->capabilities);
+        $session->setLegacy($this->legacy);
 
         return $session;
     }
@@ -110,7 +121,11 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
         $sessions = array();
 
         foreach ($result['value'] as $session) {
-            $sessions[] = new Session($this->url . '/session/' . $session['id'], $this->legacy);
+            $session = new Session($this->url . '/session/' . $session['id']);
+            $session->setCapabilities($this->capabilities);
+            $session->setLegacy($this->legacy);
+
+            $sessions[] = $session;
         }
 
         return $sessions;
