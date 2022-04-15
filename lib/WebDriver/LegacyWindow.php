@@ -25,8 +25,6 @@ namespace WebDriver;
 class LegacyWindow extends AbstractWebDriver
 {
     /**
-     * Window handle
-     *
      * @var string
      */
     private $windowHandle;
@@ -55,25 +53,33 @@ class LegacyWindow extends AbstractWebDriver
     }
 
     /**
-     * Get window handle
+     * Constructor
+     *
+     * @param string      $url
+     * @param string|null $windowHandle
+     */
+    public function __construct($url, $windowHandle = null)
+    {
+        parent::__construct($url);
+
+        $this->windowHandle = $windowHandle;
+    }
+
+    /**
+     * Get window handle: /session/:sessionId/window_handle (GET)
+     * - $session->window($handle)->getHandle()
+     * - $session->window()->getHandle()
      *
      * @return string
      */
     public function getHandle()
     {
+        if (! $this->windowHandle) {
+            $result = $this->curl('GET', '_handle');
+
+            $this->windowHandle = $result['value'];
+        }
+
         return $this->windowHandle;
-    }
-
-    /**
-     * Constructor
-     *
-     * @param string $url          URL
-     * @param string $windowHandle Window handle
-     */
-    public function __construct($url, $windowHandle)
-    {
-        $this->windowHandle = $windowHandle;
-
-        parent::__construct($url . '/' . $windowHandle);
     }
 }

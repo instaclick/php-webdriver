@@ -17,8 +17,8 @@ namespace WebDriver;
  * @package WebDriver
  *
  * @method void accept_alert() Accepts the currently displayed alert dialog.
- * @method array deleteActions() Release Actions
- * @method array postActions() Perform Actions
+ * @method array deleteActions() Release actions.
+ * @method array postActions() Perform actions.
  * @method string getAlert_text() Gets the text of the currently displayed JavaScript alert(), confirm(), or prompt() dialog.
  * @method void postAlert_text($jsonText) Sends keystrokes to a JavaScript prompt() dialog.
  * @method void back() Navigates backward in the browser history, if possible.
@@ -40,13 +40,13 @@ namespace WebDriver;
  * @method void moveto($jsonCoordinates) Move the mouse by an offset of the specified element (or current mouse cursor).
  * @method string getOrientation() Get the current browser orientation.
  * @method void postOrientation($jsonOrientation) Set the current browser orientation.
- * @method array print() Print Page
+ * @method array print() Print page.
  * @method void refresh() Refresh the current page.
  * @method string screenshot() Take a screenshot of the current page.
  * @method string source() Get the current page source.
  * @method string title() Get the current page title.
- * @method string url() Retrieve the URL of the current page
- * @method void postUrl($jsonUrl) Navigate to a new URL
+ * @method string url() Retrieve the URL of the current page.
+ * @method void postUrl($jsonUrl) Navigate to a new URL.
  * @method string window_handle() Retrieve the current window handle.
  * @method array window_handles() Retrieve the list of all window handles available to the session.
  */
@@ -96,7 +96,7 @@ class Session extends Container
             'location' => array('GET', 'POST'),
             'moveto' => array('POST'),
             'orientation' => array('GET', 'POST'),
-            'window_handle' => array('GET'),
+            'window_handle' => array('GET'), // see also getWindowHandle()
             'window_handles' => array('GET'),
         );
     }
@@ -218,55 +218,67 @@ class Session extends Container
     }
 
     /**
-     * Window method chaining, e.g.,
-     * - $session->window($handle)->method() - chaining
+     * Get window handle: /session/:sessionId/window (GET)
+     *                  : /session/:sessionId/window_handle (GET)
+     * - $session->getWindowHandle()
+     *
+     * An alternative to $session->window()->getHandle()
+     *
+     * @return mixed
+     */
+    public function getWindowHandle()
+    {
+        $result = $this->curl('GET', $this->legacy ? '/window_handle' : '/window');
+
+        return $result['value'];
+    }
+
+    /**
+     * New window: /session/:sessionId/window/new (POST)
+     * - $session->newWindow($type)
+     *
+     * @internal "new" is a reserved keyword in PHP, so $session->window()->new() isn't possible
      *
      * @return \WebDriver\Window
      */
+    public function newWindow($type)
+    {
+        $arg = func_get_arg(0); // json
+
+        $result = $this->curl('POST', '/window/new', $arg);
+
+        return $result['value'];
+    }
+
+    /**
+     * window method chaining: /session/:sessionId/window (POST
+     * - $session->window($jsonHandle) - set focus
+     * - $session->window($handle)->method() - chaining
+     * - $session->window()->method() - chaining
+     *
+     * @return \WebDriver\Session|\WebDriver\Window|\WebDriver\LegacyWindow
+     */
     public function window()
     {
-        // legacy window methods
-        if ($this->legacy) {
-            return call_user_func_array(array($this, 'legacyWindow'), func_get_args());
+        $arg = null;
+
+        // set window focus / switch to window
+        if (func_num_args() === 1) {
+            $arg = func_get_arg(0); // window handle or name attribute
+
+            if (is_array($arg)) {
+                $this->curl('POST', '/window', $arg);
+
+                return $this;
+            }
         }
 
-        return new Window($this->url . '/window');
+        // chaining (with optional handle in $arg)
+        return $this->legacy ? new LegacyWindow($this->url . '/window', $arg) : new Window($this->url . '/window', $arg);
     }
 
     /**
-     * Legacy window methods: /session/:sessionId/window (POST, DELETE)
-     * - $session->legacyWindow() - close current window
-     * - $session->legacyWindow($name) - set focus
-     * - $session->legacyWindow($window_handle)->method() - chaining
-     *
-     * @deprecated
-     *
-     * @return \WebDriver\LegacyWindow|\WebDriver\Session
-     */
-    public function legacyWindow()
-    {
-        // close current window
-        if (func_num_args() === 0) {
-            $this->curl('DELETE', '/window');
-
-            return $this;
-        }
-
-        // set focus
-        $arg = func_get_arg(0); // window handle or name attribute
-
-        if (is_array($arg)) {
-            $this->curl('POST', '/window', $arg);
-
-            return $this;
-        }
-
-        // chaining
-        return new LegacyWindow($this->url . '/window', $arg);
-    }
-
-    /**
-     * Delete window: /session/:sessionId/window (DELETE)
+     * Close window: /session/:sessionId/window (DELETE)
      *
      * @return \WebDriver\Session
      */

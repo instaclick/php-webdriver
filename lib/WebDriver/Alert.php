@@ -16,10 +16,10 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
- * @method array accept() Accept Alert
- * @method array dismiss() Dismiss Alert
- * @method array getText() Get Alert Text
- * @method array postText() Send Alert Text
+ * @method array accept() Accept alert.
+ * @method array dismiss() Dismiss alert.
+ * @method array getText() Get alert text.
+ * @method array postText() Send alert text.
  */
 class Alert extends AbstractWebDriver
 {

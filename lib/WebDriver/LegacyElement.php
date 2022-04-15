@@ -26,9 +26,9 @@ namespace WebDriver;
  * @method array location() Determine an element's location on the page.
  * @method array location_in_view() Determine an element's location on the screen once it has been scrolled into view.
  * @method string name() Query for an element's tag name.
- * @method array property($propertyName) Get Element Property
- * @method array rect() Get Element Rect
- * @method array screenshot() Take Element Screenshot
+ * @method array property($propertyName) Get element property.
+ * @method array rect() Get element rect.
+ * @method array screenshot() Take element screenshot.
  * @method array size() Determine an element's size in pixels.
  * @method void submit() Submit a FORM element.
  * @method string text() Returns the visible text for the element.
