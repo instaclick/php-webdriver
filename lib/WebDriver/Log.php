@@ -29,7 +29,7 @@ namespace WebDriver;
  *
  * @method array types() Get available log types.
  */
-final class Log extends AbstractWebDriver
+class Log extends AbstractWebDriver
 {
     /**
      * {@inheritdoc}

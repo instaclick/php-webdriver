@@ -39,7 +39,7 @@ namespace WebDriver;
  * @method array getSize() Get Window Size
  * @method array postSize() Set Window Size
  */
-final class Window extends AbstractWebDriver
+class Window extends AbstractWebDriver
 {
     const WEB_WINDOW_ID = 'window-fcc6-11e5-b4f8-330a88ab9d7f';
 

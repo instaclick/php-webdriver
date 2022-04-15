@@ -36,7 +36,7 @@ namespace WebDriver;
  * @method void scroll($jsonCoordinates) Scroll on the touch screen using finger based motion events.  Coordinates are either absolute, or relative to a element (if specified).
  * @method void up($jsonCoordinates) Finger up on the screen.
  */
-final class Touch extends AbstractWebDriver
+class Touch extends AbstractWebDriver
 {
     /**
      * {@inheritdoc}

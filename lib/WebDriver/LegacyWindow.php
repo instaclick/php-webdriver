@@ -34,7 +34,7 @@ namespace WebDriver;
  * @method array getSize() Get size of the window.
  * @method void postSize($json) Change the size of the window.
  */
-final class LegacyWindow extends AbstractWebDriver
+class LegacyWindow extends AbstractWebDriver
 {
     /**
      * Window handle

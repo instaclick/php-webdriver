@@ -32,7 +32,7 @@ use WebDriver\Exception as WebDriverException;
  * @method void async_script($json) Set the amount of time, in milliseconds, that asynchronous scripts (executed by execute_async) are permitted to run before they are aborted and a timeout error is returned to the client.
  * @method void implicit_wait($json) Set the amount of time the driver should wait when searching for elements.
  */
-final class Timeouts extends AbstractWebDriver
+class Timeouts extends AbstractWebDriver
 {
     /**
      * {@inheritdoc}

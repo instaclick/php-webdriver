@@ -27,6 +27,6 @@ namespace WebDriver\Storage;
  *
  * @package WebDriver
  */
-final class Local extends AbstractStorage
+class Local extends AbstractStorage
 {
 }

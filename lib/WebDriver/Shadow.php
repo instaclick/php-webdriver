@@ -29,7 +29,7 @@ namespace WebDriver;
  *
  * @deprecated by W3C WebDriver
  */
-final class Shadow extends Container
+class Shadow extends Container
 {
     const SHADOW_ROOT_ID = 'shadow-6066-11e4-a52e-4f735466cecf';
 

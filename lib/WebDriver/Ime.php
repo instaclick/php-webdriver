@@ -33,7 +33,7 @@ namespace WebDriver;
  * @method array available_engines() List all available engines on the machines.
  * @method void deactivate() De-activates the currently active IME engine.
  */
-final class Ime extends AbstractWebDriver
+class Ime extends AbstractWebDriver
 {
     /**
      * {@inheritdoc}

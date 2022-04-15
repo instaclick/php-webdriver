@@ -32,7 +32,7 @@ namespace WebDriver;
  * @method array getText() Get Alert Text
  * @method array postText() Send Alert Text
  */
-final class Alert extends AbstractWebDriver
+class Alert extends AbstractWebDriver
 {
     /**
      * {@inheritdoc}

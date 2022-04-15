@@ -29,7 +29,7 @@ namespace WebDriver;
  *
  * @method void parent() Change focus to the parent context.
  */
-final class Frame extends AbstractWebDriver
+class Frame extends AbstractWebDriver
 {
     const WEB_FRAME_ID = 'frame-075b-4da1-b6ba-e579c2d3230a';
 

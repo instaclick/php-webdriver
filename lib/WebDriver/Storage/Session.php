@@ -27,6 +27,6 @@ namespace WebDriver\Storage;
  *
  * @package WebDriver
  */
-final class Session extends AbstractStorage
+class Session extends AbstractStorage
 {
 }

@@ -62,7 +62,7 @@ namespace WebDriver;
  * @method string window_handle() Retrieve the current window handle.
  * @method array window_handles() Retrieve the list of all window handles available to the session.
  */
-final class Session extends Container
+class Session extends Container
 {
     /**
      * @var array

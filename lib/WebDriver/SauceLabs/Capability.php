@@ -22,14 +22,12 @@
 
 namespace WebDriver\SauceLabs;
 
-use WebDriver\Capability as BaseCapability;
-
 /**
  * WebDriver\SauceLabs\Capability class
  *
  * @package WebDriver
  */
-class Capability extends BaseCapability
+final class Capability
 {
     /**
      * Desired capabilities - SauceLabs
