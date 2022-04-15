@@ -325,6 +325,19 @@ final class Session extends Container
     }
 
     /**
+     * Get timeouts (W3C): /session/:sessionId/timeouts (GET)
+     * - $session->getTimeouts()
+     *
+     * @return mixed
+     */
+    public function getTimeouts()
+    {
+        $result = $this->curl('GET', '/timeouts');
+
+        return $result['value'];
+    }
+
+    /**
      * timeouts methods: /session/:sessionId/timeouts (POST)
      * - $session->timeouts($json) - set timeout for an operation
      * - $session->timeouts()->method() - chaining
@@ -343,7 +356,7 @@ final class Session extends Container
         }
 
         if (func_num_args() === 2) {
-            $type    = func_get_arg(0); // 'script', 'implicit', or 'page load' (legacy: 'pageLoad')
+            $type    = func_get_arg(0); // 'script', 'implicit', or 'pageLoad' (legacy: 'pageLoad')
             $timeout = func_get_arg(1); // timeout in milliseconds
 
             $arg = $this->legacy ? array('type' => $type, 'ms' => $timeout) : array($type => $timeout);

@@ -40,6 +40,7 @@ final class Timeouts extends AbstractWebDriver
     protected function methods()
     {
         return array(
+            // Legacy JSON Wire Protocol
             'async_script' => array('POST'),
             'implicit_wait' => array('POST'),
         );
