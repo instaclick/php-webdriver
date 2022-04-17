@@ -120,6 +120,8 @@ abstract class AbstractWebDriver
             $url .= '/' . $parameters;
         }
 
+        $this->assertNonObjectParameters($parameters);
+
         list($rawResult, $info) = ServiceFactory::getInstance()->getService('service.curl')->execute($requestMethod, $url, $parameters, $extraOptions);
 
         $httpCode = $info['http_code'];
@@ -194,6 +196,32 @@ abstract class AbstractWebDriver
             'info'       => $info,
             'sessionId'  => $sessionId,
             'sessionUrl' => $sessionId ? $this->url . '/session/' . $sessionId : $info['url'],
+        );
+    }
+
+    /**
+     * @param mixed $parameters
+     */
+    private function assertNonObjectParameters($parameters)
+    {
+        if ($parameters === null || is_scalar($parameters)) {
+            return;
+        }
+
+        if (is_array($parameters)) {
+            foreach ($parameters as $value) {
+                $this->assertNonObjectParameters($value);
+            }
+
+            return;
+        }
+
+        throw WebDriverException::factory(
+            WebDriverException::UNEXPECTED_PARAMETERS,
+            sprintf(
+                "Unable to serialize non-scalar type %s",
+                is_object($parameters) ? get_class($parameters) : gettype($parameters)
+            )
         );
     }
 
