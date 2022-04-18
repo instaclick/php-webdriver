@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  DRIVER_URL: "http://localhost:4444/wd/hub"
+
+jobs:
+  Mink:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        selenium: [ '2.53.1', '3.141.59' ]
+        php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
+      fail-fast: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "${{ matrix.php }}"
+          tools: composer
+          ini-values: error_reporting=-1, display_errors=On
+
+      - name: Install dependencies
+        run: |
+          composer config version 1.4.99
+          composer require --no-update behat/mink-selenium2-driver:dev-master --dev --quiet
+          composer require --no-update mink/driver-testsuite:dev-master --dev --quiet
+          php -r '$json = json_decode(file_get_contents ("composer.json"), true); $json["autoload"]["psr-4"]["Behat\\Mink\\Tests\\Driver\\"] = "vendor/behat/mink-selenium2-driver/tests/"; file_put_contents("composer.json", json_encode($json, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));'
+          composer update --no-interaction --prefer-dist
+
+      - name: Start Selenium & Mink test server
+        run: |
+          mkdir logs
+          docker run --net host --name selenium --volume /dev/shm:/dev/shm --shm-size 2g "selenium/standalone-firefox:${{ matrix.selenium }}" &> logs/selenium.log &
+          vendor/bin/mink-test-server &> logs/mink-test-server.log &
+          while ! nc -z localhost 4444 </dev/null; do echo Waiting for remote driver to start...; sleep 1; done
+          while ! nc -z localhost 8002 </dev/null; do echo Waiting for PHP server to start...; sleep 1; done
+
+      - name: Run Mink tests
+        run: |
+          sed -i "s~vendor/~../../../vendor/~" vendor/behat/mink-selenium2-driver/phpunit.xml.dist
+          # remove test excludes once https://github.com/minkphp/MinkSelenium2Driver/pull/354 Selenium 3 issues are fixed
+          if [ "${{ matrix.selenium }}" = "3.141.59" ]; then
+              vendor/bin/phpunit --exclude-group none --no-coverage -v -c vendor/behat/mink-selenium2-driver --filter '^(?!Behat\\Mink\\Tests\\Driver\\(?:Basic\\IFrameTest::testIFrame|Js\\ChangeEventTest::testSetValueChangeEvent.*|Js\\WindowTest::testWindow|Custom\\TimeoutTest::testInvalidTimeoutSettingThrowsException|Js\\EventsTest::testRightClick)$)'
+          else
+              vendor/bin/phpunit --exclude-group none --no-coverage -v -c vendor/behat/mink-selenium2-driver
+          fi

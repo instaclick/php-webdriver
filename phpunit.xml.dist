@@ -14,9 +14,6 @@
     <include>
       <directory suffix=".php">lib</directory>
     </include>
-    <exclude>
-      <file>__init__.php</file>
-    </exclude>
   </coverage>
   <testsuites>
     <testsuite name="Project Test Suite">
