@@ -27,9 +27,11 @@
         "ext-curl": "*"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "^1.0||^2.0",
-        "phpunit/phpunit": "^4.8"
+        "satooshi/php-coveralls": "^1.0 || ^2.0",
+        "phpunit/phpunit": "^8.5 || ^9.5"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-0": {
             "WebDriver": "lib/"
