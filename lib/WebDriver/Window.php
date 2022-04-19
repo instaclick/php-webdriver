@@ -24,8 +24,6 @@ namespace WebDriver;
  * @method void postPosition($json) Change position of the window.
  * @method array getRect() Get window rect.
  * @method array postRect() Set window rect.
- * @method array getSize() Get window size.
- * @method array postSize() Set window size.
  */
 class Window extends AbstractWebDriver
 {
@@ -48,6 +46,16 @@ class Window extends AbstractWebDriver
             'minimize' => array('POST'),
             'position' => array('GET', 'POST'),
             'rect' => array('GET', 'POST'),
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function obsoleteMethods()
+    {
+        return array(
+            // Legacy JSON Wire Protocol
             'size' => array('GET', 'POST'),
         );
     }
