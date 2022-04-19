@@ -99,7 +99,8 @@ class CurlService implements CurlServiceInterface
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, $customHeaders);
 
-        $rawResult = trim(curl_exec($curl));
+        $rawResult = curl_exec($curl);
+        $rawResult = is_string($rawResult) ? trim($rawResult) : '';
 
         $info = curl_getinfo($curl);
         $info['request_method'] = $requestMethod;

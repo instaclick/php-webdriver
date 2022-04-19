@@ -295,7 +295,8 @@ abstract class AbstractWebDriver
         if (preg_match('/^(get|post|delete)/', $name, $matches)) {
             $requestMethod = strtoupper($matches[0]);
             $webdriverCommand = strtolower(substr($name, strlen($requestMethod)));
-            $dontcare = getRequestMethod($webDriverCommand); // validation
+
+            $this->getRequestMethod($webdriverCommand); // validation
         } else {
             $webdriverCommand = $name;
             $requestMethod = $this->getRequestMethod($webdriverCommand);

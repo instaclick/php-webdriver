@@ -32,7 +32,8 @@ abstract class Container extends AbstractWebDriver
     {
         parent::__construct($url);
 
-        $locatorStrategy  = new \ReflectionClass('WebDriver\LocatorStrategy');
+        $locatorStrategy = new \ReflectionClass('WebDriver\LocatorStrategy');
+
         $this->strategies = $locatorStrategy->getConstants();
     }
 

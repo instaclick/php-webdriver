@@ -60,7 +60,7 @@ class Session extends Container
     /**
      * @var boolean
      */
-    private $legacy = null;
+    private $w3c = null;
 
     /**
      * {@inheritdoc}
@@ -112,6 +112,30 @@ class Session extends Container
             'speed' => array('GET', 'POST'),
             'visible' => array('GET', 'POST'),
         );
+    }
+
+    /**
+     * Constructor
+     *
+     * @param string     $url URL to Selenium server
+     * @param array|null $capabilities
+     */
+    public function __construct($url, $capabilities)
+    {
+        parent::__construct($url);
+
+        $this->capabilities = $capabilities;
+        $this->w3c          = !! $capabilities;
+    }
+
+    /**
+     * Is W3C webdriver?
+     *
+     * @return boolean
+     */
+    public function isW3C()
+    {
+        return $this->w3c;
     }
 
     /**
@@ -228,7 +252,7 @@ class Session extends Container
      */
     public function getWindowHandle()
     {
-        $result = $this->curl('GET', $this->legacy ? '/window_handle' : '/window');
+        $result = $this->curl('GET', $this->w3c ? '/window' : '/window_handle');
 
         return $result['value'];
     }
@@ -274,7 +298,7 @@ class Session extends Container
         }
 
         // chaining (with optional handle in $arg)
-        return $this->legacy ? new LegacyWindow($this->url . '/window', $arg) : new Window($this->url . '/window', $arg);
+        return $this->w3c ? new Window($this->url . '/window', $arg) : new LegacyWindow($this->url . '/window', $arg);
     }
 
     /**
@@ -359,7 +383,7 @@ class Session extends Container
             $type    = func_get_arg(0); // 'script', 'implicit', or 'pageLoad' (legacy: 'pageLoad')
             $timeout = func_get_arg(1); // timeout in milliseconds
 
-            $arg = $this->legacy ? array('type' => $type, 'ms' => $timeout) : array($type => $timeout);
+            $arg = $this->w3c ? array($type => $timeout) : array('type' => $type, 'ms' => $timeout);
 
             $this->curl('POST', '/timeouts', $arg);
 
@@ -489,7 +513,7 @@ class Session extends Container
     {
         // execute script
         if (func_num_args() > 0) {
-            $execute = $this->legacy ? new LegacyExecute($this->url) : new Execute($this->url . '/execute');
+            $execute = $this->w3c ? new Execute($this->url . '/execute') : new LegacyExecute($this->url);
             $result  = $execute->sync(func_get_arg(0));
 
             return $result;
@@ -507,30 +531,10 @@ class Session extends Container
      */
     public function execute_async()
     {
-        $execute = $this->legacy ? new LegacyExecute($this->url) : new Execute($this->url . '/execute');
+        $execute = $this->w3c ? new Execute($this->url . '/execute') : new LegacyExecute($this->url);
         $result  = $execute->async(func_get_arg(0));
 
         return $result;
-    }
-
-    /**
-     * Set capabilities
-     *
-     * @param array $capabilities
-     */
-    public function setCapabilities($capabilities)
-    {
-        $this->capabilities = $capabilities;
-    }
-
-    /**
-     * Set legacy
-     *
-     * @param boolean $legacy
-     */
-    public function setLegacy($legacy)
-    {
-        $this->legacy = $legacy;
     }
 
     /**

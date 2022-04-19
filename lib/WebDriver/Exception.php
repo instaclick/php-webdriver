@@ -185,7 +185,7 @@ abstract class Exception extends \Exception
 
         $errorDefinition = self::$errs[$code];
 
-        if (trim($message) === '') {
+        if ($message === null || trim($message) === '') {
             $message = $errorDefinition[1];
         }
 
