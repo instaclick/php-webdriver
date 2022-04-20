@@ -12,8 +12,11 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        selenium: [ '2.53.1', '3.141.59' ]
+        selenium: [ '3.141.59' ]
         php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
+        include:
+          - selenium: '2.53.1'
+            php: 'latest'
       fail-fast: false
 
     steps:
@@ -48,7 +51,7 @@ jobs:
           sed -i "s~vendor/~../../../vendor/~" vendor/behat/mink-selenium2-driver/phpunit.xml.dist
           # remove test excludes once https://github.com/minkphp/MinkSelenium2Driver/pull/354 Selenium 3 issues are fixed
           if [ "${{ matrix.selenium }}" = "3.141.59" ]; then
-              vendor/bin/phpunit --exclude-group none --no-coverage -v -c vendor/behat/mink-selenium2-driver --filter '^(?!Behat\\Mink\\Tests\\Driver\\(?:Basic\\IFrameTest::testIFrame|Js\\ChangeEventTest::testSetValueChangeEvent.*|Js\\WindowTest::testWindow|Custom\\TimeoutTest::testInvalidTimeoutSettingThrowsException|Js\\EventsTest::testRightClick)$)'
+              vendor/bin/phpunit --exclude-group none --no-coverage -v -c vendor/behat/mink-selenium2-driver --filter '^(?!Behat\\Mink\\Tests\\Driver\\(?:Basic\\IFrameTest::testIFrame|Js\\ChangeEventTest::testSetValueChangeEvent.*|Js\\WindowTest::(?:testWindow|testResizeWindow)|Custom\\TimeoutTest::testInvalidTimeoutSettingThrowsException|Js\\EventsTest::testRightClick)$)'
           else
               vendor/bin/phpunit --exclude-group none --no-coverage -v -c vendor/behat/mink-selenium2-driver
           fi
