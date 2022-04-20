@@ -70,22 +70,14 @@ class Execute extends AbstractWebDriver
     protected function serializeArguments(array $arguments)
     {
         foreach ($arguments as $key => $value) {
-            switch (true) {
-                case $value instanceof LegacyElement:
-                    $arguments[$key] = [LegacyElement::LEGACY_ELEMENT_ID => $value->getID()];
-                    break;
-
-                case $value instanceof Element:
-                    $arguments[$key] = [Element::WEB_ELEMENT_ID => $value->getID()];
-                    break;
-
-                case $value instanceof Shadow:
-                    $arguments[$key] = [Shadow::SHADOW_ROOT_ID => $value->getID()];
-                    break;
-
-                case is_array($value):
-                    $arguments[$key] = $this->serializeArguments($value);
-                    break;
+            if ($value instanceof LegacyElement) {
+                $arguments[$key] = [LegacyElement::LEGACY_ELEMENT_ID => $value->getID()];
+            } elseif ($value instanceof Element) {
+                $arguments[$key] = [Element::WEB_ELEMENT_ID => $value->getID()];
+            } elseif ($value instanceof Shadow) {
+                $arguments[$key] = [Shadow::SHADOW_ROOT_ID => $value->getID()];
+            } elseif (is_array($value)) {
+                $arguments[$key] = $this->serializeArguments($value);
             }
         }
 
