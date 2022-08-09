@@ -181,18 +181,17 @@ abstract class AbstractWebDriver
             );
         }
 
-        // According to https://w3c.github.io/webdriver/webdriver-spec.html all 4xx responses are to be considered
-        // an error and return plaintext, while 5xx responses are json encoded
-        if ($httpCode >= 400 && $httpCode <= 499) {
-            throw WebDriverException::factory(
-                WebDriverException::CURL_EXEC,
-                'Webdriver http error: ' . $httpCode . ', payload :' . substr($rawResult, 0, 1000)
-            );
-        }
-
         $result = json_decode($rawResult, true);
 
         if (! empty($rawResult) && $result === null && json_last_error() != JSON_ERROR_NONE) {
+            // Legacy webdriver 4xx responses are to be considered // an error and return plaintext
+            if ($httpCode >= 400 && $httpCode <= 499) {
+                throw WebDriverException::factory(
+                    WebDriverException::CURL_EXEC,
+                    'Webdriver http error: ' . $httpCode . ', payload :' . substr($rawResult, 0, 1000)
+                );
+            }
+
             throw WebDriverException::factory(
                 WebDriverException::CURL_EXEC,
                 'Payload received from webdriver is not valid json: ' . substr($rawResult, 0, 1000)
