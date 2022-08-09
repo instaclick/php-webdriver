@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2013 Anthon Pang
+ * @copyright 2019 Anthon Pang
  * @license Apache-2.0
  *
  * @package WebDriver
@@ -14,10 +14,10 @@ namespace WebDriver\Exception;
 use WebDriver\Exception as BaseException;
 
 /**
- * WebDriver\Exception\MoveTargetOutOfBounds class
+ * WebDriver\Exception\UnsupportedOperation class
  *
  * @package WebDriver
  */
-final class MoveTargetOutOfBounds extends BaseException
+final class UnsupportedOperation extends BaseException
 {
 }

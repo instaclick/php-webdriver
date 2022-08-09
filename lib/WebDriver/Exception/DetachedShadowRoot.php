@@ -14,10 +14,10 @@ namespace WebDriver\Exception;
 use WebDriver\Exception as BaseException;
 
 /**
- * WebDriver\Exception\MoveTargetOutOfBounds class
+ * WebDriver\Exception\DetachedShadowRoot class
  *
  * @package WebDriver
  */
-final class MoveTargetOutOfBounds extends BaseException
+final class DetachedShadowRoot extends BaseException
 {
 }
