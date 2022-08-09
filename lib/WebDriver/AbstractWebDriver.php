@@ -120,7 +120,7 @@ abstract class AbstractWebDriver
             $url .= '/' . $parameters;
         }
 
-        $this->assertNonObjectParameters($parameters);
+        $this->assertSerializable($parameters);
 
         list($rawResult, $info) = ServiceFactory::getInstance()->getService('service.curl')->execute($requestMethod, $url, $parameters, $extraOptions);
 
@@ -135,8 +135,8 @@ abstract class AbstractWebDriver
 
         $result = json_decode($rawResult, true);
 
-        if (!empty($rawResult) && $result === null && json_last_error() != JSON_ERROR_NONE) {
-            // Legacy webdriver 4xx responses are to be considered // an error and return plaintext
+        if (! empty($rawResult) && $result === null && json_last_error() != JSON_ERROR_NONE) {
+            // Legacy webdriver 4xx responses are to be considered a plaintext error
             if ($httpCode >= 400 && $httpCode <= 499) {
                 throw WebDriverException::factory(
                     WebDriverException::CURL_EXEC,
@@ -157,13 +157,9 @@ abstract class AbstractWebDriver
             );
         }
 
-        $value   = (is_array($result) && array_key_exists('value', $result)) ? $result['value'] : null;
-        $message = (is_array($result) && array_key_exists('message', $result))
-            ? $result['message']
-            : ((is_array($value) && array_key_exists('message', $value)) ? $value['message'] : null);
-        $error   = (is_array($result) && array_key_exists('error', $result))
-            ? $result['error']
-            : ((is_array($value) && array_key_exists('error', $value)) ? $value['error'] : null);
+        $value   = $this->offsetGet('value', $result);
+        $message = $this->offsetGet('message', $result) ?: $this->offsetGet('message', $value);
+        $error   = $this->offsetGet('error', $result)   ?: $this->offsetGet('error', $value);
 
         // if not success, throw exception
         if (isset($result['status']) && (int) $result['status'] !== 0) {
@@ -180,47 +176,15 @@ abstract class AbstractWebDriver
             );
         }
 
-        $sessionId = isset($result['sessionId'])
-           ? $result['sessionId']
-           : (isset($value['sessionId'])
-               ? $value['sessionId']
-               : (isset($value['webdriver.remote.sessionid'])
-                   ? $value['webdriver.remote.sessionid']
-                   : null
-               )
-           );
+        $sessionId = $this->offsetGet('sessionId', $result)
+                  ?: $this->offsetGet('sessionId', $value)
+                  ?: $this->offsetGet('webdriver.remote.sessionid', $value);
 
         return array(
             'value'      => $value,
             'info'       => $info,
             'sessionId'  => $sessionId,
             'sessionUrl' => $sessionId ? $this->url . '/session/' . $sessionId : $info['url'],
-        );
-    }
-
-    /**
-     * @param mixed $parameters
-     */
-    private function assertNonObjectParameters($parameters)
-    {
-        if ($parameters === null || is_scalar($parameters)) {
-            return;
-        }
-
-        if (is_array($parameters)) {
-            foreach ($parameters as $value) {
-                $this->assertNonObjectParameters($value);
-            }
-
-            return;
-        }
-
-        throw WebDriverException::factory(
-            WebDriverException::UNEXPECTED_PARAMETERS,
-            sprintf(
-                "Unable to serialize non-scalar type %s",
-                is_object($parameters) ? get_class($parameters) : gettype($parameters)
-            )
         );
     }
 
@@ -271,6 +235,47 @@ abstract class AbstractWebDriver
         );
 
         return $result['value'];
+    }
+
+    /**
+     * Sanity check
+     *
+     * @param mixed $parameters
+     */
+    private function assertSerializable($parameters)
+    {
+        if ($parameters === null || is_scalar($parameters)) {
+            return;
+        }
+
+        if (is_array($parameters)) {
+            foreach ($parameters as $value) {
+                $this->assertSerializable($value);
+            }
+
+            return;
+        }
+
+        throw WebDriverException::factory(
+            WebDriverException::UNEXPECTED_PARAMETERS,
+            sprintf(
+                "Unable to serialize non-scalar type %s",
+                is_object($parameters) ? get_class($parameters) : gettype($parameters)
+            )
+        );
+    }
+
+    /**
+     * Extract value from result
+     *
+     * @param string $key
+     * @param mixed  $result
+     *
+     * @return string|null
+     */
+    private function offsetGet($key, $result)
+    {
+        return (is_array($result) && array_key_exists($key, $result)) ? $result[$key] : null;
     }
 
     /**
