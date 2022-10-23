@@ -218,7 +218,7 @@ final class Session extends Container
     /**
      * window methods: /session/:sessionId/window (POST, DELETE)
      * - $session->window() - close current window
-     * - $session->window($name) - set focus
+     * - $session->window($window_handle) - set focus
      * - $session->window($window_handle)->method() - chaining
      *
      * @return \WebDriver\Window|\WebDriver\Session
@@ -233,7 +233,7 @@ final class Session extends Container
         }
 
         // set focus
-        $arg = func_get_arg(0); // window handle or name attribute
+        $arg = func_get_arg(0); // window handle
 
         if (is_array($arg)) {
             $this->curl('POST', '/window', $arg);
@@ -260,13 +260,13 @@ final class Session extends Container
     /**
      * Set focus to window: /session/:sessionId/window (POST)
      *
-     * @param mixed $name window handler or name attribute
+     * @param mixed $name window handle
      *
      * @return \WebDriver\Session
      */
     public function focusWindow($name)
     {
-        $this->curl('POST', '/window', array('name' => $name));
+        $this->curl('POST', '/window', array('handle' => $name, 'name' => $name));
 
         return $this;
     }
