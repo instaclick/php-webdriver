@@ -316,13 +316,13 @@ class Session extends Container
     /**
      * Set focus to window: /session/:sessionId/window (POST)
      *
-     * @param mixed $name window handler or name attribute
+     * @param mixed $handle window handle (or legacy name) attribute
      *
      * @return \WebDriver\Session
      */
-    public function focusWindow($name)
+    public function focusWindow($handle)
     {
-        $this->curl('POST', '/window', array('name' => $name, 'handle' => $name));
+        $this->curl('POST', '/window', array('handle' => $handle, 'name' => $handle));
 
         return $this;
     }
