@@ -94,7 +94,6 @@ class Session extends Container
             'execute_sql' => array('POST'),
             'keys' => array('POST'),
             'location' => array('GET', 'POST'),
-            'moveto' => array('POST'),
             'orientation' => array('GET', 'POST'),
             'window_handle' => array('GET'), // see also getWindowHandle()
             'window_handles' => array('GET'),
