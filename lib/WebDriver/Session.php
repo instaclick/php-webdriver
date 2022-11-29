@@ -529,7 +529,7 @@ class Session extends Container
      *
      * @return mixed
      */
-    public function execute_async()
+    public function executeAsync()
     {
         $execute = $this->w3c ? new Execute($this->url . '/execute') : new LegacyExecute($this->url);
         $result  = $execute->async(func_get_arg(0));
@@ -551,9 +551,10 @@ class Session extends Container
     public function __call($name, $arguments)
     {
         $map = [
+            'application_cache' => 'applicationCache',
+            'execute_async' => 'executeAsync',
             'local_storage' => 'localStorage',
             'session_storage' => 'sessionStorage',
-            'application_cache' => 'applicationCache',
         ];
 
         if (array_key_exists($name, $map)) {
