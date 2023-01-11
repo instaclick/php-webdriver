@@ -552,13 +552,13 @@ class Session extends Container
     {
         $map = [
             'application_cache' => 'applicationCache',
-            'execute_async' => 'executeAsync',
-            'local_storage' => 'localStorage',
-            'session_storage' => 'sessionStorage',
+            'execute_async'     => 'executeAsync',
+            'local_storage'     => 'localStorage',
+            'session_storage'   => 'sessionStorage',
         ];
 
         if (array_key_exists($name, $map)) {
-            $name = $map[$name];
+            return call_user_func_array([$this, $map[$name]], $arguments);
         }
 
         // fallback to executing WebDriver commands
