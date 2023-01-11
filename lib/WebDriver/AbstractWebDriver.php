@@ -158,8 +158,16 @@ abstract class AbstractWebDriver
         }
 
         $value   = $this->offsetGet('value', $result);
-        $message = $this->offsetGet('message', $result) ?: $this->offsetGet('message', $value);
-        $error   = $this->offsetGet('error', $result)   ?: $this->offsetGet('error', $value);
+        $message = $this->offsetGet('message', $result);
+        $error   = $this->offsetGet('error', $result);
+
+        if ($message === null) {
+            $message = $this->offsetGet('message', $value);
+        }
+
+        if ($error === null) {
+            $error = $this->offsetGet('error', $value);
+        }
 
         // if not success, throw exception
         if (isset($result['status']) && (int) $result['status'] !== 0) {
