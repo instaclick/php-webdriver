@@ -148,4 +148,13 @@ class Element extends Container
     {
         return preg_replace('/' . preg_quote($this->id) . '$/', $identifier, $this->url);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function click()
+    {
+        return parent::click([':id' => $this->id]);
+    }
+
 }
