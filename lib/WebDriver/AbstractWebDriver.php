@@ -63,7 +63,7 @@ abstract class AbstractWebDriver
      *
      * @param string $url URL to Selenium server
      */
-    public function __construct($url = 'http://localhost:4444/wd/hub')
+    public function __construct($url = 'http://localhost:4444/')
     {
         $this->url = $url;
         $this->transientOptions = array();

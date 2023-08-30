@@ -1,0 +1,6 @@
+/.ddev export-ignore
+/.github export-ignore
+/test export-ignore
+/phpdoc.dist.xml export-ignore
+/phpstan.neon.dist export-ignore
+/phpunit.xml.dist export-ignore

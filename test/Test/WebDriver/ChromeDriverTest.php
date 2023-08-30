@@ -23,6 +23,7 @@
 namespace Test\WebDriver;
 
 use Test\WebDriver\WebDriverTestBase;
+use WebDriver\Browser;
 use WebDriver\Session;
 
 /**
@@ -37,48 +38,38 @@ class ChromeDriverTest extends WebDriverTestBase
     protected $testWebDriverRootUrl = 'http://localhost:9515';
     protected $testWebDriverName    = 'chromedriver';
 
-    /**
-     * Test driver session
-     */
-    public function testSession()
+    protected function setUp(): void
     {
+        parent::setUp();
         try {
-            $this->session = $this->driver->session();
-        } catch (\Exception $e) {
+            $this->status = $this->driver->status();
+            $this->session = $this->driver->session(Browser::CHROME, [
+                'goog:chromeOptions' => [
+                    'w3c' => true,
+                    'args' => [
+                        '--no-sandbox',
+                        '--ignore-certificate-errors',
+                        '--allow-insecure-localhost',
+                        '--headless',
+                    ],
+                ],
+            ]);
+        }
+        catch (\Exception $e) {
             if ($this->isWebDriverDown($e)) {
-                $this->markTestSkipped("{$this->testWebDriverName} server not running");
-
-                return;
+                $this->fail("{$this->testWebDriverName} server not running: {$e->getMessage()}");
             }
-
             throw $e;
         }
-
-        $this->assertTrue($this->session instanceof Session);
     }
 
-    /**
     /**
      * Test driver status
      */
     public function testStatus()
     {
-        try {
-            $status = $this->driver->status();
-        } catch (\Exception $e) {
-            if ($this->isWebDriverDown($e)) {
-                $this->markTestSkipped("{$this->testWebDriverName} server not running");
-
-                return;
-            }
-
-            throw $e;
-        }
-
-        $this->assertCount(4, $status);
-        $this->assertTrue(isset($status['build']));
-        $this->assertTrue(isset($status['message']));
-        $this->assertTrue(isset($status['os']));
-        $this->assertTrue(isset($status['ready']));
+        $this->assertEquals(1, $this->status['ready'], 'Chromedriver is not ready');
+        $this->assertEquals('ChromeDriver ready for new sessions.', $this->status['message'], 'Chromedriver is not ready');
+        $this->assertNotEmpty($this->status['os'], 'OS info not detected');
     }
 }

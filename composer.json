@@ -1,5 +1,5 @@
 {
-    "name": "instaclick/php-webdriver",
+    "name": "lullabot/php-webdriver",
     "type": "library",
     "description": "PHP WebDriver for Selenium 2",
     "keywords": [
@@ -8,26 +8,12 @@
         "webtest",
         "browser"
     ],
-    "homepage": "http://instaclick.com/",
+    "homepage": "https://www.lullabot.com/",
     "license": "Apache-2.0",
-    "authors": [
-        {
-            "name": "Justin Bishop",
-            "email": "jubishop@gmail.com",
-            "role": "Developer"
-        },
-        {
-            "name": "Anthon Pang",
-            "email": "apang@softwaredevelopment.ca",
-            "role": "Fork Maintainer"
-        }
-    ],
     "require": {
-        "php": ">=5.3.2",
         "ext-curl": "*"
     },
     "require-dev": {
-        "php": ">=7.1",
         "phpunit/phpunit": "^8.5 || ^9.5"
     },
     "minimum-stability": "dev",
@@ -41,10 +27,5 @@
         "psr-0": {
             "Test": "test/"
        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.0.x-dev"
-        }
     }
 }

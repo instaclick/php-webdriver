@@ -22,8 +22,9 @@
 
 namespace Test\WebDriver;
 
-use Test\WebDriver\WebDriverTestBase;
-use WebDriver\Session;
+use WebDriver\Browser;
+use WebDriver\WebDriver;
+use WebDriver\Exception\CurlExec;
 
 /**
  * GeckoDriver
@@ -37,24 +38,25 @@ class GeckoDriverTest extends WebDriverTestBase
     protected $testWebDriverRootUrl = 'http://localhost:4444';
     protected $testWebDriverName    = 'geckodriver';
 
-    /**
-     * Test driver session
-     */
-    public function testSession()
+    protected function setUp(): void
     {
+        parent::setUp();
         try {
-            $this->session = $this->driver->session();
-        } catch (\Exception $e) {
+            $this->status = $this->driver->status();
+            $this->session = $this->driver->session(Browser::FIREFOX, [
+                'moz:firefoxOptions' => [
+                    'args' => [
+                        '--headless',
+                    ],
+                ],
+            ]);
+        }
+        catch (\Exception $e) {
             if ($this->isWebDriverDown($e)) {
-                $this->markTestSkipped("{$this->testWebDriverName} server not running");
-
-                return;
+                $this->fail("{$this->testWebDriverName} server not running: {$e->getMessage()}");
             }
-
             throw $e;
         }
-
-        $this->assertTrue($this->session instanceof Session);
     }
 
     /**
@@ -62,20 +64,24 @@ class GeckoDriverTest extends WebDriverTestBase
      */
     public function testStatus()
     {
-        try {
-            $status = $this->driver->status();
-        } catch (\Exception $e) {
-            if ($this->isWebDriverDown($e)) {
-                $this->markTestSkipped("{$this->testWebDriverName} server not running");
-
-                return;
-            }
-
-            throw $e;
-        }
-
-        $this->assertCount(2, $status);
-        $this->assertTrue(isset($status['message']));
-        $this->assertTrue(isset($status['ready']));
+        $this->assertEquals(1, $this->status['ready'], 'Chromedriver is not ready');
     }
+
+    /**
+     * Checks that an error connecting to WebDriver gives back the expected exception
+     */
+    public function testWebDriverError()
+    {
+        $this->session->close();
+        $this->session = null;
+        try {
+            $this->driver = new WebDriver($this->getTestWebDriverRootUrl() . '/../invalidurl');
+            $this->driver->status();
+            $this->fail('Exception not thrown while connecting to invalid WebDriver url');
+        }
+        catch (\Exception $e) {
+            $this->assertEquals(CurlExec::class, get_class($e), $e->getMessage());
+        }
+    }
+
 }

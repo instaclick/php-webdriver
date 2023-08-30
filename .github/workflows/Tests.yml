@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'  # every day at midnight
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  Tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: [ '7.4', '8.0', '8.1', '8.2' ]
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ddev/github-action-setup-ddev@v1
+
+      - name: Setup PHP Version
+        run: ddev config --php-version ${{ matrix.php }}
+
+      - name: Install dependencies
+        run: ddev composer install
+
+      - name: Run tests
+        run: ddev exec phpunit --log-junit phpunit-results.xml

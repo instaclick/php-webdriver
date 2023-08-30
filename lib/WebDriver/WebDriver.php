@@ -42,13 +42,9 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
     {
         // default to W3C WebDriver API
         $firstMatch = $desiredCapabilities ?: array();
-        $firstMatch[] = array('browserName' => Browser::CHROME);
+        $firstMatch['browserName'] = $browserName;
 
-        if ($browserName !== Browser::CHROME) {
-            $firstMatch[] = array('browserName' => $browserName);
-        }
-
-        $parameters = array('capabilities' => array('firstMatch' => $firstMatch));
+        $parameters = array('capabilities' => array('firstMatch' => [$firstMatch]));
 
         if (is_array($requiredCapabilities) && count($requiredCapabilities)) {
             $parameters['capabilities']['alwaysMatch'] = $requiredCapabilities;
