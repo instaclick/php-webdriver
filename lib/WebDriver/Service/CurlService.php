@@ -41,8 +41,8 @@ class CurlService implements CurlServiceInterface
     public function execute($requestMethod, $url, $parameters = null, $extraOptions = array())
     {
         $customHeaders = array(
-            'Content-Type: application/json;charset=UTF-8',
-            'Accept: application/json;charset=UTF-8',
+            'Content-Type: application/json;charset=utf-8',
+            'Accept: application/json',
         );
 
         $curl = curl_init($url);
@@ -56,7 +56,8 @@ class CurlService implements CurlServiceInterface
                 if ($parameters && is_array($parameters)) {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
                 } else {
-                    $customHeaders[] = 'Content-Length: 0';
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, "{}");
+                    $customHeaders[] = 'Content-Length: 2';
 
                     // Suppress "Transfer-Encoding: chunked" header automatically added by cURL that
                     // causes a 400 bad request (bad content-length).
@@ -78,7 +79,8 @@ class CurlService implements CurlServiceInterface
                 if ($parameters && is_array($parameters)) {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
                 } else {
-                    $customHeaders[] = 'Content-Length: 0';
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, "{}");
+                    $customHeaders[] = 'Content-Length: 2';
 
                     // Suppress "Transfer-Encoding: chunked" header automatically added by cURL that
                     // causes a 400 bad request (bad content-length).

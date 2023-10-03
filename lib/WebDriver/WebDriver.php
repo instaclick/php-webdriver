@@ -38,14 +38,41 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
     /**
      * {@inheritdoc}
      */
-    public function session($browserName = Browser::FIREFOX, $desiredCapabilities = null, $requiredCapabilities = null)
+    public function session($browserName = Browser::FIREFOX, $desiredCapabilities = array(), $requiredCapabilities = array())
     {
-        // default to W3C WebDriver API
+        // Filter capabilities.
+        $filterCapabilites = function($key) {
+          // See https://github.com/jlipps/simple-wd-spec#capabilities
+          if (str_contains($key, ':')) {
+            return true;
+          }
+
+          return in_array($key, [
+            'browserName',
+            'browserVersion',
+            'platformName',
+            'acceptInsecureCerts',
+            'pageLoadStrategy',
+            'proxy',
+            'setWindowRect',
+            'timeouts',
+            'timeouts',
+          ]);
+        };
+
+        $w3c_mode = true;
+        if (isset($desiredCapabilities['w3c']) && $desiredCapabilities['w3c'] === false) {
+          $w3c_mode = false;
+        }
+
+        if ($w3c_mode) {
+          $requiredCapabilities = array_filter($requiredCapabilities, $filterCapabilites, ARRAY_FILTER_USE_KEY);
+          $desiredCapabilities = array_filter($desiredCapabilities, $filterCapabilites, ARRAY_FILTER_USE_KEY);
+        }
+
         $firstMatch = $desiredCapabilities ?: array();
         $firstMatch['browserName'] = $browserName;
-
         $parameters = array('capabilities' => array('firstMatch' => [$firstMatch]));
-
         if (is_array($requiredCapabilities) && count($requiredCapabilities)) {
             $parameters['capabilities']['alwaysMatch'] = $requiredCapabilities;
         }
@@ -77,7 +104,6 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
         }
 
         $this->capabilities = isset($result['value']['capabilities']) ? $result['value']['capabilities'] : null;
-
         $session = new Session($result['sessionUrl'], $this->capabilities);
 
         return $session;
