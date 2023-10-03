@@ -240,6 +240,19 @@ class Session extends Container
     }
 
     /**
+     * Get window handles : /session/:sessionId/window_handles (GET)
+     *                    : /session/:sessionId/window/handles (GET)
+     * - $session->getWindowHandles()
+     *
+     * @return mixed
+     */
+    public function getWindowHandles() {
+        $result = $this->curl('GET', $this->w3c ? '/window/handles' : '/window_handles');
+
+        return $result['value'];
+    }
+
+    /**
      * Get window handle: /session/:sessionId/window (GET)
      *                  : /session/:sessionId/window_handle (GET)
      * - $session->getWindowHandle()

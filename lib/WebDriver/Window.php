@@ -75,6 +75,7 @@ class Window extends AbstractWebDriver
 
     /**
      * Get window handle: /session/:sessionId/window (GET)
+     *                  : /session/:sessionId/window_handle (GET)
      * - $session->window($handle)->getHandle()
      * - $session->window()->getHandle()
      *
