@@ -42,7 +42,6 @@ namespace WebDriver;
  * @method array location() Determine an element's location on the page.
  * @method array location_in_view() Determine an element's location on the screen once it has been scrolled into view.
  * @method array size() Determine an element's size in pixels.
- * @method string css($propertyName) Query the value of an element's computed CSS property.
  */
 final class Element extends Container
 {
@@ -66,7 +65,6 @@ final class Element extends Container
             'location' => array('GET'),
             'location_in_view' => array('GET'),
             'size' => array('GET'),
-            'css' => array('GET'),
         );
     }
 
@@ -112,6 +110,20 @@ final class Element extends Container
     public function getID()
     {
         return $this->id;
+    }
+
+    /**
+     * Query the value of an element’s computed CSS property: /session/:sessionId/element/:id/css/:propertyName
+     *
+     * @param string $propertyName
+     *
+     * @return mixed
+     */
+    public function css($propertyName)
+    {
+        $result = $this->curl('GET', "/css/$propertyName");
+
+        return $result['value'];
     }
 
     /**
