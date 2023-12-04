@@ -38,8 +38,8 @@ class CurlService implements CurlServiceInterface
     public function execute($requestMethod, $url, $parameters = null, $extraOptions = array())
     {
         $customHeaders = array(
-            'Content-Type: application/json;charset=UTF-8',
-            'Accept: application/json;charset=UTF-8',
+            'Content-Type: application/json;charset=utf-8',
+            'Accept: application/json',
         );
 
         $curl = curl_init($url);
