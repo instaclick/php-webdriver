@@ -36,7 +36,6 @@ namespace WebDriver;
  * @method void clear() Clear a TEXTAREA or text INPUT element's value.
  * @method boolean selected() Determine if an OPTION element, or an INPUT element of type checkbox or radiobutton is currently selected.
  * @method boolean enabled() Determine if an element is currently enabled.
- * @method string attribute($attributeName) Get the value of an element's attribute.
  * @method boolean equals($otherId) Test if two element IDs refer to the same DOM element.
  * @method boolean displayed() Determine if an element is currently displayed.
  * @method array location() Determine an element's location on the page.
@@ -59,7 +58,6 @@ final class Element extends Container
             'clear' => array('POST'),
             'selected' => array('GET'),
             'enabled' => array('GET'),
-            'attribute' => array('GET'),
             'equals' => array('GET'),
             'displayed' => array('GET'),
             'location' => array('GET'),
@@ -110,6 +108,20 @@ final class Element extends Container
     public function getID()
     {
         return $this->id;
+    }
+
+    /**
+     * Get the value of an element's attribute: /session/:sessionId/element/:id/attribute/:name
+     *
+     * @param string name
+     *
+     * @return mixed
+     */
+    public function attribute($name)
+    {
+        $result = $this->curl('GET', "/attribute/$name");
+
+        return $result['value'];
     }
 
     /**
