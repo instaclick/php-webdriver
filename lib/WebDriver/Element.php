@@ -19,7 +19,6 @@ namespace WebDriver;
  * @method string attribute($attributeName) Get the value of an element's attribute.
  * @method void clear() Clear a TEXTAREA or text INPUT element's value.
  * @method void click() Click on an element.
- * @method string css($propertyName) Query the value of an element's computed CSS property.
  * @method boolean displayed() Determine if an element is currently displayed.
  * @method boolean enabled() Determine if an element is currently enabled.
  * @method boolean equals($otherId) Test if two element IDs refer to the same DOM element.
@@ -55,7 +54,6 @@ class Element extends Container
             'attribute' => array('GET'),
             'clear' => array('POST'),
             'click' => array('POST'),
-            'css' => array('GET'),
             'enabled' => array('GET'),
             'name' => array('GET'),
             'property' => array('GET'),
@@ -113,6 +111,20 @@ class Element extends Container
     public function getID()
     {
         return $this->id;
+    }
+
+    /**
+     * Query the value of an element’s computed CSS property: /session/:sessionId/element/:id/css/:propertyName
+     *
+     * @param string $propertyName
+     *
+     * @return mixed
+     */
+    public function css($propertyName)
+    {
+        $result = $this->curl('GET', "/css/$propertyName");
+
+        return $result['value'];
     }
 
     /**
