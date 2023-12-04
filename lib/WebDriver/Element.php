@@ -16,7 +16,6 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
- * @method string attribute($attributeName) Get the value of an element's attribute.
  * @method void clear() Clear a TEXTAREA or text INPUT element's value.
  * @method void click() Click on an element.
  * @method boolean displayed() Determine if an element is currently displayed.
@@ -25,7 +24,6 @@ namespace WebDriver;
  * @method array location() Determine an element's location on the page.
  * @method array location_in_view() Determine an element's location on the screen once it has been scrolled into view.
  * @method string name() Query for an element's tag name.
- * @method array property($propertyName) Get element property.
  * @method array rect() Get element rect.
  * @method array screenshot() Take element screenshot.
  * @method array selected() Is element selected?
@@ -51,12 +49,10 @@ class Element extends Container
     protected function methods()
     {
         return array(
-            'attribute' => array('GET'),
             'clear' => array('POST'),
             'click' => array('POST'),
             'enabled' => array('GET'),
             'name' => array('GET'),
-            'property' => array('GET'),
             'rect' => array('GET'),
             'screenshot' => array('GET'),
             'selected' => array('GET'),
@@ -114,6 +110,20 @@ class Element extends Container
     }
 
     /**
+     * Get the value of an element's attribute: /session/:sessionId/element/:id/attribute/:name
+     *
+     * @param string name
+     *
+     * @return mixed
+     */
+    public function attribute($name)
+    {
+        $result = $this->curl('GET', "/attribute/$name");
+
+        return $result['value'];
+    }
+
+    /**
      * Query the value of an element’s computed CSS property: /session/:sessionId/element/:id/css/:propertyName
      *
      * @param string $propertyName
@@ -123,6 +133,20 @@ class Element extends Container
     public function css($propertyName)
     {
         $result = $this->curl('GET', "/css/$propertyName");
+
+        return $result['value'];
+    }
+
+    /**
+     * Get element property: /session/:sessionId/element/:id/property/:name
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function property($name)
+    {
+        $result = $this->curl('GET', "/property/$name");
 
         return $result['value'];
     }
