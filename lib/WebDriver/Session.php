@@ -18,7 +18,7 @@ namespace WebDriver;
  *
  * @method void accept_alert() Accepts the currently displayed alert dialog.
  * @method array deleteActions() Release actions.
- * @method array postActions() Perform actions.
+ * @method array postActions($json) Perform actions.
  * @method string getAlert_text() Gets the text of the currently displayed JavaScript alert(), confirm(), or prompt() dialog.
  * @method void postAlert_text($jsonText) Sends keystrokes to a JavaScript prompt() dialog.
  * @method void back() Navigates backward in the browser history, if possible.

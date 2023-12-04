@@ -19,7 +19,7 @@ namespace WebDriver;
  * @method array accept() Accept alert.
  * @method array dismiss() Dismiss alert.
  * @method array getText() Get alert text.
- * @method array postText() Send alert text.
+ * @method array postText($json) Send alert text.
  */
 class Alert extends AbstractWebDriver
 {
