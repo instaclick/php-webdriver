@@ -37,7 +37,6 @@ namespace WebDriver;
  * @method void keys($jsonKeys) Send a sequence of key strokes to the active element.
  * @method array getLocation() Get the current geo location.
  * @method void postLocation($jsonCoordinates) Set the current geo location.
- * @method void moveto($jsonCoordinates) Move the mouse by an offset of the specified element (or current mouse cursor).
  * @method string getOrientation() Get the current browser orientation.
  * @method void postOrientation($jsonOrientation) Set the current browser orientation.
  * @method array print() Print page.
@@ -94,7 +93,6 @@ class Session extends Container
             'execute_sql' => array('POST'),
             'keys' => array('POST'),
             'location' => array('GET', 'POST'),
-            'moveto' => array('POST'),
             'orientation' => array('GET', 'POST'),
             'window_handle' => array('GET'), // see also getWindowHandle()
             'window_handles' => array('GET'),
