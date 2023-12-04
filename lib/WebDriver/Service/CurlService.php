@@ -30,20 +30,20 @@ class CurlService implements CurlServiceInterface
      *
      * @param mixed $defaultOptions
      */
-    public function __construct($defaultOptions = array())
+    public function __construct($defaultOptions = [])
     {
-        $this->defaultOptions = is_array($defaultOptions) ? $defaultOptions : array();
+        $this->defaultOptions = is_array($defaultOptions) ? $defaultOptions : [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function execute($requestMethod, $url, $parameters = null, $extraOptions = array())
+    public function execute($requestMethod, $url, $parameters = null, $extraOptions = [])
     {
-        $customHeaders = array(
+        $customHeaders = [
             'Content-Type: application/json;charset=utf-8',
             'Accept: application/json',
-        );
+        ];
 
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -113,6 +113,6 @@ class CurlService implements CurlServiceInterface
 
         curl_close($curl);
 
-        return array($rawResult, $info);
+        return [$rawResult, $info];
     }
 }

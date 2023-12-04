@@ -16,7 +16,7 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
- * @deprecated by W3C WebDriver
+ * @deprecated
  */
 final class AppCacheStatus
 {

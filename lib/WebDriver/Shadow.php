@@ -15,8 +15,6 @@ namespace WebDriver;
  * WebDriver\Shadow class
  *
  * @package WebDriver
- *
- * @deprecated by W3C WebDriver
  */
 class Shadow extends Container
 {
@@ -30,14 +28,6 @@ class Shadow extends Container
     private $id;
 
     /**
-     * {@inheritdoc}
-     */
-    protected function methods()
-    {
-        return array();
-    }
-
-    /**
      * Constructor
      *
      * @param string $url URL
@@ -45,7 +35,7 @@ class Shadow extends Container
      */
     public function __construct($url, $id)
     {
-        parent::__construct($url);
+        parent::__construct($url . "/$id");
 
         $this->id = $id;
     }
@@ -63,8 +53,8 @@ class Shadow extends Container
     /**
      * {@inheritdoc}
      */
-    protected function getIdentifierPath($identifier)
+    protected function getNewIdentifierPath($identifier)
     {
-        return sprintf('%s/element/%s', $this->url, $identifier);
+        return preg_replace('~/shadow/' . preg_quote($this->id) . '$~', "/element/$identifier", $this->url);
     }
 }

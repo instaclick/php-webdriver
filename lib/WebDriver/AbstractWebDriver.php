@@ -42,36 +42,45 @@ abstract class AbstractWebDriver
     private $transientOptions;
 
     /**
-     * Return array of supported method names and corresponding HTTP request methods
-     *
-     * @return array
+     * @var array
      */
-    abstract protected function methods();
+    private $extensions;
 
     /**
-     * Return array of obsolete method names and corresponding HTTP request methods
+     * Return array of protocol methods
      *
      * @return array
      */
-    protected function obsoleteMethods()
+    protected function methods()
     {
-        return array();
+        return [];
+    }
+
+    /**
+     * Return array of chainable method/property names
+     *
+     * @return array
+     */
+    protected function chainable()
+    {
+        return [];
     }
 
     /**
      * Constructor
      *
-     * @param string $url URL to Selenium server
+     * @param string $url
      */
-    public function __construct($url = 'http://localhost:4444/wd/hub')
+    public function __construct($url)
     {
         $this->url = $url;
-        $this->transientOptions = array();
+        $this->transientOptions = [];
+        $this->extensions = [];
         $this->curlService = ServiceFactory::getInstance()->getService('service.curl');
     }
 
     /**
-     * Magic method which returns URL to Selenium server
+     * Return URL
      *
      * @return string
      */
@@ -81,7 +90,7 @@ abstract class AbstractWebDriver
     }
 
     /**
-     * Returns URL to Selenium server
+     * Return URL
      *
      * @return string
      */
@@ -117,7 +126,7 @@ abstract class AbstractWebDriver
      */
     public function setTransientOptions($transientOptions)
     {
-        $this->transientOptions = is_array($transientOptions) ? $transientOptions : array();
+        $this->transientOptions = is_array($transientOptions) ? $transientOptions : [];
     }
 
     /**
@@ -129,11 +138,99 @@ abstract class AbstractWebDriver
     }
 
     /**
+     * Register extension
+     *
+     * @param string $extension
+     * @param string $className
+     * @param string $path
+     */
+    public function register($extension, $className, $path)
+    {
+        if (class_exists($className, false)) {
+            $this->extensions[$extension] = [$className, $path];
+        }
+    }
+
+    /**
+     * Magic method that maps calls to class methods to execute WebDriver commands
+     *
+     * @param string $name      Method name
+     * @param array  $arguments Arguments
+     *
+     * @return mixed
+     *
+     * @throws \WebDriver\Exception if invalid WebDriver command
+     */
+    public function __call($name, $arguments)
+    {
+        if (count($arguments) > 1) {
+            throw WebDriverException::factory(
+                WebDriverException::_JSON_PARAMETERS_EXPECTED,
+                'Commands should have at most only one parameter, which should be the JSON Parameter object'
+            );
+        }
+
+        if (count($arguments) === 0 && is_array($this->extensions) && array_key_exists($name, $this->extensions)) {
+            $className = $this->extensions[$name][0];
+
+            return new $className($this->url . '/' . $this->extensions[$name][1]);
+        }
+
+        if (count($arguments) === 0 && array_key_exists($name, $this->chainable())) {
+            return call_user_func([$this, $name]);
+        }
+
+        if (preg_match('/^(get|post|delete)/', $name, $matches)) {
+            $requestMethod = strtoupper($matches[0]);
+            $webdriverCommand = strtolower(substr($name, strlen($requestMethod)));
+
+            $this->getRequestMethod($webdriverCommand); // validation
+        } else {
+            $webdriverCommand = $name;
+            $requestMethod = $this->getRequestMethod($webdriverCommand);
+        }
+
+        $methods = $this->methods();
+
+        if (! in_array($requestMethod, $methods[$webdriverCommand])) {
+            throw WebDriverException::factory(
+                WebDriverException::_INVALID_REQUEST,
+                sprintf(
+                    '%s is not an available http request method for the command %s.',
+                    $requestMethod,
+                    $webdriverCommand
+                )
+            );
+        }
+
+        $parameters = array_shift($arguments);
+        $result = $this->curl($requestMethod, '/' . $webdriverCommand, $parameters);
+
+        return $result['value'];
+    }
+
+    /**
+     * Magic method that maps property names to chainable methods
+     *
+     * @param string $name Property name
+     *
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if (array_key_exists($name, $this->chainable())) {
+            return call_user_func([$this, $name]);
+        }
+
+        trigger_error('Undefined property: ' . __CLASS__ . '::$' . $name, E_USER_WARNING);
+    }
+
+    /**
      * Curl request to webdriver server.
      *
      * @param string               $requestMethod HTTP request method, e.g., 'GET', 'POST', or 'DELETE'
      * @param string               $command       If not defined in methods() this function will throw.
-     * @param array|integer|string $parameters    If an array(), they will be posted as JSON parameters
+     * @param array|integer|string $parameters    If an array, they will be posted as JSON parameters
      *                                            If a number or string, "/$params" is appended to url
      * @param array                $extraOptions  key=>value pairs of curl options to pass to curl_setopt()
      *
@@ -141,11 +238,11 @@ abstract class AbstractWebDriver
      *
      * @throws \WebDriver\Exception if error
      */
-    protected function curl($requestMethod, $command, $parameters = null, $extraOptions = array())
+    protected function curl($requestMethod, $command, $parameters = null, $extraOptions = [])
     {
         if ($parameters && is_array($parameters) && $requestMethod !== 'POST') {
             throw WebDriverException::factory(
-                WebDriverException::NO_PARAMETERS_EXPECTED,
+                WebDriverException::_NO_PARAMETERS_EXPECTED,
                 sprintf(
                     'The http request method called for %s is %s but it has to be POST if you want to pass the JSON parameters %s',
                     $command,
@@ -155,9 +252,11 @@ abstract class AbstractWebDriver
             );
         }
 
-        $url = sprintf('%s%s', $this->url, $command);
+        $url = $this->url . $command;
 
-        if ($parameters && (is_int($parameters) || is_string($parameters))) {
+        if (($requestMethod === 'GET' || $requestMethod === 'DELETE')
+            && $parameters && (is_int($parameters) || is_string($parameters))
+        ) {
             $url .= '/' . $parameters;
         }
 
@@ -170,13 +269,13 @@ abstract class AbstractWebDriver
             array_replace($extraOptions, $this->transientOptions)
         );
 
-        $this->transientOptions = array();
+        $this->transientOptions = [];
 
         $httpCode = $info['http_code'];
 
         if ($httpCode === 0) {
             throw WebDriverException::factory(
-                WebDriverException::CURL_EXEC,
+                WebDriverException::_CURL_EXEC,
                 $info['error']
             );
         }
@@ -187,20 +286,20 @@ abstract class AbstractWebDriver
             // Legacy webdriver 4xx responses are to be considered a plaintext error
             if ($httpCode >= 400 && $httpCode <= 499) {
                 throw WebDriverException::factory(
-                    WebDriverException::CURL_EXEC,
+                    WebDriverException::_CURL_EXEC,
                     'Webdriver http error: ' . $httpCode . ', payload :' . substr($rawResult, 0, 1000)
                 );
             }
 
             throw WebDriverException::factory(
-                WebDriverException::CURL_EXEC,
+                WebDriverException::_CURL_EXEC,
                 'Payload received from webdriver is not valid json: ' . substr($rawResult, 0, 1000)
             );
         }
 
         if (is_array($result) && ! array_key_exists('status', $result) && ! array_key_exists('value', $result)) {
             throw WebDriverException::factory(
-                WebDriverException::CURL_EXEC,
+                WebDriverException::_CURL_EXEC,
                 'Payload received from webdriver is valid but unexpected json: ' . substr($rawResult, 0, 1000)
             );
         }
@@ -234,63 +333,12 @@ abstract class AbstractWebDriver
                   ?: $this->offsetGet('sessionId', $value)
                   ?: $this->offsetGet('webdriver.remote.sessionid', $value);
 
-        return array(
+        return [
             'value'      => $value,
             'info'       => $info,
             'sessionId'  => $sessionId,
             'sessionUrl' => $sessionId ? $this->url . '/session/' . $sessionId : $info['url'],
-        );
-    }
-
-    /**
-     * Magic method that maps calls to class methods to execute WebDriver commands
-     *
-     * @param string $name      Method name
-     * @param array  $arguments Arguments
-     *
-     * @return mixed
-     *
-     * @throws \WebDriver\Exception if invalid WebDriver command
-     */
-    public function __call($name, $arguments)
-    {
-        if (count($arguments) > 1) {
-            throw WebDriverException::factory(
-                WebDriverException::JSON_PARAMETERS_EXPECTED,
-                'Commands should have at most only one parameter, which should be the JSON Parameter object'
-            );
-        }
-
-        if (preg_match('/^(get|post|delete)/', $name, $matches)) {
-            $requestMethod = strtoupper($matches[0]);
-            $webdriverCommand = strtolower(substr($name, strlen($requestMethod)));
-
-            $this->getRequestMethod($webdriverCommand); // validation
-        } else {
-            $webdriverCommand = $name;
-            $requestMethod = $this->getRequestMethod($webdriverCommand);
-        }
-
-        $methods = $this->methods();
-
-        if (! in_array($requestMethod, (array) $methods[$webdriverCommand])) {
-            throw WebDriverException::factory(
-                WebDriverException::INVALID_REQUEST,
-                sprintf(
-                    '%s is not an available http request method for the command %s.',
-                    $requestMethod,
-                    $webdriverCommand
-                )
-            );
-        }
-
-        $result = $this->curl(
-            $requestMethod,
-            '/' . $webdriverCommand,
-            array_shift($arguments)
-        );
-
-        return $result['value'];
+        ];
     }
 
     /**
@@ -313,7 +361,7 @@ abstract class AbstractWebDriver
         }
 
         throw WebDriverException::factory(
-            WebDriverException::UNEXPECTED_PARAMETERS,
+            WebDriverException::_UNEXPECTED_PARAMETERS,
             sprintf(
                 "Unable to serialize non-scalar type %s",
                 is_object($parameters) ? get_class($parameters) : gettype($parameters)
@@ -347,14 +395,13 @@ abstract class AbstractWebDriver
     {
         if (! array_key_exists($webdriverCommand, $this->methods())) {
             throw WebDriverException::factory(
-                array_key_exists($webdriverCommand, $this->obsoleteMethods())
-                ? WebDriverException::OBSOLETE_COMMAND : WebDriverException::UNKNOWN_COMMAND,
+                WebDriverException::UNKNOWN_COMMAND,
                 sprintf('%s is not a valid WebDriver command.', $webdriverCommand)
             );
         }
 
         $methods = $this->methods();
-        $requestMethods = (array) $methods[$webdriverCommand];
+        $requestMethods = $methods[$webdriverCommand];
 
         return array_shift($requestMethods);
     }
