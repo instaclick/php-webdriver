@@ -30,23 +30,28 @@ namespace WebDriver;
 final class Browser
 {
     /**
-     * Check browser names used in static functions in the selenium source:
-     * @see http://code.google.com/p/selenium/source/browse/java/client/src/org/openqa/selenium/remote/DesiredCapabilities.java
-     *
-     * Note: Capability array takes these browserNames and not the "browserTypes"
-     *
-     * Also check
-     * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Capabilities_JSON_Object
+     * @see https://github.com/SeleniumHQ/selenium/blob/trunk/java/src/org/openqa/selenium/remote/Browser.java
      */
-    const ANDROID           = 'android';
-    const CHROME            = 'chrome';
-    const FIREFOX           = 'firefox';
-    const HTMLUNIT          = 'htmlunit';
-    const IE                = 'internet explorer';
-    const INTERNET_EXPLORER = 'internet explorer';
-    const IPHONE            = 'iPhone';
-    const IPAD              = 'iPad';
-    const OPERA             = 'opera';
-    const PHANTOMJS         = 'phantomjs';
-    const SAFARI            = 'safari';
+    const CHROME              = 'chrome';
+    const EDGE                = 'MicrosoftEdge';
+    const FIREFOX             = 'firefox';
+    const HTMLUNIT            = 'htmlunit';
+    const IE                  = 'internet explorer';
+    const OPERA               = 'opera';
+    const SAFARI              = 'safari';
+    const SAFARI_TECH_PREVIEW = 'Safari Technology Preview';
+
+    /**
+     * @see https://github.com/SeleniumHQ/selenium/blob/trunk/javascript/webdriver/capabilities.js
+     * @deprecated
+     */
+    const ANDROID             = 'android';
+    const EDGEHTML            = 'EdgeHTML';
+    const INTERNET_EXPLORER   = 'internet explorer';
+    const IPAD                = 'iPad';
+    const IPHONE              = 'iPhone';
+    const MSEDGE              = 'MicrosoftEdge';
+    const OPERA_BLINK         = 'operablink';
+    const PHANTOM_JS          = 'phantomjs';
+    const PHANTOMJS           = 'phantomjs';
 }
