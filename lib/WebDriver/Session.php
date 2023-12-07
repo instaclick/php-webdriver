@@ -22,6 +22,8 @@
 
 namespace WebDriver;
 
+use WebDriver\Exception as WebDriverException;
+
 /**
  * WebDriver\Session class
  *
@@ -290,6 +292,24 @@ final class Session extends Container
 
         // chaining
         return new Frame($this->url . '/frame');
+    }
+
+    /**
+     * moveto: /session/:sessionId/moveto (POST)
+     *
+     * @param array $parameters
+     *
+     * @return mixed
+     */
+    public function moveto($parameters)
+    {
+        try {
+            $result = $this->curl('POST', '/moveto', $parameters);
+        } catch (WebDriverException\ScriptTimeout) {
+            throw WebDriverException::factory(WebDriverException::UNKNOWN_ERROR);
+        }
+
+        return $result['value'];
     }
 
     /**
