@@ -54,8 +54,8 @@ class CurlService implements CurlServiceInterface
 
             case 'POST':
             case 'PUT':
-                $parameters =  ! $parameters || ! is_array($parameters)
-                    ? '{}'
+                $parameters = ! $parameters || ! is_array($parameters)
+                    ? '{}' // instead of json_encode(new \stdclass))
                     : json_encode($parameters);
 
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
@@ -74,11 +74,11 @@ class CurlService implements CurlServiceInterface
                 break;
         }
 
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $customHeaders);
+
         foreach (array_replace($this->defaultOptions, $extraOptions) as $option => $value) {
             curl_setopt($curl, $option, $value);
         }
-
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $customHeaders);
 
         $rawResult = curl_exec($curl);
         $rawResult = is_string($rawResult) ? trim($rawResult) : '';
