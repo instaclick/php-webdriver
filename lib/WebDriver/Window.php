@@ -91,7 +91,7 @@ class Window extends AbstractWebDriver
      */
     public function setRect($parameters)
     {
-        $result = $this->curl('POST', '/rect', $parameters);
+        $result = $this->curl('POST', 'rect', $parameters);
 
         return $result['value'];
     }
@@ -106,7 +106,7 @@ class Window extends AbstractWebDriver
     public function getHandle()
     {
         if (! $this->windowHandle) {
-            $result = $this->curl('GET', $this->url);
+            $result = $this->curl('GET', '');
 
             $this->windowHandle = array_key_exists(self::WEB_WINDOW_ID, $result['value'])
                 ? $result['value'][self::WEB_WINDOW_ID]

@@ -53,7 +53,7 @@ class FederatedCredentialManagementAPI extends AbstractWebDriver
      */
     public function cancelDialog()
     {
-        $result = $this->curl('POST', '/canceldialog');
+        $result = $this->curl('POST', 'canceldialog');
 
         return $result['value'];
     }
@@ -71,7 +71,7 @@ class FederatedCredentialManagementAPI extends AbstractWebDriver
             $parameters = ['accountIndex' => $parameters];
         }
 
-        $result = $this->curl('POST', '/selectaccount', $parameters);
+        $result = $this->curl('POST', 'selectaccount', $parameters);
 
         return $result['value'];
     }
@@ -85,7 +85,7 @@ class FederatedCredentialManagementAPI extends AbstractWebDriver
      */
     public function clickDialogButton($parameters)
     {
-        $result = $this->curl('POST', '/clickdialogbutton', $parameters);
+        $result = $this->curl('POST', 'clickdialogbutton', $parameters);
 
         return $result['value'];
     }
@@ -97,7 +97,7 @@ class FederatedCredentialManagementAPI extends AbstractWebDriver
      */
     public function getAccounts()
     {
-        $result = $this->curl('GET', '/accountlist');
+        $result = $this->curl('GET', 'accountlist');
 
         return $result['value'];
     }
@@ -109,7 +109,7 @@ class FederatedCredentialManagementAPI extends AbstractWebDriver
      */
     public function getTitle()
     {
-        $result = $this->curl('GET', '/gettitle');
+        $result = $this->curl('GET', 'gettitle');
 
         return $result['value'];
     }
@@ -121,7 +121,7 @@ class FederatedCredentialManagementAPI extends AbstractWebDriver
      */
     public function getDialogType()
     {
-        $result = $this->curl('GET', '/getdialogtype');
+        $result = $this->curl('GET', 'getdialogtype');
 
         return $result['value'];
     }
@@ -139,7 +139,7 @@ class FederatedCredentialManagementAPI extends AbstractWebDriver
             $parameters = ['enabled' => $parameters];
         }
 
-        $result = $this->curl('POST', '/setdelayenabled', $parameters);
+        $result = $this->curl('POST', 'setdelayenabled', $parameters);
 
         return $result['value'];
     }
@@ -151,7 +151,7 @@ class FederatedCredentialManagementAPI extends AbstractWebDriver
      */
     public function resetCooldown()
     {
-        $result = $this->curl('POST', '/resetCooldown');
+        $result = $this->curl('POST', 'resetCooldown');
 
         return $result['value'];
     }

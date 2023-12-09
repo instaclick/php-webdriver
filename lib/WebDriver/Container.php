@@ -54,7 +54,7 @@ abstract class Container extends AbstractWebDriver
         $parameters = $this->parseArgs('element', func_get_args());
 
         try {
-            $result = $this->curl('POST', '/element', $parameters);
+            $result = $this->curl('POST', 'element', $parameters);
         } catch (WebDriverException\NoSuchElement $e) {
             throw WebDriverException::factory(
                 WebDriverException::NO_SUCH_ELEMENT,
@@ -100,7 +100,7 @@ abstract class Container extends AbstractWebDriver
     {
         $parameters = $this->parseArgs('elements', func_get_args());
 
-        $result = $this->curl('POST', '/elements', $parameters);
+        $result = $this->curl('POST', 'elements', $parameters);
 
         if (! is_array($result['value'])) {
             return [];

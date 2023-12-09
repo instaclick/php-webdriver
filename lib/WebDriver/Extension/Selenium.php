@@ -39,7 +39,7 @@ class Selenium extends AbstractWebDriver
             ];
         }
 
-        $result = $this->curl('POST', '/log', $parameters);
+        $result = $this->curl('POST', 'log', $parameters);
 
         return $result['value'];
     }
@@ -51,7 +51,7 @@ class Selenium extends AbstractWebDriver
      */
     public function getAvailableLogTypes()
     {
-        $result = $this->curl('GET', '/log/types');
+        $result = $this->curl('GET', 'log/types');
 
         return $result['value'];
     }
@@ -69,7 +69,7 @@ class Selenium extends AbstractWebDriver
             $parameters = ['name' => $parameters];
         }
 
-        $result = $this->curl('POST', '/se/files', $parameters);
+        $result = $this->curl('POST', 'se/files', $parameters);
 
         return $result['value'];
     }
@@ -81,7 +81,7 @@ class Selenium extends AbstractWebDriver
      */
     public function getDownloadableFiles()
     {
-        $result = $this->curl('GET', '/se/files');
+        $result = $this->curl('GET', 'se/files');
 
         return $result['value'];
     }
@@ -93,7 +93,7 @@ class Selenium extends AbstractWebDriver
      */
     public function deleteDownloadableFiles()
     {
-        $result = $this->curl('DELETE', '/se/files');
+        $result = $this->curl('DELETE', 'se/files');
 
         return $result['value'];
     }
@@ -119,7 +119,7 @@ class Selenium extends AbstractWebDriver
             trigger_error('UPLOAD_FILE expected base64 encoded ZIP file', E_USER_NOTICE);
         }
 
-        $result = $this->curl('POST', '/se/file', $parameters);
+        $result = $this->curl('POST', 'se/file', $parameters);
 
         return $result['value'];
     }

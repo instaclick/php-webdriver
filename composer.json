@@ -26,10 +26,10 @@
     ],
     "require": {
         "php": ">=7.2",
+        "psr/event-dispatcher": "^1.0.0",
         "ext-curl": "*"
     },
     "require-dev": {
-        "php": ">=7.2",
         "phpunit/phpunit": "^8.5 || ^9.5"
     },
     "minimum-stability": "dev",

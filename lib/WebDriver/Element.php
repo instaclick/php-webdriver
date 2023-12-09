@@ -126,7 +126,7 @@ class Element extends Container
      */
     public function getAccessibleName()
     {
-        $result = $this->curl('GET', '/computedlabel');
+        $result = $this->curl('GET', 'computedlabel');
 
         return $result['value'];
     }
@@ -138,7 +138,7 @@ class Element extends Container
      */
     public function getAriaRole()
     {
-        $result = $this->curl('GET', '/computedrole');
+        $result = $this->curl('GET', 'computedrole');
 
         return $result['value'];
     }
@@ -155,7 +155,7 @@ class Element extends Container
      */
     public function getShadowRoot()
     {
-        $result = $this->curl('POST', '/shadow');
+        $result = $this->curl('POST', 'shadow');
         $value  = $result['value'];
 
         if (! is_array($value)) {
@@ -178,7 +178,7 @@ class Element extends Container
      */
     public function isEnabled()
     {
-        $result = $this->curl('GET', '/enabled');
+        $result = $this->curl('GET', 'enabled');
 
         return $result['value'];
     }
@@ -190,7 +190,7 @@ class Element extends Container
      */
     public function isSelected()
     {
-        $result = $this->curl('GET', '/selected');
+        $result = $this->curl('GET', 'selected');
 
         return $result['value'];
     }
@@ -218,7 +218,7 @@ class Element extends Container
             $parameters['value'] = [$parameters['text']];
         }
 
-        $result = $this->curl('POST', '/value', $parameters);
+        $result = $this->curl('POST', 'value', $parameters);
 
         return $result['value'];
     }
@@ -235,7 +235,7 @@ class Element extends Container
         // trigger_error(__METHOD__, E_USER_DEPRECATED);
 
         try {
-            $result = $this->curl('POST', '/submit');
+            $result = $this->curl('POST', 'submit');
 
             return $result['value'];
         } catch (\Exception $e) {

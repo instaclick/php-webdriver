@@ -36,7 +36,7 @@ class ChromeDevTools extends AbstractWebDriver
             ? $cmd
             : ['cmd' => $cmd, 'params' => $params ?? new \stdclass];
 
-        $result = $this->curl('POST', '/execute', $parameters);
+        $result = $this->curl('POST', 'execute', $parameters);
 
         return $result['value'];
     }

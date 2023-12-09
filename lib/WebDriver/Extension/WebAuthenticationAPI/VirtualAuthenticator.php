@@ -78,7 +78,7 @@ class VirtualAuthenticator extends AbstractWebDriver
     {
         $credentialId = $parameters['credentialId'];
 
-        $this->curl('POST', '/credential', $parameters);
+        $this->curl('POST', 'credential', $parameters);
 
         return new Credential($this->url . '/credentials', $credentialId);
     }
@@ -96,7 +96,7 @@ class VirtualAuthenticator extends AbstractWebDriver
             $parameters = ['isUserVerified' => $parameters];
         }
 
-        $result = $this->curl('POST', '/uv', $parameters);
+        $result = $this->curl('POST', 'uv', $parameters);
 
         return $result['value'];
     }

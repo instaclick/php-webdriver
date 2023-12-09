@@ -86,7 +86,7 @@ class WebDriver extends AbstractWebDriver
         }
 
         $options = [CURLOPT_FOLLOWLOCATION => true];
-        $result = $this->curl('POST', '/session', $parameters, $options);
+        $result = $this->curl('POST', 'session', $parameters, $options);
 
         $this->capabilities = $result['value']['capabilities'] ?? $result['value']['capabilities'];
 
@@ -106,7 +106,7 @@ class WebDriver extends AbstractWebDriver
      */
     public function getAllSessions()
     {
-        $result = $this->curl('GET', '/sessions');
+        $result = $this->curl('GET', 'sessions');
         $sessions = [];
 
         foreach ($result['value'] as $session) {
@@ -127,7 +127,7 @@ class WebDriver extends AbstractWebDriver
      */
     public function getSessionLogs()
     {
-        $result = $this->curl('POST', '/logs');
+        $result = $this->curl('POST', 'logs');
 
         return $result['value'];
     }
@@ -139,7 +139,7 @@ class WebDriver extends AbstractWebDriver
      */
     public function getStatus()
     {
-        $result = $this->curl('GET', '/status');
+        $result = $this->curl('GET', 'status');
 
         return $result['value'];
     }

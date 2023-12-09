@@ -177,7 +177,7 @@ class Session extends Container
      */
     public function open($url)
     {
-        $this->curl('POST', '/url', ['url' => $url]);
+        $this->curl('POST', 'url', ['url' => $url]);
 
         return $this;
     }
@@ -208,7 +208,7 @@ class Session extends Container
      */
     public function getAllCookies()
     {
-        $result = $this->curl('GET', '/cookie');
+        $result = $this->curl('GET', 'cookie');
 
         return $result['value'];
     }
@@ -227,7 +227,7 @@ class Session extends Container
             ? $cookieData
             : ['cookie' => $cookieData];
 
-        $this->curl('POST', '/cookie', $parameters);
+        $this->curl('POST', 'cookie', $parameters);
 
         return $this;
     }
@@ -239,7 +239,7 @@ class Session extends Container
      */
     public function deleteAllCookies()
     {
-        $this->curl('DELETE', '/cookie');
+        $this->curl('DELETE', 'cookie');
 
         return $this;
     }
@@ -253,7 +253,7 @@ class Session extends Container
      */
     public function deleteCookie($cookieName)
     {
-        $this->curl('DELETE', '/cookie/' . $cookieName);
+        $this->curl('DELETE', 'cookie/' . $cookieName);
 
         return $this;
     }
@@ -268,7 +268,7 @@ class Session extends Container
      */
     public function getWindowHandle()
     {
-        $result = $this->curl('GET', '/window');
+        $result = $this->curl('GET', 'window');
 
         return $result['value'];
     }
@@ -281,7 +281,7 @@ class Session extends Container
      */
     public function getWindowHandles()
     {
-        $result = $this->curl('GET', '/window/handles');
+        $result = $this->curl('GET', 'window/handles');
 
         return $result['value'];
     }
@@ -302,7 +302,7 @@ class Session extends Container
             ? $type
             : ['type' => $type];
 
-        $result = $this->curl('POST', '/window/new', $parameters);
+        $result = $this->curl('POST', 'window/new', $parameters);
 
         return $result['value'];
     }
@@ -335,7 +335,7 @@ class Session extends Container
      */
     public function deleteWindow()
     {
-        $this->curl('DELETE', '/window');
+        $this->curl('DELETE', 'window');
 
         return $this;
     }
@@ -353,7 +353,7 @@ class Session extends Container
             ? $handle
             : ['handle' => $handle, 'name' => $handle];
 
-        $this->curl('POST', '/window', $parameters);
+        $this->curl('POST', 'window', $parameters);
 
         return $this;
     }
@@ -374,7 +374,7 @@ class Session extends Container
                 ? $id
                 : ['id' => $id];
 
-            $this->curl('POST', '/frame', $parameters);
+            $this->curl('POST', 'frame', $parameters);
 
             return $this;
         }
@@ -433,7 +433,7 @@ class Session extends Container
      */
     public function getActiveElement()
     {
-        $result = $this->curl('POST', '/element/active');
+        $result = $this->curl('POST', 'element/active');
 
         return $this->makeElement($result['value']);
     }
@@ -538,7 +538,7 @@ class Session extends Container
         // trigger_error(__METHOD__ . ': use actions() API instead', E_USER_DEPRECATED);
 
         try {
-            $result = $this->curl('POST', '/moveto', $parameters);
+            $result = $this->curl('POST', 'moveto', $parameters);
         } catch (\Exception $e) {
             if (! array_key_exists('element', $parameters)) {
                 $actionItem = [
@@ -579,7 +579,7 @@ class Session extends Container
         // trigger_error(__METHOD__ . ': use actions() API instead', E_USER_DEPRECATED);
 
         try {
-            $result = $this->curl('POST', '/click', $parameters);
+            $result = $this->curl('POST', 'click', $parameters);
         } catch (\Exception $e) {
             $mouse = $this->actions()->getPointerInput(0, PointerInput::MOUSE);
 
@@ -610,7 +610,7 @@ class Session extends Container
         // trigger_error(__METHOD__ . ': use actions() API instead', E_USER_DEPRECATED);
 
         try {
-            $result = $this->curl('POST', '/doubleclick', $parameters);
+            $result = $this->curl('POST', 'doubleclick', $parameters);
         } catch (\Exception $e) {
             $mouse = $this->actions()->getPointerInput(0, PointerInput::MOUSE);
 
@@ -647,7 +647,7 @@ class Session extends Container
         // trigger_error(__METHOD__ . ': use actions() API instead', E_USER_DEPRECATED);
 
         try {
-            $result = $this->curl('POST', '/buttondown', $parameters);
+            $result = $this->curl('POST', 'buttondown', $parameters);
         } catch (\Exception $e) {
             $mouse = $this->actions()->getPointerInput(0, PointerInput::MOUSE);
 
@@ -675,7 +675,7 @@ class Session extends Container
         // trigger_error(__METHOD__ . ': use actions() API instead', E_USER_DEPRECATED);
 
         try {
-            $result = $this->curl('POST', '/buttonup', $parameters);
+            $result = $this->curl('POST', 'buttonup', $parameters);
         } catch (\Exception $e) {
             $mouse = $this->actions()->getPointerInput(0, PointerInput::MOUSE);
 
@@ -701,7 +701,7 @@ class Session extends Container
         // trigger_error(__METHOD__ . ': use "Alert::getAlertText()" instead', E_USER_DEPRECATED);
 
         try {
-            $result = $this->curl('GET', '/alert_text');
+            $result = $this->curl('GET', 'alert_text');
         } catch (\Exception $e) {
             $result = $this->alert()->getAlertText();
         }
@@ -727,7 +727,7 @@ class Session extends Container
         // trigger_error(__METHOD__ . ': use "Alert::setAlertText()" instead', E_USER_DEPRECATED);
 
         try {
-            $result = $this->curl('POST', '/alert_text', $parameters);
+            $result = $this->curl('POST', 'alert_text', $parameters);
         } catch (\Exception $e) {
             $result = $this->alert()->setAlertText();
         }
@@ -747,7 +747,7 @@ class Session extends Container
         // trigger_error(__METHOD__ . ': use "Alert::acceptAlert()" instead', E_USER_DEPRECATED);
 
         try {
-            $result = $this->curl('POST', '/accept_alert');
+            $result = $this->curl('POST', 'accept_alert');
         } catch (\Exception $e) {
             $result = $this->alert()->acceptAlert();
         }
@@ -767,7 +767,7 @@ class Session extends Container
         // trigger_error(__METHOD__ . ': use "Alert::dismissAlert()" instead', E_USER_DEPRECATED);
 
         try {
-            $result = $this->curl('POST', '/dismiss_alert');
+            $result = $this->curl('POST', 'dismiss_alert');
         } catch (\Exception $e) {
             $result = $this->alert()->dismissAlert();
         }
@@ -793,7 +793,7 @@ class Session extends Container
         // trigger_error(__METHOD__ . ': use "Element::sendKeys()" instead', E_USER_DEPRECATED);
 
         try {
-            $result = $this->curl('POST', '/keys', $parameters);
+            $result = $this->curl('POST', 'keys', $parameters);
         } catch (\Exception $e) {
             $result = $this->getActiveElement()->sendKeys($parameters);
         }
@@ -819,7 +819,7 @@ class Session extends Container
         // trigger_error(__METHOD__ . ': use "Selenium::uploadFile()" instead', E_USER_DEPRECATED);
 
         try {
-            $result = $this->curl('POST', '/file', $parameters);
+            $result = $this->curl('POST', 'file', $parameters);
         } catch (\Exception $e) {
             $result = $this->selenium()->uploadFile($parameters);
         }

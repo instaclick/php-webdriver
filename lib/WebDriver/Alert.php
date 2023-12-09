@@ -59,7 +59,7 @@ class Alert extends AbstractWebDriver
      */
     public function acceptAlert()
     {
-        $result = $this->curl('POST', '/accept');
+        $result = $this->curl('POST', 'accept');
 
         return $result['value'];
     }
@@ -71,7 +71,7 @@ class Alert extends AbstractWebDriver
      */
     public function dismissAlert()
     {
-        $result = $this->curl('POST', '/dismiss');
+        $result = $this->curl('POST', 'dismiss');
 
         return $result['value'];
     }
@@ -83,7 +83,7 @@ class Alert extends AbstractWebDriver
      */
     public function getAlertText()
     {
-        $result = $this->curl('GET', '/text');
+        $result = $this->curl('GET', 'text');
 
         return $result['value'];
     }
@@ -101,7 +101,7 @@ class Alert extends AbstractWebDriver
             ? $text
             : ['text' => $text];
 
-        $result = $this->curl('POST', '/text', $parameters);
+        $result = $this->curl('POST', 'text', $parameters);
 
         return $result['value'];
     }

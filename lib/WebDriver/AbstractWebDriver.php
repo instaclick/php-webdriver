@@ -11,7 +11,9 @@
 
 namespace WebDriver;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use WebDriver\Exception as WebDriverException;
+use WebDriver\Service\CurlServiceInterface;
 
 /**
  * Abstract WebDriver\AbstractWebDriver class
@@ -33,6 +35,13 @@ abstract class AbstractWebDriver
      * @var \WebDriver\Service\CurlServiceInterface
      */
     private $curlService;
+
+    /**
+     * Event Dispatcher
+     *
+     * @var \Psr\EventDispatcher\EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     /**
      * Transient options
@@ -77,6 +86,7 @@ abstract class AbstractWebDriver
         $this->transientOptions = [];
         $this->extensions = [];
         $this->curlService = ServiceFactory::getInstance()->getService('service.curl');
+        $this->eventDispatcher = ServiceFactory::getInstance()->getService('event_dispatcher');
     }
 
     /**
@@ -104,7 +114,7 @@ abstract class AbstractWebDriver
      *
      * @param \WebDriver\Service\CurlServiceInterface $curlService
      */
-    public function setCurlService($curlService)
+    public function setCurlService(CurlServiceInterface $curlService)
     {
         $this->curlService = $curlService;
     }
@@ -117,6 +127,26 @@ abstract class AbstractWebDriver
     public function getCurlService()
     {
         return $this->curlService;
+    }
+
+    /**
+     * Set event dispatcher
+     *
+     * @param \Psr\EventDispatcher\EventDispatcherInterface $eventDispatcher
+     */
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * Get curl service
+     *
+     * @return \Psr\EventDispatcher\EventDispatcherInterface
+     */
+    public function getEventDispatcher()
+    {
+        return $this->eventDispatcher;
     }
 
     /**
@@ -204,7 +234,7 @@ abstract class AbstractWebDriver
         }
 
         $parameters = array_shift($arguments);
-        $result = $this->curl($requestMethod, '/' . $webdriverCommand, $parameters);
+        $result = $this->curl($requestMethod, $webdriverCommand, $parameters);
 
         return $result['value'];
     }
@@ -226,6 +256,32 @@ abstract class AbstractWebDriver
     }
 
     /**
+     * Event firing command wrapper
+     */
+    protected function curl($requestMethod, $command, $parameters = null, $extraOptions = [])
+    {
+        $name = strtoupper($requestMethod) . ':'
+              . substr($className = get_class($this), strrpos($className, '\\') + 1) . ':'
+              . ($command ?: substr($this->url, strrpos($this->url, '/') + 1));
+
+        $this->eventDispatcher->dispatch((object) ['event' => 'before', 'command' => $name, 'parameters' => $parameters]);
+
+        try {
+            $result = $this->curlExec($requestMethod, $command, $parameters, $extraOptions);
+        } catch (\Exception $e) {
+            $source = substr($className = get_class($e), strrpos($className, '\\') + 1);
+
+            $this->eventDispatcher->dispatch((object) ['event' => 'error', 'command' => $name, 'error' => $source]);
+
+            throw $e;
+        }
+
+        $this->eventDispatcher->dispatch((object) ['event' => 'after', 'command' => $name, 'result' => $result['value']]);
+
+        return $result;
+    }
+
+    /**
      * Curl request to webdriver server.
      *
      * @param string               $requestMethod HTTP request method, e.g., 'GET', 'POST', or 'DELETE'
@@ -238,7 +294,7 @@ abstract class AbstractWebDriver
      *
      * @throws \WebDriver\Exception if error
      */
-    protected function curl($requestMethod, $command, $parameters = null, $extraOptions = [])
+    protected function curlExec($requestMethod, $command, $parameters, $extraOptions)
     {
         if ($parameters && is_array($parameters) && $requestMethod !== 'POST') {
             throw WebDriverException::factory(
@@ -252,7 +308,13 @@ abstract class AbstractWebDriver
             );
         }
 
-        $url = $this->url . $command;
+        $url = $this->url;
+
+        if ($command && substr($this->url, -1) !== '/') {
+            $url .= '/';
+        }
+
+        $url .= $command;
 
         if (($requestMethod === 'GET' || $requestMethod === 'DELETE')
             && $parameters && (is_int($parameters) || is_string($parameters))

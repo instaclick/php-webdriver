@@ -34,7 +34,7 @@ class Execute extends AbstractWebDriver
 
         $parameters['args'] = $this->serializeArguments($parameters['args']);
 
-        $result = $this->curl('POST', '/execute/async', $parameters);
+        $result = $this->curl('POST', 'execute/async', $parameters);
 
         return $this->unserializeResult($result['value']);
     }
@@ -55,7 +55,7 @@ class Execute extends AbstractWebDriver
 
         $parameters['args'] = $this->serializeArguments($parameters['args']);
 
-        $result = $this->curl('POST', '/execute/sync', $parameters);
+        $result = $this->curl('POST', 'execute/sync', $parameters);
 
         return $this->unserializeResult($result['value']);
     }

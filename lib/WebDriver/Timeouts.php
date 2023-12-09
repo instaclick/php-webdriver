@@ -82,7 +82,7 @@ class Timeouts extends AbstractWebDriver
 
         // trigger_error(__METHOD__ . ': use "setTimeout()" instead', E_USER_DEPRECATED);
 
-        $result = $this->curl('POST', '/implicit_wait', $parameters);
+        $result = $this->curl('POST', 'implicit_wait', $parameters);
 
         return $this;
     }
@@ -104,7 +104,7 @@ class Timeouts extends AbstractWebDriver
 
         // trigger_error(__METHOD__ . ': use "setTimeout()" instead', E_USER_DEPRECATED);
 
-        $result = $this->curl('POST', '/async_script', $parameters);
+        $result = $this->curl('POST', 'async_script', $parameters);
 
         return $this;
     }
