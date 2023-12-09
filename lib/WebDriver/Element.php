@@ -16,21 +16,25 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
+ * W3C
+ * @method string attribute($attributeName) Get the value of an element's attribute.
  * @method void clear() Clear a TEXTAREA or text INPUT element's value.
  * @method void click() Click on an element.
- * @method boolean displayed() Determine if an element is currently displayed.
+ * @method array computedlabel() Get ARIA Role.
+ * @method array computedrole() Get Accessible Name.
+ * @method string css($propertyName) Query the value of an element's computed CSS property.
  * @method boolean enabled() Determine if an element is currently enabled.
- * @method boolean equals($otherId) Test if two element IDs refer to the same DOM element.
- * @method array location() Determine an element's location on the page.
- * @method array location_in_view() Determine an element's location on the screen once it has been scrolled into view.
  * @method string name() Query for an element's tag name.
+ * @method array property($propertyName) Get element property.
  * @method array rect() Get element rect.
  * @method array screenshot() Take element screenshot.
- * @method array selected() Is element selected?
- * @method array size() Determine an element's size in pixels.
- * @method void submit() Submit a FORM element.
+ * @method boolean selected() Is element selected?
  * @method string text() Returns the visible text for the element.
- * @method void postValue($json) Send a sequence of key strokes to an element.
+ * @method void value($parameters) Send a sequence of key strokes to an element.
+ * Selenium
+ * @method boolean equals($otherId) Test if two element IDs refer to the same DOM element.
+ * @method array location() Determine an element's location on the page.
+ * @method array size() Determine an element's size in pixels.
  */
 class Element extends Container
 {
@@ -48,42 +52,48 @@ class Element extends Container
      */
     protected function methods()
     {
-        return array(
-            'clear' => array('POST'),
-            'click' => array('POST'),
-            'enabled' => array('GET'),
-            'name' => array('GET'),
-            'rect' => array('GET'),
-            'screenshot' => array('GET'),
-            'selected' => array('GET'),
-            'text' => array('GET'),
-            'value' => array('POST'),
+        return [
+            'attribute'     => ['GET'],
+            'clear'         => ['POST'],
+            'click'         => ['POST'],
+            'computedlabel' => ['GET'],
+            'computedrole'  => ['GET'],
+            'css'           => ['GET'],
+            'enabled'       => ['GET'],
+            'name'          => ['GET'],
+            'property'      => ['GET'],
+            'rect'          => ['GET'],
+            'screenshot'    => ['GET'],
+            'selected'      => ['GET'],
+            'text'          => ['GET'],
+            'value'         => ['POST'],
 
-            // Legacy JSON Wire Protocol
-            'displayed' => array('GET'),        // @see https://w3c.github.io/webdriver/#element-displayedness
-            'equals' => array('GET'),
-            'location' => array('GET'),
-            'location_in_view' => array('GET'),
-            'size' => array('GET'),
-            'submit' => array('POST'),
-        );
+            // @deprecated
+            'equals'        => ['GET'],
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function obsoleteMethods()
+    protected function chainable()
     {
-        return array(
-            'active' => array('GET'),
-            'computedlabel' => array('GET'),
-            'computedrole' => array('GET'),
-            'drag' => array('POST'),
-            'hover' => array('POST'),
-            'selected' => array('POST'),
-            'toggle' => array('POST'),
-            'value' => array('GET'),
-        );
+        return [
+            'shadow' => 'getShadowRoot',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function aliases()
+    {
+        return [
+            // @deprecated
+            'location'  => 'rect',
+            'size'      => 'rect',
+            'postValue' => 'sendKeys',
+        ];
     }
 
     /**
@@ -94,7 +104,7 @@ class Element extends Container
      */
     public function __construct($url, $id)
     {
-        parent::__construct($url);
+        parent::__construct($url . "/$id");
 
         $this->id = $id;
     }
@@ -110,43 +120,25 @@ class Element extends Container
     }
 
     /**
-     * Get the value of an element's attribute: /session/:sessionId/element/:id/attribute/:name
-     *
-     * @param string name
+     * Get Accessible Name: /session/:sessionId/element/:elementId/computedlabel
      *
      * @return mixed
      */
-    public function attribute($name)
+    public function getAccessibleName()
     {
-        $result = $this->curl('GET', "/attribute/$name");
+        $result = $this->curl('GET', 'computedlabel');
 
         return $result['value'];
     }
 
     /**
-     * Query the value of an element’s computed CSS property: /session/:sessionId/element/:id/css/:propertyName
-     *
-     * @param string $propertyName
+     * Get ARIA Role: /session/:sessionId/element/:elementId/computedrole
      *
      * @return mixed
      */
-    public function css($propertyName)
+    public function getAriaRole()
     {
-        $result = $this->curl('GET', "/css/$propertyName");
-
-        return $result['value'];
-    }
-
-    /**
-     * Get element property: /session/:sessionId/element/:id/property/:name
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
-    public function property($name)
-    {
-        $result = $this->curl('GET', "/property/$name");
+        $result = $this->curl('GET', 'computedrole');
 
         return $result['value'];
     }
@@ -155,33 +147,126 @@ class Element extends Container
      * Get element shadow root: /session/:sessionId/element/:elementId/shadow
      *
      * shadow root method chaining, e.g.,
-     * - $element->method()
+     * - $element->shadow()->method()
+     * - $element->shadow->method()
      *
      * @return \WebDriver\Shadow|null
      *
      */
-    public function shadow()
+    public function getShadowRoot()
     {
-        $result = $this->curl('POST', '/shadow');
+        $result = $this->curl('POST', 'shadow');
         $value  = $result['value'];
 
-        if (array_key_exists(Shadow::SHADOW_ROOT_ID, (array) $value)) {
+        if (! is_array($value)) {
+            $value = [$value];
+        }
+
+        if (array_key_exists(Shadow::SHADOW_ROOT_ID, $value)) {
             $shadowRootReference = $value[Shadow::SHADOW_ROOT_ID];
 
-            return new Shadow(
-                preg_replace('/' . preg_quote('element/' . $this->id, '/') . '$/', '/', $this->url), // remove /element/:elementid
-                $shadowRootReference
-            );
+            return new Shadow($this->getSessionPath() . '/shadow', $shadowRootReference);
         }
 
         return null;
     }
 
     /**
+     * Is Element Enabled: /session/:sessionId/element/:elementId/enabled
+     *
+     * @return mixed
+     */
+    public function isEnabled()
+    {
+        $result = $this->curl('GET', 'enabled');
+
+        return $result['value'];
+    }
+
+    /**
+     * Is Element Selected: /session/:sessionId/element/:elementId/selected
+     *
+     * @return mixed
+     */
+    public function isSelected()
+    {
+        $result = $this->curl('GET', 'selected');
+
+        return $result['value'];
+    }
+
+    /**
+     * Send Keys to Element: /session/:sessionId/element/:elementId/value
+     *
+     * @param array|string $text Parameters {text: ...}
+     *
+     * @return mixed
+     */
+    public function sendKeys($text)
+    {
+        $parameters = is_array($text)
+            ? $text
+            : ['text' => $text, 'value' => [$text]];
+
+        if (! array_key_exists('text', $parameters) && array_key_exists('value', $parameters)) {
+            // trigger_error(__METHOD__ . ': use "text" property instead of "value"', E_USER_DEPRECATED);
+
+            $parameters['text'] = implode($parameters['value']);
+        }
+
+        if (array_key_exists('text', $parameters) && ! array_key_exists('value', $parameters)) {
+            $parameters['value'] = [$parameters['text']];
+        }
+
+        $result = $this->curl('POST', 'value', $parameters);
+
+        return $result['value'];
+    }
+
+    /**
+     * Submit a FORM Element: /session/:sessionId/element/:elementId/submit
+     *
+     * @deprecated
+     *
+     * @return mixed
+     */
+    public function submit()
+    {
+        // trigger_error(__METHOD__, E_USER_DEPRECATED);
+
+        try {
+            $result = $this->curl('POST', 'submit');
+
+            return $result['value'];
+        } catch (\Exception $e) {
+            $session = new Session($this->getSessionPath(), []);
+
+            return $session->execute()->sync(
+                ['script' => <<<JS
+var elem = arguments[0];
+elem.submit();
+JS
+                , 'args' => [$this]]
+            );
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
-    protected function getIdentifierPath($identifier)
+    protected function getNewIdentifierPath($identifier)
     {
-        return preg_replace('/' . preg_quote($this->id) . '$/', $identifier, $this->url);
+        return preg_replace('~/' . preg_quote($this->id) . '$~', "/$identifier", $this->url);
+    }
+
+    /**
+     * Get session path
+     *
+     * @return string
+     */
+    private function getSessionPath()
+    {
+        // remove /element/:elementid
+        return preg_replace('~/element/' . preg_quote($this->id) . '$~', '', $this->url);
     }
 }

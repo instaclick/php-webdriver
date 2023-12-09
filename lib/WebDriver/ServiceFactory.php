@@ -11,6 +11,9 @@
 
 namespace WebDriver;
 
+use WebDriver\Service\CurlService;
+use WebDriver\Service\VoidDispatcher;
+
 /**
  * WebDriver\ServiceFactory class
  *
@@ -42,11 +45,12 @@ class ServiceFactory
      */
     private function __construct()
     {
-        $this->services = array();
+        $this->services = [];
 
-        $this->serviceClasses = array(
-            'service.curl' => '\\WebDriver\\Service\\CurlService',
-        );
+        $this->serviceClasses = [
+            'service.curl' => CurlService::class,
+            'event_dispatcher' => VoidDispatcher::class,
+        ];
     }
 
     /**
@@ -72,7 +76,7 @@ class ServiceFactory
      */
     public function getService($serviceName)
     {
-        if (! isset($this->services[$serviceName])) {
+        if (! isset($this->services[$serviceName]) && isset($this->serviceClasses[$serviceName])) {
             $className = $this->serviceClasses[$serviceName];
 
             $this->services[$serviceName] = new $className();

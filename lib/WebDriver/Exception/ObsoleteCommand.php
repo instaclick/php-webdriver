@@ -16,6 +16,8 @@ use WebDriver\Exception as BaseException;
 /**
  * WebDriver\Exception\ObsoleteCommand class
  *
+ * @internal php-webdriver
+ *
  * @package WebDriver
  */
 final class ObsoleteCommand extends BaseException

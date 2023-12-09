@@ -12,13 +12,18 @@
 namespace WebDriver;
 
 /**
- * WebDriver class
+ * WebDriver client class
  *
  * @package WebDriver
  *
+ * W3C
+ * @method void session($parameters) New session.
  * @method array status() Returns information about whether a remote end is in a state in which it can create new sessions.
+ * Selenium
+ * @method array logs() Returns session logs mapped to session IDs.
+ * @method array sessions() Get all sessions.
  */
-class WebDriver extends AbstractWebDriver implements WebDriverInterface
+class WebDriver extends AbstractWebDriver
 {
     /**
      * @var array
@@ -30,57 +35,60 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
      */
     protected function methods()
     {
-        return array(
-            'status' => 'GET',
-        );
+        return [
+            'session'  => ['POST'],
+            'status'   => ['GET'],
+
+            // @deprecated
+            'logs'     => ['POST'],
+            'sessions' => ['GET'],
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function session($browserName = Browser::FIREFOX, $desiredCapabilities = null, $requiredCapabilities = null)
+    protected function aliases()
     {
-        // default to W3C WebDriver API
-        $firstMatch = $desiredCapabilities ?: array();
-        $firstMatch[] = array('browserName' => Browser::CHROME);
+        return [
+            'session'  => 'newSession',
+            'status'   => 'getStatus',
 
-        if ($browserName !== Browser::CHROME) {
-            $firstMatch[] = array('browserName' => $browserName);
-        }
+            // @deprecated
+            'logs'     => 'getSessionLogs',
+            'sessions' => 'getAllSessions',
+        ];
+    }
 
-        $parameters = array('capabilities' => array('firstMatch' => $firstMatch));
+    /**
+     * New Session: /session (POST)
+     * Returns a session object suitable for chaining
+     *
+     * @param array|string $browserName          Preferred browser
+     * @param array        $desiredCapabilities  Optional desired capabilities
+     * @param array        $requiredCapabilities Optional required capabilities
+     *
+     * @return \WebDriver\Session
+     */
+    public function newSession($browserName = Browser::CHROME, $desiredCapabilities = null, $requiredCapabilities = null)
+    {
+        if (func_num_args() === 1 && is_array($browserName)) {
+            $parameters = $browserName;
+        } else {
+            $firstMatch = $desiredCapabilities ?: [];
+            $firstMatch[] = ['browserName' => $browserName];
 
-        if (is_array($requiredCapabilities) && count($requiredCapabilities)) {
-            $parameters['capabilities']['alwaysMatch'] = $requiredCapabilities;
-        }
-
-        try {
-            $result = $this->curl(
-                'POST',
-                '/session',
-                $parameters,
-                array(CURLOPT_FOLLOWLOCATION => true)
-            );
-        } catch (\Exception $e) {
-            // fallback to legacy JSON Wire Protocol
-            $capabilities = $desiredCapabilities ?: array();
-            $capabilities[Capability::BROWSER_NAME] = $browserName;
-
-            $parameters = array('desiredCapabilities' => $capabilities);
+            $parameters = ['capabilities' => ['firstMatch' => $firstMatch]];
 
             if (is_array($requiredCapabilities) && count($requiredCapabilities)) {
-                $parameters['requiredCapabilities'] = $requiredCapabilities;
+                $parameters['capabilities']['alwaysMatch'] = $requiredCapabilities;
             }
-
-            $result = $this->curl(
-                'POST',
-                '/session',
-                $parameters,
-                array(CURLOPT_FOLLOWLOCATION => true)
-            );
         }
 
-        $this->capabilities = isset($result['value']['capabilities']) ? $result['value']['capabilities'] : null;
+        $options = [CURLOPT_FOLLOWLOCATION => true];
+        $result = $this->curl('POST', 'session', $parameters, $options);
+
+        $this->capabilities = $result['value']['capabilities'] ?? $result['value']['capabilities'];
 
         $session = new Session($result['sessionUrl'], $this->capabilities);
 
@@ -88,17 +96,18 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
     }
 
     /**
-     * Get Sessions: /sessions (GET)
+     * Get all sessions: /sessions (GET)
      * Get list of currently active sessions
      *
+     * @see https://github.com/SeleniumHQ/selenium/blob/trunk/java/src/org/openqa/selenium/remote/codec/AbstractHttpCommandCodec.java
      * @deprecated
      *
      * @return array an array of \WebDriver\Session objects
      */
-    public function sessions()
+    public function getAllSessions()
     {
-        $result = $this->curl('GET', '/sessions');
-        $sessions = array();
+        $result = $this->curl('GET', 'sessions');
+        $sessions = [];
 
         foreach ($result['value'] as $session) {
             $session = new Session($this->url . '/session/' . $session['id'], $this->capabilities);
@@ -107,5 +116,31 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
         }
 
         return $sessions;
+    }
+
+    /**
+     * Get session logs: /logs
+     *
+     * @deprecated
+     *
+     * @return mixed
+     */
+    public function getSessionLogs()
+    {
+        $result = $this->curl('POST', 'logs');
+
+        return $result['value'];
+    }
+
+    /**
+     * Get status: /status
+     *
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        $result = $this->curl('GET', 'status');
+
+        return $result['value'];
     }
 }

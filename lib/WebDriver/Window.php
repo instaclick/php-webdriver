@@ -16,14 +16,17 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
- * @method array handles() Get window handles.
+ * W3C
  * @method array fullscreen() Fullscreen window.
  * @method array maximize() Maximize the window if not already maximized.
  * @method array minimize() Minimize window.
- * @method array getPosition() Get position of the window.
- * @method void postPosition($json) Change position of the window.
  * @method array getRect() Get window rect.
- * @method array postRect($json) Set window rect.
+ * @method array postRect($parameters) Set window rect.
+ * Selenium
+ * @method array getPosition() Get window position.
+ * @method array postPosition($parameters) Set window position.
+ * @method array getSize() Get window size.
+ * @method array postSize($parameters) Set window size.
  */
 class Window extends AbstractWebDriver
 {
@@ -39,25 +42,31 @@ class Window extends AbstractWebDriver
      */
     protected function methods()
     {
-        return array(
-            'handles' => array('GET'),
-            'fullscreen' => array('POST'),
-            'maximize' => array('POST'),
-            'minimize' => array('POST'),
-            'position' => array('GET', 'POST'),
-            'rect' => array('GET', 'POST'),
-        );
+        return [
+            'fullscreen' => ['POST'],
+            'maximize'   => ['POST'],
+            'minimize'   => ['POST'],
+            'rect'       => ['GET', 'POST'],
+
+            // @deprecated
+            'position'   => ['GET', 'POST'],
+            'size'       => ['GET', 'POST'],
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function obsoleteMethods()
+    protected function aliases()
     {
-        return array(
-            // Legacy JSON Wire Protocol
-            'size' => array('GET', 'POST'),
-        );
+        return [
+            'getPosition'  => 'getRect',
+            'getSize'      => 'getRect',
+            'postPosition' => 'setRect',
+            'postSize'     => 'sesRect',
+            'setPosition'  => 'setRect',
+            'setSize'      => 'setRect',
+        ];
     }
 
     /**
@@ -74,6 +83,20 @@ class Window extends AbstractWebDriver
     }
 
     /**
+     * Set window rect: /session/:sessionId/window/rect (POST)
+     *
+     * @param array $parameters Parameters {width: ..., height: ..., x: ..., y: ...}
+     *
+     * @return mixed
+     */
+    public function setRect($parameters)
+    {
+        $result = $this->curl('POST', 'rect', $parameters);
+
+        return $result['value'];
+    }
+
+    /**
      * Get window handle: /session/:sessionId/window (GET)
      * - $session->window($handle)->getHandle()
      * - $session->window()->getHandle()
@@ -83,7 +106,7 @@ class Window extends AbstractWebDriver
     public function getHandle()
     {
         if (! $this->windowHandle) {
-            $result = $this->curl('GET', $this->url);
+            $result = $this->curl('GET', '');
 
             $this->windowHandle = array_key_exists(self::WEB_WINDOW_ID, $result['value'])
                 ? $result['value'][self::WEB_WINDOW_ID]

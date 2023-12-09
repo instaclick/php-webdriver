@@ -23,7 +23,7 @@ interface CurlServiceInterface
      *
      * @param string $requestMethod HTTP request method, e.g., 'GET', 'POST', or 'DELETE'
      * @param string $url           Request URL
-     * @param array  $parameters    If an array(), they will be posted as JSON parameters
+     * @param array  $parameters    If an array, they will be posted as JSON parameters
      *                              If a number or string, "/$params" is appended to url
      * @param array  $extraOptions  key=>value pairs of curl options to pass to curl_setopt()
      *
@@ -31,5 +31,5 @@ interface CurlServiceInterface
      *
      * @throws \WebDriver\Exception\CurlExec only if http error and CURLOPT_FAILONERROR has been set in extraOptions
      */
-    public function execute($requestMethod, $url, $parameters = null, $extraOptions = array());
+    public function execute($requestMethod, $url, $parameters = null, $extraOptions = []);
 }

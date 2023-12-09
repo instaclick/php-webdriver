@@ -16,6 +16,8 @@ use WebDriver\Exception as BaseException;
 /**
  * WebDriver\Exception\NoParametersExpected class
  *
+ * @internal php-webdriver
+ *
  * @package WebDriver
  */
 final class NoParametersExpected extends BaseException

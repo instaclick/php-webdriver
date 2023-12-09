@@ -16,6 +16,8 @@ use WebDriver\Exception as BaseException;
 /**
  * WebDriver\Exception\InvalidRequest class
  *
+ * @internal php-webdriver
+ *
  * @package WebDriver
  */
 final class InvalidRequest extends BaseException
