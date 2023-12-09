@@ -37,7 +37,7 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
     protected function methods()
     {
         return array(
-            'status' => 'GET',
+            'status' => array('GET'),
         );
     }
 
