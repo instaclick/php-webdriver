@@ -16,6 +16,8 @@ use WebDriver\AbstractWebDriver;
 /**
  * Chrome Dev Tools extension
  *
+ * @see https://chromedevtools.github.io/devtools-protocol/
+ *
  * @package WebDriver
  */
 class ChromeDevTools extends AbstractWebDriver
