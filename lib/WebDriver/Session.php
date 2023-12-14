@@ -32,11 +32,13 @@ namespace WebDriver;
  * @method void dismiss_alert() Dismisses the currently displayed alert dialog.
  * @method void doubleclick() Double-clicks at the current mouse coordinates (set by moveto).
  * @method array execute_sql($jsonQuery) Execute SQL.
- * @method array file($jsonFile) Upload file.
+ * @method array execute_async($jsonScript) Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame.
+ * @method string file($jsonFile) Upload file.
  * @method void forward() Navigates forward in the browser history, if possible.
  * @method void keys($jsonKeys) Send a sequence of key strokes to the active element.
  * @method array getLocation() Get the current geo location.
  * @method void postLocation($jsonCoordinates) Set the current geo location.
+ * @method void moveto($jsonElementCoordinates) Move the mouse by an offset of the specified element.
  * @method string getOrientation() Get the current browser orientation.
  * @method void postOrientation($jsonOrientation) Set the current browser orientation.
  * @method array print() Print page.
@@ -93,6 +95,7 @@ class Session extends Container
             'execute_sql' => array('POST'),
             'keys' => array('POST'),
             'location' => array('GET', 'POST'),
+            'moveto' => array('POST'),
             'orientation' => array('GET', 'POST'),
             'window_handle' => array('GET'), // see also getWindowHandle()
             'window_handles' => array('GET'),

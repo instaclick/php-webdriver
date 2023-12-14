@@ -23,7 +23,7 @@ namespace WebDriver;
  * @method array getPosition() Get position of the window.
  * @method void postPosition($json) Change position of the window.
  * @method array getRect() Get window rect.
- * @method array postRect() Set window rect.
+ * @method array postRect($json) Set window rect.
  */
 class Window extends AbstractWebDriver
 {

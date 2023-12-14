@@ -29,7 +29,7 @@ namespace WebDriver;
  * @method array property($propertyName) Get element property.
  * @method array rect() Get element rect.
  * @method array screenshot() Take element screenshot.
- * @method array selected() Is element selected?
+ * @method boolean selected() Is element selected?
  * @method array size() Determine an element's size in pixels.
  * @method void submit() Submit a FORM element.
  * @method string text() Returns the visible text for the element.
