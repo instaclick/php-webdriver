@@ -16,7 +16,7 @@ maintained)
 ### Distinguishing features:
 
 * Up-to-date with:
-  * [WebDriver: W3C Working Draft 14 November 2023](https://www.w3.org/TR/webdriver2)
+  * [WebDriver: W3C Working Draft 13 December 2023](https://www.w3.org/TR/webdriver2)
   * [Federated Credential Management API: Draft Community Group Report, 1 December 2023](https://fedidcg.github.io/FedCM/)
   * [Web Authentication: An API for accessing Public Key Credentials, Level 2: W3C Recommendation, 8 April 2021](https://www.w3.org/TR/webauthn-2/)
 * In the *master* branch, class names and file organization follow PSR-0
