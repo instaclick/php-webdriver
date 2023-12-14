@@ -16,6 +16,8 @@ use WebDriver\Exception as BaseException;
 /**
  * WebDriver\Exception\CurlExec class
  *
+ * @internal php-webdriver
+ *
  * @package WebDriver
  */
 final class CurlExec extends BaseException
@@ -23,7 +25,7 @@ final class CurlExec extends BaseException
     /**
      * @var array
      */
-    private $curlInfo = array();
+    private $curlInfo = [];
 
     /**
      * Get curl info

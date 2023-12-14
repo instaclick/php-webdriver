@@ -16,6 +16,8 @@ use WebDriver\Exception as BaseException;
 /**
  * WebDriver\Exception\UnknownLocatorStrategy class
  *
+ * @internal php-webdriver
+ *
  * @package WebDriver
  */
 final class UnknownLocatorStrategy extends BaseException

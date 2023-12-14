@@ -9,7 +9,7 @@
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
-namespace WebDriver;
+namespace WebDriver\Extension\Selenium;
 
 /**
  * WebDriver\LogType class
@@ -27,6 +27,6 @@ final class LogType
     const CLIENT      = 'client';
     const DRIVER      = 'driver';
     const PERFORMANCE = 'performance';
-    const PROFILER    = 'driver';
+    const PROFILER    = 'profiler';
     const SERVER      = 'server';
 }

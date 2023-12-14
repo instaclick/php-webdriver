@@ -19,25 +19,22 @@ namespace WebDriver;
 class Execute extends AbstractWebDriver
 {
     /**
-     * {@inheritdoc}
-     */
-    protected function methods()
-    {
-        return array();
-    }
-
-    /**
      * Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (asynchronous)
      *
-     * @param array{script: string, args: array} $jsonScript
+     * @param string|array $script
+     * @param array|null   $args
      *
      * @return mixed
      */
-    public function async(array $jsonScript)
+    public function async($script, $args = null)
     {
-        $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
+        $parameters = func_num_args() === 1 && is_array($script)
+            ? $script
+            : ['script' => $script, 'args' => $args];
 
-        $result = $this->curl('POST', '/async', $jsonScript);
+        $parameters['args'] = $this->serializeArguments($parameters['args']);
+
+        $result = $this->curl('POST', '/execute/async', $parameters);
 
         return $this->unserializeResult($result['value']);
     }
@@ -45,15 +42,20 @@ class Execute extends AbstractWebDriver
     /**
      * Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (synchronous)
      *
-     * @param array{script: string, args: array} $jsonScript
+     * @param string|array $script
+     * @param array|null   $args
      *
      * @return mixed
      */
-    public function sync(array $jsonScript)
+    public function sync($script, $args = null)
     {
-        $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
+        $parameters = func_num_args() === 1 && is_array($script)
+            ? $script
+            : ['script' => $script, 'args' => $args];
 
-        $result = $this->curl('POST', '/sync', $jsonScript);
+        $parameters['args'] = $this->serializeArguments($parameters['args']);
+
+        $result = $this->curl('POST', '/execute/sync', $parameters);
 
         return $this->unserializeResult($result['value']);
     }
@@ -70,9 +72,7 @@ class Execute extends AbstractWebDriver
     protected function serializeArguments(array $arguments)
     {
         foreach ($arguments as $key => $value) {
-            if ($value instanceof LegacyElement) {
-                $arguments[$key] = [LegacyElement::LEGACY_ELEMENT_ID => $value->getID()];
-            } elseif ($value instanceof Element) {
+            if ($value instanceof Element) {
                 $arguments[$key] = [Element::WEB_ELEMENT_ID => $value->getID()];
             } elseif ($value instanceof Shadow) {
                 $arguments[$key] = [Shadow::SHADOW_ROOT_ID => $value->getID()];
@@ -117,41 +117,18 @@ class Execute extends AbstractWebDriver
      */
     protected function makeElement($value)
     {
-        if (array_key_exists(LegacyElement::LEGACY_ELEMENT_ID, $value)) {
-            $identifier = $value[LegacyElement::LEGACY_ELEMENT_ID];
-
-            return new LegacyElement(
-                $this->getIdentifierPath('/element/' . $identifier),
-                $identifier
-            );
-        }
-
         if (array_key_exists(Element::WEB_ELEMENT_ID, $value)) {
             $identifier = $value[Element::WEB_ELEMENT_ID];
 
-            return new Element(
-                $this->getIdentifierPath('/element/' . $identifier),
-                $identifier
-            );
+            return new Element($this->url . '/element', $identifier);
         }
 
         if (array_key_exists(Shadow::SHADOW_ROOT_ID, $value)) {
             $identifier = $value[Shadow::SHADOW_ROOT_ID];
 
-            return new Shadow(
-                $this->getIdentifierPath('/shadow/' . $identifier),
-                $identifier
-            );
+            return new Shadow($this->url . '/shadow', $identifier);
         }
 
         return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getIdentifierPath($identifier)
-    {
-        return preg_replace('~/execute$~', '', $this->url) . $identifier; // remove /execute from path
     }
 }

@@ -19,22 +19,14 @@ namespace WebDriver;
 final class Browser
 {
     /**
-     * Check browser names used in static functions in the selenium source:
-     * @see https://github.com/SeleniumHQ/selenium/blob/trunk/java/src/org/openqa/selenium/remote/BrowserType.java
+     * @see https://github.com/SeleniumHQ/selenium/blob/trunk/java/src/org/openqa/selenium/remote/Browser.java
      */
-    const ANDROID           = 'android';
-    const CHROME            = 'chrome';
-    const EDGE              = 'edge';
-    const EDGEHTML          = 'EdgeHTML';
-    const FIREFOX           = 'firefox';
-    const HTMLUNIT          = 'htmlunit';
-    const IE                = 'internet explorer';
-    const INTERNET_EXPLORER = 'internet explorer';
-    const IPHONE            = 'iPhone';
-    const IPAD              = 'iPad';
-    const MSEDGE            = 'MicrosoftEdge';
-    const OPERA             = 'opera';
-    const OPERA_BLINK       = 'operablink';
-    const PHANTOMJS         = 'phantomjs';
-    const SAFARI            = 'safari';
+    const CHROME              = 'chrome';
+    const EDGE                = 'MicrosoftEdge';
+    const FIREFOX             = 'firefox';
+    const HTMLUNIT            = 'htmlunit';
+    const IE                  = 'internet explorer';
+    const OPERA               = 'opera';
+    const SAFARI              = 'safari';
+    const SAFARI_TECH_PREVIEW = 'Safari Technology Preview';
 }

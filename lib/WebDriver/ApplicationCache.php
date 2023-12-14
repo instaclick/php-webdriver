@@ -16,6 +16,8 @@ namespace WebDriver;
  *
  * @package WebDriver
  *
+ * @deprecated
+ *
  * @method integer status() Get application cache status.
  */
 class ApplicationCache extends AbstractWebDriver
@@ -26,6 +28,7 @@ class ApplicationCache extends AbstractWebDriver
     protected function methods()
     {
         return array(
+            // @deprecated
             'status' => array('GET'),
         );
     }

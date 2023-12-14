@@ -16,6 +16,8 @@ use WebDriver\Exception as BaseException;
 /**
  * WebDriver\Exception\JsonParameterExpected class
  *
+ * @internal php-webdriver
+ *
  * @package WebDriver
  */
 final class JsonParameterExpected extends BaseException

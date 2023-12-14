@@ -16,6 +16,8 @@ use WebDriver\Exception as BaseException;
 /**
  * WebDriver\Exception\UnexpectedParameters class
  *
+ * @internal php-webdriver
+ *
  * @package WebDriver
  */
 final class UnexpectedParameters extends BaseException

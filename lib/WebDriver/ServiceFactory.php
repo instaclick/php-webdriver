@@ -11,6 +11,8 @@
 
 namespace WebDriver;
 
+use WebDriver\Service\CurlService;
+
 /**
  * WebDriver\ServiceFactory class
  *
@@ -42,11 +44,11 @@ class ServiceFactory
      */
     private function __construct()
     {
-        $this->services = array();
+        $this->services = [];
 
-        $this->serviceClasses = array(
-            'service.curl' => '\\WebDriver\\Service\\CurlService',
-        );
+        $this->serviceClasses = [
+            'service.curl' => CurlService::class,
+        ];
     }
 
     /**
