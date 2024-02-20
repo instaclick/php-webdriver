@@ -60,7 +60,7 @@ class LegacyWindow extends AbstractWebDriver
      */
     public function __construct($url, $windowHandle = null)
     {
-        parent::__construct($url);
+        parent::__construct($url . '/' . $windowHandle);
 
         $this->windowHandle = $windowHandle;
     }
