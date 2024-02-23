@@ -33,10 +33,12 @@ jobs:
       - name: Install dependencies
         run: |
           composer config version 1.4.99
+          composer config preferred-install.behat/mink-selenium2-driver source
+          composer config preferred-install.* dist
           composer require --no-update behat/mink-selenium2-driver:dev-master --dev --quiet
           composer require --no-update mink/driver-testsuite:dev-master --dev --quiet
           php -r '$json = json_decode(file_get_contents ("composer.json"), true); $json["autoload"]["psr-4"]["Behat\\Mink\\Tests\\Driver\\"] = "vendor/behat/mink-selenium2-driver/tests/"; file_put_contents("composer.json", json_encode($json, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));'
-          composer update --no-interaction --prefer-dist
+          composer update --no-interaction
 
       - name: Start Selenium & Mink test server
         run: |
