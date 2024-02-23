@@ -282,7 +282,7 @@ final class Session extends Container
     public function frame()
     {
         if (func_num_args() === 1) {
-            $arg = func_get_arg(0); // json
+            $arg = $this->serializeArguments(func_get_arg(0)); // json
 
             $this->curl('POST', '/frame', $arg);
 
