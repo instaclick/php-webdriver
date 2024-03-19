@@ -112,7 +112,7 @@ class Element extends Container
     /**
      * Get the value of an element's attribute: /session/:sessionId/element/:id/attribute/:name
      *
-     * @param string name
+     * @param string $name
      *
      * @return mixed
      */
