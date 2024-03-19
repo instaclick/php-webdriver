@@ -83,9 +83,9 @@ class Window extends AbstractWebDriver
     public function getHandle()
     {
         if (! $this->windowHandle) {
-            $result = $this->curl('GET', $this->url);
+            $result = $this->curl('GET', '');
 
-            $this->windowHandle = array_key_exists(self::WEB_WINDOW_ID, $result['value'])
+            $this->windowHandle = is_array($result['value']) && array_key_exists(self::WEB_WINDOW_ID, $result['value'])
                 ? $result['value'][self::WEB_WINDOW_ID]
                 : $result['value'];
         }
