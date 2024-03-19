@@ -41,7 +41,7 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
     public function session($browserName = Browser::FIREFOX, $desiredCapabilities = null, $requiredCapabilities = null)
     {
         // default to W3C WebDriver API
-        $firstMatch = $desiredCapabilities ?: array();
+        $firstMatch = $desiredCapabilities ? array($desiredCapabilities) : array();
         $firstMatch[] = array('browserName' => Browser::CHROME);
 
         if ($browserName !== Browser::CHROME) {
