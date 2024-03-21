@@ -15,12 +15,6 @@ namespace WebDriver;
  * WebDriver\LegacyWindow class
  *
  * @package WebDriver
- *
- * @method void maximize() Maximize the window if not already maximized.
- * @method array getPosition() Get position of the window.
- * @method void postPosition($json) Change position of the window.
- * @method array getSize() Get size of the window.
- * @method void postSize($json) Change the size of the window.
  */
 class LegacyWindow extends AbstractWebDriver
 {
@@ -34,12 +28,7 @@ class LegacyWindow extends AbstractWebDriver
      */
     protected function methods()
     {
-        return array(
-            // Legacy JSON Wire Protocol
-            'maximize' => array('POST'),
-            'position' => array('GET', 'POST'),
-            'size' => array('GET', 'POST'),
-        );
+        return array();
     }
 
     /**
@@ -62,7 +51,59 @@ class LegacyWindow extends AbstractWebDriver
     {
         parent::__construct($url);
 
-        $this->windowHandle = $windowHandle;
+        $this->windowHandle = $windowHandle ?: 'current';
+    }
+
+    /**
+     * Maximize the window if not already maximized: /session/:sessionId/window/:windowHandle/maximize (POST)
+     */
+    public function maximize()
+    {
+        $this->curl('POST', "/{$this->windowHandle}/maximize");
+    }
+
+    /**
+     * Get position of the window: /session/:sessionId/window/:windowHandle/position (GET)
+     *
+     * @return array
+     */
+    public function getPosition()
+    {
+        $result = $this->curl('GET', "/{$this->windowHandle}/position");
+
+        return $result['value'];
+    }
+
+    /**
+     * Change position of the window: /session/:sessionId/window/:windowHandle/position (POST)
+     *
+     * @param array $json
+     */
+    public function postPosition(array $json)
+    {
+        $this->curl('POST', "/{$this->windowHandle}/position", $json);
+    }
+
+    /**
+     * Get size of the window: /session/:sessionId/window/:windowHandle/size (GET)
+     *
+     * @return array
+     */
+    public function getSize()
+    {
+        $result = $this->curl('GET', "/{$this->windowHandle}/size");
+
+        return $result['value'];
+    }
+
+    /**
+     * Change the size of the window: /session/:sessionId/window/:windowHandle/size (POST)
+     *
+     * @param array $json
+     */
+    public function postSize(array $json)
+    {
+        $this->curl('POST', "/{$this->windowHandle}/size", $json);
     }
 
     /**
@@ -74,7 +115,7 @@ class LegacyWindow extends AbstractWebDriver
      */
     public function getHandle()
     {
-        if (! $this->windowHandle) {
+        if (! $this->windowHandle || $this->windowHandle === 'current') {
             $result = $this->curl('GET', '_handle');
 
             $this->windowHandle = $result['value'];
