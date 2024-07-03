@@ -24,9 +24,14 @@ jobs:
       - uses: actions/checkout@v3
 
       - uses: ddev/github-action-setup-ddev@v1
+        with:
+          autostart: false
 
       - name: Setup PHP Version
         run: ddev config --php-version ${{ matrix.php }}
+
+      - name: Start ddev
+        run: ddev start
 
       - name: Install dependencies
         run: ddev composer install
