@@ -22,10 +22,6 @@
 
 namespace Test\WebDriver;
 
-use Test\WebDriver\WebDriverTestBase;
-use WebDriver\Browser;
-use WebDriver\Session;
-
 /**
  * ChromeDriver
  *
@@ -33,44 +29,7 @@ use WebDriver\Session;
  *
  * @group Functional
  */
-class ChromeDriverNonW3CTest extends WebDriverTestBase
+class ChromeDriverNonW3CTest extends ChromeDriverTest
 {
-    protected $testWebDriverRootUrl = 'http://localhost:9515';
-    protected $testWebDriverName    = 'chromedriver';
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        try {
-            $this->status = $this->driver->status();
-            $this->session = $this->driver->session(Browser::CHROME, [
-                'goog:chromeOptions' => [
-                    'w3c' => false,
-                    'args' => [
-                        '--no-sandbox',
-                        '--ignore-certificate-errors',
-                        '--allow-insecure-localhost',
-                        '--headless',
-                    ],
-                ],
-            ]);
-        }
-        catch (\Exception $e) {
-            if ($this->isWebDriverDown($e)) {
-                $this->fail("{$this->testWebDriverName} server not running: {$e->getMessage()}");
-            }
-            throw $e;
-        }
-    }
-
-    /**
-     * Test driver status
-     */
-    public function testStatus()
-    {
-        $this->assertEquals(1, $this->status['ready'], 'Chromedriver is not ready');
-        $this->assertEquals('ChromeDriver ready for new sessions.', $this->status['message'], 'Chromedriver is not ready');
-        $this->assertNotEmpty($this->status['os'], 'OS info not detected');
-        $this->assertFalse($this->driver->isW3c());
-    }
+    protected $w3c = false;
 }
