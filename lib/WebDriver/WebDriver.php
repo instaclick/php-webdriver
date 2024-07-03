@@ -61,7 +61,10 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
         };
 
         $w3c_mode = true;
-        if (isset($desiredCapabilities['w3c']) && $desiredCapabilities['w3c'] === false) {
+        if (
+            (isset($desiredCapabilities['w3c']) && $desiredCapabilities['w3c'] === false) ||
+            (isset($desiredCapabilities['goog:chromeOptions']['w3c']) && $desiredCapabilities['goog:chromeOptions']['w3c'] === false) ||
+        ) {
           $w3c_mode = false;
         }
 
@@ -77,31 +80,24 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
             $parameters['capabilities']['alwaysMatch'] = $requiredCapabilities;
         }
 
-        try {
-            $result = $this->curl(
-                'POST',
-                '/session',
-                $parameters,
-                array(CURLOPT_FOLLOWLOCATION => true)
-            );
-        } catch (\Exception $e) {
-            // fallback to legacy JSON Wire Protocol
-            $capabilities = $desiredCapabilities ?: array();
-            $capabilities[Capability::BROWSER_NAME] = $browserName;
+        if (!$w3c_mode) {
+          // fallback to legacy JSON Wire Protocol
+          $capabilities = $desiredCapabilities ?: array();
+          $capabilities[Capability::BROWSER_NAME] = $browserName;
 
-            $parameters = array('desiredCapabilities' => $capabilities);
+          $parameters = array('desiredCapabilities' => $capabilities);
 
-            if (is_array($requiredCapabilities) && count($requiredCapabilities)) {
-                $parameters['requiredCapabilities'] = $requiredCapabilities;
-            }
-
-            $result = $this->curl(
-                'POST',
-                '/session',
-                $parameters,
-                array(CURLOPT_FOLLOWLOCATION => true)
-            );
+          if (is_array($requiredCapabilities) && count($requiredCapabilities)) {
+            $parameters['requiredCapabilities'] = $requiredCapabilities;
+          }
         }
+
+        $result = $this->curl(
+            'POST',
+            '/session',
+            $parameters,
+            array(CURLOPT_FOLLOWLOCATION => true)
+        );
 
         $this->capabilities = isset($result['value']['capabilities']) ? $result['value']['capabilities'] : null;
         $session = new Session($result['sessionUrl'], $this->capabilities);
