@@ -24,6 +24,6 @@ abstract class SeleniumWebDriverTestBase extends WebDriverTestBase
         $this->assertEquals(1, $this->status['ready'], 'Selenium is not ready');
         $this->assertEquals('Selenium Grid ready.', $this->status['message'], 'Selenium is not ready');
         $this->assertNotEmpty($this->status['nodes'][0]['osInfo'], 'OS info not detected');
-        $this->assertSame($this->w3c, $this->driver->isW3c());
+        $this->assertSame($this->w3c, $this->session->isW3c());
     }
 }

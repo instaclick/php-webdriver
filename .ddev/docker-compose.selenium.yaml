@@ -19,7 +19,23 @@ services:
       - ddev-global-cache:/mnt/ddev-global-cache
   chrome:
     container_name: ddev-${DDEV_SITENAME}-chrome
-    image: selenium/standalone-chrome:latest
+    image: selenium/standalone-chromium:latest
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: $DDEV_APPROOT
+    shm_size: 2gb
+    environment:
+      - VIRTUAL_HOST=$DDEV_HOSTNAME
+    links:
+      - web:web
+    external_links:
+      - ddev-router:${DDEV_SITENAME}.${DDEV_TLD}
+    volumes:
+      - ".:/mnt/ddev_config:ro"
+      - ddev-global-cache:/mnt/ddev-global-cache
+  oldchrome:
+    container_name: ddev-${DDEV_SITENAME}-oldchrome
+    image: selenium/standalone-chrome:4.8
     labels:
       com.ddev.site-name: ${DDEV_SITENAME}
       com.ddev.approot: $DDEV_APPROOT

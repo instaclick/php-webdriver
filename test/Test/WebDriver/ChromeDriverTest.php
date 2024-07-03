@@ -72,6 +72,6 @@ class ChromeDriverTest extends WebDriverTestBase
         $this->assertEquals(1, $this->status['ready'], 'Chromedriver is not ready');
         $this->assertEquals('ChromeDriver ready for new sessions.', $this->status['message'], 'Chromedriver is not ready');
         $this->assertNotEmpty($this->status['os'], 'OS info not detected');
-        $this->assertSame($this->w3c, $this->driver->isW3c());
+        $this->assertSame($this->w3c, $this->session->isW3c());
     }
 }
