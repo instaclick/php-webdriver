@@ -63,7 +63,7 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
         $w3c_mode = true;
         if (
             (isset($desiredCapabilities['w3c']) && $desiredCapabilities['w3c'] === false) ||
-            (isset($desiredCapabilities['goog:chromeOptions']['w3c']) && $desiredCapabilities['goog:chromeOptions']['w3c'] === false) ||
+            (isset($desiredCapabilities['goog:chromeOptions']['w3c']) && $desiredCapabilities['goog:chromeOptions']['w3c'] === false)
         ) {
           $w3c_mode = false;
         }
