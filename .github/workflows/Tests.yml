@@ -17,16 +17,21 @@ jobs:
 
     strategy:
       matrix:
-        php: [ '7.4', '8.0', '8.1', '8.2' ]
+        php: [ '8.0', '8.3' ]
       fail-fast: false
 
     steps:
       - uses: actions/checkout@v3
 
       - uses: ddev/github-action-setup-ddev@v1
+        with:
+          autostart: false
 
       - name: Setup PHP Version
         run: ddev config --php-version ${{ matrix.php }}
+
+      - name: Start ddev
+        run: ddev start
 
       - name: Install dependencies
         run: ddev composer install

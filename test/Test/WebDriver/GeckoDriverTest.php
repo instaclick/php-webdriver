@@ -37,6 +37,7 @@ class GeckoDriverTest extends WebDriverTestBase
 {
     protected $testWebDriverRootUrl = 'http://localhost:4444';
     protected $testWebDriverName    = 'geckodriver';
+    protected $status = null;
 
     protected function setUp(): void
     {

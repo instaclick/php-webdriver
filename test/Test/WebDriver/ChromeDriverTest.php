@@ -37,6 +37,7 @@ class ChromeDriverTest extends WebDriverTestBase
 {
     protected $testWebDriverRootUrl = 'http://localhost:9515';
     protected $testWebDriverName    = 'chromedriver';
+    protected $status = null;
 
     protected function setUp(): void
     {
