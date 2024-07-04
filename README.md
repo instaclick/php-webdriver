@@ -1,7 +1,7 @@
 This package is a fork of instaclick/php-webdriver that works with newer
 versions of Selenium.
 
-# WebDriver for Selenium 2
+# WebDriver for Selenium 4
 This WebDriver client implementation is based on Meta/Facebook's original [php-webdriver](https://github.com/lullabot/php-webdriver/tree/upstream)
 project by Justin Bishop. Meta/Facebook's current [php-webdriver](https://github.com/php-webdriver/php-webdriver) is a complete rewrite.
 
