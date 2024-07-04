@@ -8,7 +8,7 @@ project by Justin Bishop. Meta/Facebook's current [php-webdriver](https://github
 Distinguishing features:
 * Up-to-date with [WebDriver: W3C Editor's Draft 25 Octoberl 2022](https://w3c.github.io/webdriver/)
 * Up-to-date with [Selenium 2 JSON Wire Protocol](https://github.com/SeleniumHQ/selenium/blob/trunk/java/src/org/openqa/selenium/remote/DriverCommand.java) (including WebDriver commands yet to be documented).
-* In the *master* branch, class names and file organization follow PSR-0 conventions for namespaces.
+* In the *main* branch, class names and file organization follow PSR-0 conventions for namespaces.
 * Coding style follows PSR-1, PSR-2, and Symfony2 conventions.
 * Auto-generate API documentation via [phpDocumentor 2.x](http://phpdoc.org/).
 
