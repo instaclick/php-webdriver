@@ -19,6 +19,3 @@ Distinguishing features:
 * [Packagist](http://packagist.org/packages/lullabot/php-webdriver)
 * [Github](https://github.com/lullabot/php-webdriver)
 * [W3C/WebDriver](https://github.com/w3c/webdriver)
-
-## Notes
-* The *5.2.x* branch is no longer maintained. This branch features class names and file re-organization that follow PEAR/ZF1 conventions. Bug fixes and enhancements from the master branch likely won't be backported.
