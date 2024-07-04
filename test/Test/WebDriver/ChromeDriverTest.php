@@ -37,6 +37,7 @@ class ChromeDriverTest extends WebDriverTestBase
 {
     protected $testWebDriverRootUrl = 'http://localhost:9515';
     protected $testWebDriverName    = 'chromedriver';
+    protected $w3c = true;
     protected $status = null;
 
     protected function setUp(): void
@@ -46,7 +47,7 @@ class ChromeDriverTest extends WebDriverTestBase
             $this->status = $this->driver->status();
             $this->session = $this->driver->session(Browser::CHROME, [
                 'goog:chromeOptions' => [
-                    'w3c' => true,
+                    'w3c' => $this->w3c,
                     'args' => [
                         '--no-sandbox',
                         '--ignore-certificate-errors',
@@ -72,5 +73,6 @@ class ChromeDriverTest extends WebDriverTestBase
         $this->assertEquals(1, $this->status['ready'], 'Chromedriver is not ready');
         $this->assertEquals('ChromeDriver ready for new sessions.', $this->status['message'], 'Chromedriver is not ready');
         $this->assertNotEmpty($this->status['os'], 'OS info not detected');
+        $this->assertSame($this->w3c, $this->session->isW3c());
     }
 }

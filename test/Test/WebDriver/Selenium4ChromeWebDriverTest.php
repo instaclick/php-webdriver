@@ -25,7 +25,7 @@ class Selenium4ChromeWebDriverTest extends SeleniumWebDriverTestBase
             $this->status = $this->driver->status();
             $this->session = $this->driver->session(Browser::CHROME, [
                 'goog:chromeOptions' => [
-                    'w3c' => true,
+                    'w3c' => $this->w3c,
                     'args' => [
                         '--no-sandbox',
                         '--ignore-certificate-errors',
