@@ -93,4 +93,16 @@ class Window extends AbstractWebDriver
 
         return $this->windowHandle;
     }
+
+    /**
+     * Close window: /session/:sessionId/window (DELETE)
+     *
+     * @return mixed
+     */
+    public function close()
+    {
+        $result = $this->curl('DELETE', '');
+
+        return $result['value'];
+    }
 }
