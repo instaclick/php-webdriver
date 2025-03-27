@@ -170,9 +170,9 @@ abstract class Exception extends \Exception
     /**
      * Factory method to create WebDriver\Exception objects
      *
-     * @param integer    $code              Code
-     * @param string     $message           Message
-     * @param \Exception $previousException Previous exception
+     * @param integer|string $code              Code
+     * @param string         $message           Message
+     * @param \Exception     $previousException Previous exception
      *
      * @return \Exception
      */
