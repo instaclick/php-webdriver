@@ -62,7 +62,15 @@ class LegacyWindow extends AbstractWebDriver
     {
         parent::__construct($url);
 
+        if (! $windowHandle || $windowHandle === 'current') {
+            $result = $this->curl('GET', '_handle');
+
+            $windowHandle = $result['value'];
+        }
+
         $this->windowHandle = $windowHandle;
+
+        $this->url .= '/' . $windowHandle;
     }
 
     /**
@@ -74,12 +82,6 @@ class LegacyWindow extends AbstractWebDriver
      */
     public function getHandle()
     {
-        if (! $this->windowHandle) {
-            $result = $this->curl('GET', '_handle');
-
-            $this->windowHandle = $result['value'];
-        }
-
         return $this->windowHandle;
     }
 }
