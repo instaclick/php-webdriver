@@ -6,7 +6,9 @@
         "selenium",
         "webdriver",
         "webtest",
-        "browser"
+        "browser",
+        "test",
+        "automation"
     ],
     "homepage": "http://instaclick.com/",
     "license": "Apache-2.0",
@@ -23,11 +25,11 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2",
+        "php": ">=7.2",
         "ext-curl": "*"
     },
     "require-dev": {
-        "php": ">=7.1",
+        "php": ">=7.2",
         "phpunit/phpunit": "^8.5 || ^9.5"
     },
     "minimum-stability": "dev",

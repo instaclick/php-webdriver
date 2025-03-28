@@ -5,4 +5,5 @@ vendor/
 composer.lock
 composer.phar
 .idea/
+nohup.out
 .phpunit.result.cache
