@@ -4,8 +4,6 @@
  * @copyright 2004 Meta Platforms, Inc.
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Justin Bishop <jubishop@gmail.com>
  */
 
@@ -13,8 +11,6 @@ namespace WebDriver;
 
 /**
  * WebDriver\Element class
- *
- * @package WebDriver
  *
  * @method void clear() Clear a TEXTAREA or text INPUT element's value.
  * @method void click() Click on an element.
@@ -30,7 +26,7 @@ namespace WebDriver;
  * @method array size() Determine an element's size in pixels.
  * @method void submit() Submit a FORM element.
  * @method string text() Returns the visible text for the element.
- * @method void postValue($json) Send a sequence of key strokes to an element.
+ * @method void postValue($parameters) Send a sequence of key strokes to an element.
  */
 class Element extends Container
 {
@@ -48,25 +44,27 @@ class Element extends Container
      */
     protected function methods()
     {
-        return array(
-            'clear' => array('POST'),
-            'click' => array('POST'),
-            'enabled' => array('GET'),
-            'name' => array('GET'),
-            'rect' => array('GET'),
-            'screenshot' => array('GET'),
-            'selected' => array('GET'),
-            'text' => array('GET'),
-            'value' => array('POST'),
+        return [
+            'clear'         => ['POST'],
+            'click'         => ['POST'],
+            'computedlabel' => ['GET'],
+            'computedrole'  => ['GET'],
+            'enabled'       => ['GET'],
+            'name'          => ['GET'],
+            'rect'          => ['GET'],
+            'screenshot'    => ['GET'],
+            'selected'      => ['GET'],
+            'text'          => ['GET'],
+            'value'         => ['POST'],
 
             // Legacy JSON Wire Protocol
-            'displayed' => array('GET'),        // @see https://w3c.github.io/webdriver/#element-displayedness
-            'equals' => array('GET'),
-            'location' => array('GET'),
-            'location_in_view' => array('GET'),
-            'size' => array('GET'),
-            'submit' => array('POST'),
-        );
+            'displayed'        => ['GET'], /** @see https://w3c.github.io/webdriver/#element-displayedness */
+            'equals'           => ['GET'],
+            'location'         => ['GET'],
+            'location_in_view' => ['GET'],
+            'size'             => ['GET'],
+            'submit'           => ['POST'],
+        ];
     }
 
     /**
@@ -74,16 +72,14 @@ class Element extends Container
      */
     protected function obsoleteMethods()
     {
-        return array(
-            'active' => array('GET'),
-            'computedlabel' => array('GET'),
-            'computedrole' => array('GET'),
-            'drag' => array('POST'),
-            'hover' => array('POST'),
-            'selected' => array('POST'),
-            'toggle' => array('POST'),
-            'value' => array('GET'),
-        );
+        return [
+            'active'   => ['GET'],
+            'drag'     => ['POST'],
+            'hover'    => ['POST'],
+            'selected' => ['POST'],
+            'toggle'   => ['POST'],
+            'value'    => ['GET'],
+        ];
     }
 
     /**
@@ -158,7 +154,6 @@ class Element extends Container
      * - $element->method()
      *
      * @return \WebDriver\Shadow|null
-     *
      */
     public function shadow()
     {
@@ -169,7 +164,7 @@ class Element extends Container
             $shadowRootReference = $value[Shadow::SHADOW_ROOT_ID];
 
             return new Shadow(
-                preg_replace('/' . preg_quote('element/' . $this->id, '/') . '$/', '/', $this->url), // remove /element/:elementid
+                preg_replace('~/' . preg_quote('element/' . $this->id, '~') . '~', '/', $this->url), // remove /element/:elementid
                 $shadowRootReference
             );
         }
@@ -182,6 +177,6 @@ class Element extends Container
      */
     protected function getIdentifierPath($identifier)
     {
-        return preg_replace('/' . preg_quote($this->id) . '$/', $identifier, $this->url);
+        return preg_replace('~/' . preg_quote($this->id, '~') . '$~', $identifier, $this->url);
     }
 }

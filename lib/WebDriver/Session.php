@@ -4,8 +4,6 @@
  * @copyright 2004 Meta Platforms, Inc.
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Justin Bishop <jubishop@gmail.com>
  */
 
@@ -14,39 +12,37 @@ namespace WebDriver;
 /**
  * WebDriver\Session class
  *
- * @package WebDriver
- *
  * @method void accept_alert() Accepts the currently displayed alert dialog.
  * @method array deleteActions() Release actions.
- * @method array postActions($json) Perform actions.
+ * @method array postActions($parameters) Perform actions.
  * @method string getAlert_text() Gets the text of the currently displayed JavaScript alert(), confirm(), or prompt() dialog.
- * @method void postAlert_text($jsonText) Sends keystrokes to a JavaScript prompt() dialog.
+ * @method void postAlert_text($parameters) Sends keystrokes to a JavaScript prompt() dialog.
  * @method void back() Navigates backward in the browser history, if possible.
  * @method boolean getBrowser_connection() Is browser online?
- * @method void postBrowser_connection($jsonState) Set browser online.
+ * @method void postBrowser_connection($parameters) Set browser online.
  * @method void buttondown() Click and hold the left mouse button (at the coordinates set by the last moveto command).
  * @method void buttonup() Releases the mouse button previously held (where the mouse is currently at).
- * @method void click($jsonButton) Click any mouse button (at the coordinates set by the last moveto command).
+ * @method void click($parameters) Click any mouse button (at the coordinates set by the last moveto command).
  * @method array getCookie() Retrieve all cookies visible to the current page.
- * @method array postCookie($jsonCookie) Set a cookie.
+ * @method array postCookie($parameters) Set a cookie.
  * @method void dismiss_alert() Dismisses the currently displayed alert dialog.
  * @method void doubleclick() Double-clicks at the current mouse coordinates (set by moveto).
- * @method array execute_sql($jsonQuery) Execute SQL.
- * @method array file($jsonFile) Upload file.
+ * @method array execute_sql($parameters) Execute SQL.
+ * @method array file($parameters) Upload file.
  * @method void forward() Navigates forward in the browser history, if possible.
- * @method void keys($jsonKeys) Send a sequence of key strokes to the active element.
+ * @method void keys($parameters) Send a sequence of key strokes to the active element.
  * @method array getLocation() Get the current geo location.
- * @method void postLocation($jsonCoordinates) Set the current geo location.
- * @method void moveto($jsonCoordinates) Move the mouse by an offset of the specified element (or current mouse cursor).
+ * @method void postLocation($parameters) Set the current geo location.
+ * @method void moveto($parameters) Move the mouse by an offset of the specified element (or current mouse cursor).
  * @method string getOrientation() Get the current browser orientation.
- * @method void postOrientation($jsonOrientation) Set the current browser orientation.
+ * @method void postOrientation($parameters) Set the current browser orientation.
  * @method array print() Print page.
  * @method void refresh() Refresh the current page.
  * @method string screenshot() Take a screenshot of the current page.
  * @method string source() Get the current page source.
  * @method string title() Get the current page title.
  * @method string url() Retrieve the URL of the current page.
- * @method void postUrl($jsonUrl) Navigate to a new URL.
+ * @method void postUrl($parameters) Navigate to a new URL.
  * @method string window_handle() Retrieve the current window handle.
  * @method array window_handles() Retrieve the list of all window handles available to the session.
  */
@@ -67,38 +63,40 @@ class Session extends Container
      */
     protected function methods()
     {
-        return array(
-            'actions' => array('POST', 'DELETE'),
-            'back' => array('POST'),
-            'cookie' => array('GET', 'POST'), // for DELETE, use deleteAllCookies()
-            'forward' => array('POST'),
-            'print' => array('POST'),
-            'refresh' => array('POST'),
-            'screenshot' => array('GET'),
-            'source' => array('GET'),
-            'title' => array('GET'),
-            'url' => array('GET', 'POST'), // alternate for POST, use open($url)
+        return [
+            'actions'            => ['POST', 'DELETE'],
+            'back'               => ['POST'],
+            'cookie'             => ['GET', 'POST'], // for DELETE, use deleteAllCookies()
+            'forward'            => ['POST'],
+            'print'              => ['POST'],
+            'refresh'            => ['POST'],
+            'screenshot'         => ['GET'],
+            'source'             => ['GET'],
+            'title'              => ['GET'],
+            'url'                => ['GET', 'POST'], // alternate for POST, use open($url)
 
-            // specific to Java SeleniumServer
-            'file' => array('POST'),
-
-            // Legacy JSON Wire Protocol
-            'accept_alert' => array('POST'),
-            'alert_text' => array('GET', 'POST'),
-            'browser_connection' => array('GET', 'POST'),
-            'buttondown' => 'POST',
-            'buttonup' => array('POST'),
-            'click' => array('POST'),
-            'dismiss_alert' => array('POST'),
-            'doubleclick' => array('POST'),
-            'execute_sql' => array('POST'),
-            'keys' => array('POST'),
-            'location' => array('GET', 'POST'),
-            'moveto' => array('POST'),
-            'orientation' => array('GET', 'POST'),
-            'window_handle' => array('GET'), // see also getWindowHandle()
-            'window_handles' => array('GET'),
-        );
+            // deprecated
+            'accept_alert'       => ['POST'],
+            'alert_text'         => ['GET', 'POST'],
+            'browser_connection' => ['GET', 'POST'],
+            'buttondown'         => ['POST'],
+            'buttonup'           => ['POST'],
+            'click'              => ['POST'],
+            'context'            => ['GET', 'POST'],
+            'contexts'           => ['GET'],
+            'dismiss_alert'      => ['POST'],
+            'doubleclick'        => ['POST'],
+            'execute_sql'        => ['POST'],
+            'file'               => ['POST'],
+            'keys'               => ['POST'],
+            'location'           => ['GET', 'POST'],
+            'moveto'             => ['POST'],
+            'network_connection' => ['GET', 'POST'],
+            'orientation'        => ['GET', 'POST'],
+            'rotation'           => ['GET', 'POST'],
+            'window_handle'      => ['GET'], // see also getWindowHandle()
+            'window_handles'     => ['GET'],
+        ];
     }
 
     /**
@@ -106,18 +104,18 @@ class Session extends Container
      */
     protected function obsoleteMethods()
     {
-        return array(
-            'alert' => array('GET'),
-            'modifier' => array('POST'),
-            'speed' => array('GET', 'POST'),
-            'visible' => array('GET', 'POST'),
-        );
+        return [
+            'alert'    => ['GET'],
+            'modifier' => ['POST'],
+            'speed'    => ['GET', 'POST'],
+            'visible'  => ['GET', 'POST'],
+        ];
     }
 
     /**
      * Constructor
      *
-     * @param string     $url URL to Selenium server
+     * @param string     $url URL to server
      * @param array|null $capabilities
      */
     public function __construct($url, $capabilities)
@@ -148,7 +146,7 @@ class Session extends Container
      */
     public function open($url)
     {
-        $this->curl('POST', '/url', array('url' => $url));
+        $this->curl('POST', '/url', ['url' => $url]);
 
         return $this;
     }
@@ -202,15 +200,15 @@ class Session extends Container
 
     /**
      * Set cookie: /session/:sessionId/cookie (POST)
-     * Alternative to: $session->cookie($cookie_json);
+     * Alternative to: $session->cookie($parameters);
      *
-     * @param array $cookieJson
+     * @param array $parameters
      *
      * @return \WebDriver\Session
      */
-    public function setCookie($cookieJson)
+    public function setCookie($parameters)
     {
-        $this->curl('POST', '/cookie', array('cookie' => $cookieJson));
+        $this->curl('POST', '/cookie', ['cookie' => $parameters]);
 
         return $this;
     }
@@ -276,7 +274,7 @@ class Session extends Container
 
     /**
      * window method chaining: /session/:sessionId/window (POST
-     * - $session->window($jsonHandle) - set focus
+     * - $session->window($parameters) - set focus
      * - $session->window($handle)->method() - chaining
      * - $session->window()->method() - chaining
      *
@@ -322,14 +320,14 @@ class Session extends Container
      */
     public function focusWindow($handle)
     {
-        $this->curl('POST', '/window', array('handle' => $handle, 'name' => $handle));
+        $this->curl('POST', '/window', ['handle' => $handle, 'name' => $handle]);
 
         return $this;
     }
 
     /**
      * frame methods: /session/:sessionId/frame (POST)
-     * - $session->frame($json) - change focus to another frame on the page
+     * - $session->frame($parameters) - change focus to another frame on the page
      * - $session->frame()->method() - chaining
      *
      * @return \WebDriver\Session|\WebDriver\Frame
@@ -349,21 +347,8 @@ class Session extends Container
     }
 
     /**
-     * Get timeouts (W3C): /session/:sessionId/timeouts (GET)
-     * - $session->getTimeouts()
-     *
-     * @return mixed
-     */
-    public function getTimeouts()
-    {
-        $result = $this->curl('GET', '/timeouts');
-
-        return $result['value'];
-    }
-
-    /**
      * timeouts methods: /session/:sessionId/timeouts (POST)
-     * - $session->timeouts($json) - set timeout for an operation
+     * - $session->timeouts($parameters) - set timeout for an operation
      * - $session->timeouts()->method() - chaining
      *
      * @return \WebDriver\Session|\WebDriver\Timeouts
@@ -383,7 +368,7 @@ class Session extends Container
             $type    = func_get_arg(0); // 'script', 'implicit', or 'pageLoad' (legacy: 'pageLoad')
             $timeout = func_get_arg(1); // timeout in milliseconds
 
-            $arg = $this->w3c ? array($type => $timeout) : array('type' => $type, 'ms' => $timeout);
+            $arg = $this->w3c ? [$type => $timeout] : ['type' => $type, 'ms' => $timeout];
 
             $this->curl('POST', '/timeouts', $arg);
 
@@ -392,6 +377,19 @@ class Session extends Container
 
         // chaining
         return new Timeouts($this->url . '/timeouts');
+    }
+
+    /**
+     * Get timeouts (W3C): /session/:sessionId/timeouts (GET)
+     * - $session->getTimeouts()
+     *
+     * @return mixed
+     */
+    public function getTimeouts()
+    {
+        $result = $this->curl('GET', '/timeouts');
+
+        return $result['value'];
     }
 
     /**
@@ -477,9 +475,9 @@ class Session extends Container
             $arg = func_get_arg(0);
 
             if (is_string($arg)) {
-                $arg = array(
+                $arg = [
                     'type' => $arg,
-                );
+                ];
             }
 
             $result = $this->curl('POST', '/log', $arg);
@@ -504,7 +502,7 @@ class Session extends Container
 
     /**
      * script execution method chaining, e.g.,
-     * - $session->execute($jsonScript) - fallback for legacy JSON Wire Protocol
+     * - $session->execute($jparameters) - fallback for legacy JSON Wire Protocol
      * - $session->execute()->method() - chaining
      *
      * @return mixed
@@ -525,7 +523,7 @@ class Session extends Container
 
     /**
      * async script execution
-     * - $session->execute_async($jsonScript)
+     * - $session->execute_async($parameters)
      *
      * @return mixed
      */
@@ -535,14 +533,6 @@ class Session extends Container
         $result  = $execute->async(func_get_arg(0));
 
         return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getIdentifierPath($identifier)
-    {
-        return sprintf('%s/element/%s', $this->url, $identifier);
     }
 
     /**
@@ -563,5 +553,13 @@ class Session extends Container
 
         // fallback to executing WebDriver commands
         return parent::__call($name, $arguments);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getIdentifierPath($identifier)
+    {
+        return sprintf('%s/element/%s', $this->url, $identifier);
     }
 }

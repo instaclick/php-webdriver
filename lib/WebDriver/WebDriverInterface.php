@@ -4,8 +4,6 @@
  * @copyright 2016 Gaetano Giunta
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Gaetano Giunta <giunta.gaetano@gmail.com>
  */
 
@@ -13,8 +11,6 @@ namespace WebDriver;
 
 /**
  * WebDriverInterface interface
- *
- * @package WebDriver
  */
 interface WebDriverInterface
 {

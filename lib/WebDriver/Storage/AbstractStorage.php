@@ -4,8 +4,6 @@
  * @copyright 2011 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -17,11 +15,11 @@ use WebDriver\Exception as WebDriverException;
 /**
  * WebDriver\AbstractStorage class
  *
- * @package WebDriver
- *
  * @method mixed getKey($key) Get key/value pair.
  * @method void deleteKey($key) Delete a specific key.
  * @method integer size() Get the number of items in the storage.
+ *
+ * @deprecated Not supported by W3C WebDriver
  */
 abstract class AbstractStorage extends AbstractWebDriver
 {
@@ -30,16 +28,18 @@ abstract class AbstractStorage extends AbstractWebDriver
      */
     protected function methods()
     {
-        return array(
-            'key' => array('GET', 'DELETE'),
-            'size' => array('GET'),
-        );
+        return [
+            'key' => ['GET', 'DELETE'],
+            'size' => ['GET'],
+        ];
     }
 
     /**
      * Get all keys from storage or a specific key/value pair
      *
      * @return mixed
+     *
+     * @throws \WebDriver\Exception\UnexpectedParameters if unexpected parameters
      */
     public function get()
     {
@@ -63,7 +63,7 @@ abstract class AbstractStorage extends AbstractWebDriver
      *
      * @return \WebDriver\Storage\AbstractStorage
      *
-     * @throw \WebDriver\Exception\UnexpectedParameters if unexpected parameters
+     * @throws \WebDriver\Exception\UnexpectedParameters if unexpected parameters
      */
     public function set()
     {
@@ -74,10 +74,10 @@ abstract class AbstractStorage extends AbstractWebDriver
         }
 
         if (func_num_args() === 2) {
-            $arg = array(
+            $arg = [
                 'key' => func_get_arg(0),
                 'value' => func_get_arg(1),
-            );
+            ];
             $this->curl('POST', '', $arg);
 
             return $this;
@@ -91,7 +91,7 @@ abstract class AbstractStorage extends AbstractWebDriver
      *
      * @return \WebDriver\Storage\AbstractStorage
      *
-     * @throw \WebDriver\Exception\UnexpectedParameters if unexpected parameters
+     * @throws \WebDriver\Exception\UnexpectedParameters if unexpected parameters
      */
     public function delete()
     {

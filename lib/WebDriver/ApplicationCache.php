@@ -4,8 +4,6 @@
  * @copyright 2012 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -14,7 +12,7 @@ namespace WebDriver;
 /**
  * WebDriver\ApplicationCache class
  *
- * @package WebDriver
+ * @deprecated
  *
  * @method integer status() Get application cache status.
  */
@@ -25,8 +23,8 @@ class ApplicationCache extends AbstractWebDriver
      */
     protected function methods()
     {
-        return array(
-            'status' => array('GET'),
-        );
+        return [
+            'status' => ['GET'],
+        ];
     }
 }

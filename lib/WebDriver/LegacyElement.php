@@ -4,8 +4,6 @@
  * @copyright 2022 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -13,8 +11,6 @@ namespace WebDriver;
 
 /**
  * WebDriver\LegacyElement class
- *
- * @package WebDriver
  *
  * @method string attribute($attributeName) Get the value of an element's attribute.
  * @method void clear() Clear a TEXTAREA or text INPUT element's value.
@@ -32,7 +28,9 @@ namespace WebDriver;
  * @method array size() Determine an element's size in pixels.
  * @method void submit() Submit a FORM element.
  * @method string text() Returns the visible text for the element.
- * @method void postValue($json) Send a sequence of key strokes to an element.
+ * @method void postValue($parameters) Send a sequence of key strokes to an element.
+ *
+ * @deprecated Not supported by W3C WebDriver
  */
 class LegacyElement extends Element
 {

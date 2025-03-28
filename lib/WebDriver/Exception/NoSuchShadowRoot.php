@@ -4,8 +4,6 @@
  * @copyright 2013 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -15,8 +13,6 @@ use WebDriver\Exception as BaseException;
 
 /**
  * WebDriver\Exception\NoSuchShadowRoot class
- *
- * @package WebDriver
  */
 final class NoSuchShadowRoot extends BaseException
 {

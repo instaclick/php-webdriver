@@ -4,8 +4,6 @@
  * @copyright 2011 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -13,8 +11,6 @@ namespace WebDriver;
 
 /**
  * WebDriver\Key class
- *
- * @package WebDriver
  */
 final class Key
 {

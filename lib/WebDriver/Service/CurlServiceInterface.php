@@ -4,8 +4,6 @@
  * @copyright 2012 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -13,8 +11,6 @@ namespace WebDriver\Service;
 
 /**
  * WebDriver\Service\CurlServiceInterface class
- *
- * @package WebDriver
  */
 interface CurlServiceInterface
 {
@@ -31,5 +27,5 @@ interface CurlServiceInterface
      *
      * @throws \WebDriver\Exception\CurlExec only if http error and CURLOPT_FAILONERROR has been set in extraOptions
      */
-    public function execute($requestMethod, $url, $parameters = null, $extraOptions = array());
+    public function execute($requestMethod, $url, $parameters = null, $extraOptions = []);
 }

@@ -4,8 +4,6 @@
  * @copyright 2012 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -14,9 +12,7 @@ namespace WebDriver;
 /**
  * WebDriver\AppCacheStatus class
  *
- * @package WebDriver
- *
- * @deprecated by W3C WebDriver
+ * @deprecated
  */
 final class AppCacheStatus
 {

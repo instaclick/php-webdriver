@@ -4,8 +4,6 @@
  * @copyright 2011 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -14,16 +12,12 @@ namespace WebDriver;
 /**
  * WebDriver\Window class
  *
- * @package WebDriver
- *
  * @method array handles() Get window handles.
  * @method array fullscreen() Fullscreen window.
  * @method array maximize() Maximize the window if not already maximized.
  * @method array minimize() Minimize window.
- * @method array getPosition() Get position of the window.
- * @method void postPosition($json) Change position of the window.
  * @method array getRect() Get window rect.
- * @method array postRect($json) Set window rect.
+ * @method array postRect($parameters) Set window rect.
  */
 class Window extends AbstractWebDriver
 {
@@ -39,14 +33,13 @@ class Window extends AbstractWebDriver
      */
     protected function methods()
     {
-        return array(
-            'handles' => array('GET'),
-            'fullscreen' => array('POST'),
-            'maximize' => array('POST'),
-            'minimize' => array('POST'),
-            'position' => array('GET', 'POST'),
-            'rect' => array('GET', 'POST'),
-        );
+        return [
+            'handles'    => ['GET'],
+            'fullscreen' => ['POST'],
+            'maximize'   => ['POST'],
+            'minimize'   => ['POST'],
+            'rect'       => ['GET', 'POST'],
+        ];
     }
 
     /**
@@ -54,10 +47,11 @@ class Window extends AbstractWebDriver
      */
     protected function obsoleteMethods()
     {
-        return array(
+        return [
             // Legacy JSON Wire Protocol
-            'size' => array('GET', 'POST'),
-        );
+            'position' => ['GET', 'POST'],
+            'size'     => ['GET', 'POST'],
+        ];
     }
 
     /**

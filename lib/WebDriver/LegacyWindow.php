@@ -4,8 +4,6 @@
  * @copyright 2011 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -14,13 +12,13 @@ namespace WebDriver;
 /**
  * WebDriver\LegacyWindow class
  *
- * @package WebDriver
- *
  * @method void maximize() Maximize the window if not already maximized.
  * @method array getPosition() Get position of the window.
- * @method void postPosition($json) Change position of the window.
+ * @method void postPosition($parameters) Change position of the window.
  * @method array getSize() Get size of the window.
- * @method void postSize($json) Change the size of the window.
+ * @method void postSize($parameters) Change the size of the window.
+ *
+ * @deprecated Not supported by W3C WebDriver
  */
 class LegacyWindow extends AbstractWebDriver
 {
@@ -34,12 +32,12 @@ class LegacyWindow extends AbstractWebDriver
      */
     protected function methods()
     {
-        return array(
+        return [
             // Legacy JSON Wire Protocol
-            'maximize' => array('POST'),
-            'position' => array('GET', 'POST'),
-            'size' => array('GET', 'POST'),
-        );
+            'maximize' => ['POST'],
+            'position' => ['GET', 'POST'],
+            'size'     => ['GET', 'POST'],
+        ];
     }
 
     /**
@@ -47,9 +45,9 @@ class LegacyWindow extends AbstractWebDriver
      */
     protected function obsoleteMethods()
     {
-        return array(
-            'restore' => array('POST'),
-        );
+        return [
+            'restore' => ['POST'],
+        ];
     }
 
     /**

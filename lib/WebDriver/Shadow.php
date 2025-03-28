@@ -4,8 +4,6 @@
  * @copyright 2021 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -13,10 +11,6 @@ namespace WebDriver;
 
 /**
  * WebDriver\Shadow class
- *
- * @package WebDriver
- *
- * @deprecated by W3C WebDriver
  */
 class Shadow extends Container
 {
@@ -30,14 +24,6 @@ class Shadow extends Container
     private $id;
 
     /**
-     * {@inheritdoc}
-     */
-    protected function methods()
-    {
-        return array();
-    }
-
-    /**
      * Constructor
      *
      * @param string $url URL
@@ -45,7 +31,7 @@ class Shadow extends Container
      */
     public function __construct($url, $id)
     {
-        parent::__construct($url);
+        parent::__construct($url . "/$id");
 
         $this->id = $id;
     }
@@ -65,6 +51,6 @@ class Shadow extends Container
      */
     protected function getIdentifierPath($identifier)
     {
-        return sprintf('%s/element/%s', $this->url, $identifier);
+        return preg_replace('~/shadow/' . preg_quote($this->id, '~') . '$~', "/element/$identifier", $this->url);
     }
 }

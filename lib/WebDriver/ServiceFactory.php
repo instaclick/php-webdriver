@@ -4,8 +4,6 @@
  * @copyright 2012 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -15,8 +13,6 @@ namespace WebDriver;
  * WebDriver\ServiceFactory class
  *
  * A service factory
- *
- * @package WebDriver
  */
 class ServiceFactory
 {
@@ -42,11 +38,11 @@ class ServiceFactory
      */
     private function __construct()
     {
-        $this->services = array();
+        $this->services = [];
 
-        $this->serviceClasses = array(
-            'service.curl' => '\\WebDriver\\Service\\CurlService',
-        );
+        $this->serviceClasses = [
+            'service.curl' => \WebDriver\Service\CurlService::class,
+        ];
     }
 
     /**

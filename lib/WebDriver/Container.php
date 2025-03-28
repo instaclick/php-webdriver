@@ -4,8 +4,6 @@
  * @copyright 2004 Meta Platforms, Inc.
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Justin Bishop <jubishop@gmail.com>
  */
 
@@ -15,8 +13,6 @@ use WebDriver\Exception as WebDriverException;
 
 /**
  * Abstract WebDriver\Container class
- *
- * @package WebDriver
  */
 abstract class Container extends AbstractWebDriver
 {
@@ -32,7 +28,7 @@ abstract class Container extends AbstractWebDriver
     {
         parent::__construct($url);
 
-        $locatorStrategy = new \ReflectionClass('WebDriver\LocatorStrategy');
+        $locatorStrategy = new \ReflectionClass(\WebDriver\LocatorStrategy::class);
 
         $this->strategies = $locatorStrategy->getConstants();
     }
@@ -51,21 +47,21 @@ abstract class Container extends AbstractWebDriver
      */
     public function element($using = null, $value = null)
     {
-        $locatorJson = $this->parseArgs('element', func_get_args());
+        $locator = $this->parseArgs('element', func_get_args());
 
         try {
             $result = $this->curl(
                 'POST',
                 '/element',
-                $locatorJson
+                $locator
             );
         } catch (WebDriverException\NoSuchElement $e) {
             throw WebDriverException::factory(
                 WebDriverException::NO_SUCH_ELEMENT,
                 sprintf(
                     "Element not found with %s, %s\n\n%s",
-                    $locatorJson['using'],
-                    $locatorJson['value'],
+                    $locator['using'],
+                    $locator['value'],
                     $e->getMessage()
                 ),
                 $e
@@ -79,8 +75,8 @@ abstract class Container extends AbstractWebDriver
                 WebDriverException::NO_SUCH_ELEMENT,
                 sprintf(
                     "Element not found with %s, %s\n",
-                    $locatorJson['using'],
-                    $locatorJson['value']
+                    $locator['using'],
+                    $locator['value']
                 )
             );
         }
@@ -102,25 +98,102 @@ abstract class Container extends AbstractWebDriver
      */
     public function elements($using = null, $value = null)
     {
-        $locatorJson = $this->parseArgs('elements', func_get_args());
+        $locator = $this->parseArgs('elements', func_get_args());
 
         $result = $this->curl(
             'POST',
             '/elements',
-            $locatorJson
+            $locator
         );
 
         if (! is_array($result['value'])) {
-            return array();
+            return [];
         }
 
         return array_filter(
             array_map(
-                array($this, 'makeElement'),
+                [$this, 'makeElement'],
                 $result['value']
             )
         );
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __call($name, $arguments)
+    {
+        if (count($arguments) === 1 && in_array(str_replace('_', ' ', $name), $this->strategies)) {
+            return $this->locate($name, $arguments[0]);
+        }
+
+        // fallback to executing WebDriver commands
+        return parent::__call($name, $arguments);
+    }
+
+    /**
+     * Return JSON parameter for element / elements command
+     *
+     * @param string $using locator strategy
+     * @param string $value search target
+     *
+     * @return array
+     *
+     * @throws \WebDriver\Exception if invalid locator strategy
+     */
+    public function locate($using, $value)
+    {
+        if (! in_array($using, $this->strategies)) {
+            throw WebDriverException::factory(
+                WebDriverException::UNKNOWN_LOCATOR_STRATEGY,
+                sprintf('Invalid locator strategy %s', $using)
+            );
+        }
+
+        return [
+            'using' => $using,
+            'value' => $value,
+        ];
+    }
+
+    /**
+     * Factory method for elements
+     *
+     * @param mixed $value
+     *
+     * @return \WebDriver\Element|null
+     */
+    protected function makeElement($value)
+    {
+        if (array_key_exists(LegacyElement::LEGACY_ELEMENT_ID, (array) $value)) {
+            $identifier = $value[LegacyElement::LEGACY_ELEMENT_ID];
+
+            return new LegacyElement(
+                $this->getIdentifierPath($identifier),
+                $identifier
+            );
+        }
+
+        if (array_key_exists(Element::WEB_ELEMENT_ID, (array) $value)) {
+            $identifier = $value[Element::WEB_ELEMENT_ID];
+
+            return new Element(
+                $this->getIdentifierPath($identifier),
+                $identifier
+            );
+        }
+
+        return null;
+    }
+
+    /**
+     * Get wire protocol URL for an identifier
+     *
+     * @param string $identifier
+     *
+     * @return string
+     */
+    abstract protected function getIdentifierPath($identifier);
 
     /**
      * Parse arguments allowing either separate $using and $value parameters, or
@@ -162,81 +235,4 @@ abstract class Container extends AbstractWebDriver
 
         return $this->locate($using, $value);
     }
-
-    /**
-     * Return JSON parameter for element / elements command
-     *
-     * @param string $using locator strategy
-     * @param string $value search target
-     *
-     * @return array
-     *
-     * @throws \WebDriver\Exception if invalid locator strategy
-     */
-    public function locate($using, $value)
-    {
-        if (! in_array($using, $this->strategies)) {
-            throw WebDriverException::factory(
-                WebDriverException::UNKNOWN_LOCATOR_STRATEGY,
-                sprintf('Invalid locator strategy %s', $using)
-            );
-        }
-
-        return array(
-            'using' => $using,
-            'value' => $value,
-        );
-    }
-
-    /**
-     * Factory method for elements
-     *
-     * @param mixed $value
-     *
-     * @return \WebDriver\Element|null
-     */
-    protected function makeElement($value)
-    {
-        if (array_key_exists(LegacyElement::LEGACY_ELEMENT_ID, (array) $value)) {
-            $identifier = $value[LegacyElement::LEGACY_ELEMENT_ID];
-
-            return new LegacyElement(
-                $this->getIdentifierPath($identifier),
-                $identifier
-            );
-        }
-
-        if (array_key_exists(Element::WEB_ELEMENT_ID, (array) $value)) {
-            $identifier = $value[Element::WEB_ELEMENT_ID];
-
-            return new Element(
-                $this->getIdentifierPath($identifier),
-                $identifier
-            );
-        }
-
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __call($name, $arguments)
-    {
-        if (count($arguments) === 1 && in_array(str_replace('_', ' ', $name), $this->strategies)) {
-            return $this->locate($name, $arguments[0]);
-        }
-
-        // fallback to executing WebDriver commands
-        return parent::__call($name, $arguments);
-    }
-
-    /**
-     * Get wire protocol URL for an identifier
-     *
-     * @param string $identifier
-     *
-     * @return string
-     */
-    abstract protected function getIdentifierPath($identifier);
 }

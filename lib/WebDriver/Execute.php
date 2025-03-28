@@ -4,8 +4,6 @@
  * @copyright 2017 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -13,31 +11,21 @@ namespace WebDriver;
 
 /**
  * WebDriver\Execute class
- *
- * @package WebDriver
  */
 class Execute extends AbstractWebDriver
 {
     /**
-     * {@inheritdoc}
-     */
-    protected function methods()
-    {
-        return array();
-    }
-
-    /**
      * Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (asynchronous)
      *
-     * @param array{script: string, args: array} $jsonScript
+     * @param array{script: string, args: array} $parameters
      *
      * @return mixed
      */
-    public function async(array $jsonScript)
+    public function async(array $parameters)
     {
-        $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
+        $parameters['args'] = $this->serializeArguments($parameters['args']);
 
-        $result = $this->curl('POST', '/async', $jsonScript);
+        $result = $this->curl('POST', '/async', $parameters);
 
         return $this->unserializeResult($result['value']);
     }
@@ -45,15 +33,15 @@ class Execute extends AbstractWebDriver
     /**
      * Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. (synchronous)
      *
-     * @param array{script: string, args: array} $jsonScript
+     * @param array{script: string, args: array} $parameters
      *
      * @return mixed
      */
-    public function sync(array $jsonScript)
+    public function sync(array $parameters)
     {
-        $jsonScript['args'] = $this->serializeArguments($jsonScript['args']);
+        $parameters['args'] = $this->serializeArguments($parameters['args']);
 
-        $result = $this->curl('POST', '/sync', $jsonScript);
+        $result = $this->curl('POST', '/sync', $parameters);
 
         return $this->unserializeResult($result['value']);
     }

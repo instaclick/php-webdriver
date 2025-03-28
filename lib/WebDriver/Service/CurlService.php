@@ -4,8 +4,6 @@
  * @copyright 2004 Meta Platforms, Inc.
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Justin Bishop <jubishop@gmail.com>
  */
 
@@ -15,8 +13,6 @@ use WebDriver\Exception\CurlExec as CurlExecException;
 
 /**
  * WebDriver\Service\CurlService class
- *
- * @package WebDriver
  */
 class CurlService implements CurlServiceInterface
 {
@@ -30,20 +26,20 @@ class CurlService implements CurlServiceInterface
      *
      * @param mixed $defaultOptions
      */
-    public function __construct($defaultOptions = array())
+    public function __construct($defaultOptions = [])
     {
-        $this->defaultOptions = is_array($defaultOptions) ? $defaultOptions : array();
+        $this->defaultOptions = is_array($defaultOptions) ? $defaultOptions : [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function execute($requestMethod, $url, $parameters = null, $extraOptions = array())
+    public function execute($requestMethod, $url, $parameters = null, $extraOptions = [])
     {
-        $customHeaders = array(
+        $customHeaders = [
             'Content-Type: application/json;charset=utf-8',
             'Accept: application/json',
-        );
+        ];
 
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -54,9 +50,7 @@ class CurlService implements CurlServiceInterface
 
             case 'POST':
             case 'PUT':
-                $parameters = ! $parameters || ! is_array($parameters)
-                    ? '{}' // instead of json_encode(new \stdclass))
-                    : json_encode($parameters);
+                $parameters = is_array($parameters) ? json_encode($parameters) : '{}';
 
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
 
@@ -113,6 +107,6 @@ class CurlService implements CurlServiceInterface
 
         curl_close($curl);
 
-        return array($rawResult, $info);
+        return [$rawResult, $info];
     }
 }

@@ -4,8 +4,6 @@
  * @copyright 2013 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -16,7 +14,7 @@ use WebDriver\Exception as BaseException;
 /**
  * WebDriver\Exception\NoAlertOpenError class
  *
- * @package WebDriver
+ * @deprecated Not supported by W3C WebDriver
  */
 final class NoAlertOpenError extends BaseException
 {

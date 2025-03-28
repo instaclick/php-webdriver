@@ -4,8 +4,6 @@
  * @copyright 2013 Anthon Pang
  * @license Apache-2.0
  *
- * @package WebDriver
- *
  * @author Anthon Pang <apang@softwaredevelopment.ca>
  */
 
@@ -16,14 +14,14 @@ use WebDriver\Exception as BaseException;
 /**
  * WebDriver\Exception\CurlExec class
  *
- * @package WebDriver
+ * @internal php-webdriver
  */
 final class CurlExec extends BaseException
 {
     /**
      * @var array
      */
-    private $curlInfo = array();
+    private $curlInfo = [];
 
     /**
      * Get curl info
