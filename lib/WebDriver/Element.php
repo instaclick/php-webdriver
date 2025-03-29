@@ -83,6 +83,16 @@ class Element extends Container
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function chainable()
+    {
+        return [
+            'shadow' => 'shadow',
+        ];
+    }
+
+    /**
      * Constructor
      *
      * @param string $url URL

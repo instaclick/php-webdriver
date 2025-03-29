@@ -113,6 +113,21 @@ class Session extends Container
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function chainable()
+    {
+        return [
+            'actions'  => 'actions',
+            'alert'    => 'alert',
+            'execute'  => 'execute',
+            'frame'    => 'frame',
+            'timeouts' => 'timeouts',
+            'window'   => 'window',
+        ];
+    }
+
+    /**
      * Constructor
      *
      * @param string     $url URL to server
@@ -415,6 +430,19 @@ class Session extends Container
 
         return $this->makeElement($result['value']);
     }
+
+    /**
+     * actions method chaining, e.g.,
+     * - $session->actions()->method() - chaining
+     * - $session->actions->method() - chaining
+     *
+     * @return mixed
+     */
+    protected function actions()
+    {
+        return Actions::getInstance($this->url . '/actions');
+    }
+
 
     /**
      * touch method chaining, e.g.,

@@ -63,6 +63,16 @@ abstract class AbstractWebDriver
     }
 
     /**
+     * Return array of chainable method/property names
+     *
+     * @return array
+     */
+    protected function chainable()
+    {
+        return [];
+    }
+
+    /**
      * Constructor
      *
      * @param string $url
@@ -172,6 +182,10 @@ abstract class AbstractWebDriver
             return new $className($this->url . '/' . $this->extensions[$name][1]);
         }
 
+        if (count($arguments) === 0 && array_key_exists($name, $this->chainable())) {
+            return call_user_func([$this, $name]);
+        }
+
         if (preg_match('/^(get|post|delete)/', $name, $matches)) {
             $requestMethod = strtoupper($matches[0]);
             $webdriverCommand = strtolower(substr($name, strlen($requestMethod)));
@@ -202,6 +216,22 @@ abstract class AbstractWebDriver
         );
 
         return $result['value'];
+    }
+
+    /**
+     * Magic method that maps property names to chainable methods
+     *
+     * @param string $name Property name
+     *
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if (array_key_exists($name, $this->chainable())) {
+            return call_user_func([$this, $name]);
+        }
+
+        trigger_error('Undefined property: ' . __CLASS__ . '::$' . $name, E_USER_WARNING);
     }
 
     /**
