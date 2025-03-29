@@ -166,7 +166,7 @@ abstract class AbstractWebDriver
             );
         }
 
-        if (count($arguments) === 0 && is_array($this->extensions) && array_key_exists($name, $this->extensions)) {
+        if (count($arguments) === 0 && array_key_exists($name, $this->extensions)) {
             $className = $this->extensions[$name][0];
 
             return new $className($this->url . '/' . $this->extensions[$name][1]);

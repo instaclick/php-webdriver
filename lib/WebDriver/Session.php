@@ -560,6 +560,6 @@ class Session extends Container
      */
     protected function getIdentifierPath($identifier)
     {
-        return sprintf('%s/element/%s', $this->url, $identifier);
+        return $this->url . '/element/' . $identifier;
     }
 }

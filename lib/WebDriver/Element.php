@@ -164,7 +164,7 @@ class Element extends Container
             $shadowRootReference = $value[Shadow::SHADOW_ROOT_ID];
 
             return new Shadow(
-                preg_replace('~/' . preg_quote('element/' . $this->id, '~') . '~', '/', $this->url), // remove /element/:elementid
+                preg_replace('~/element/' . preg_quote($this->id, '~') . '$~', '', $this->url), // remove /element/:elementid
                 $shadowRootReference
             );
         }

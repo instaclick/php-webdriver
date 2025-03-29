@@ -18,9 +18,9 @@ interface WebDriverInterface
      * New Session: /session (POST)
      * Get session object for chaining
      *
-     * @param string $browserName          Preferred browser
-     * @param array  $desiredCapabilities  Optional desired capabilities
-     * @param array  $requiredCapabilities Optional required capabilities
+     * @param string     $browserName          Preferred browser
+     * @param array|null $desiredCapabilities  Optional desired capabilities
+     * @param array|null $requiredCapabilities Optional required capabilities
      *
      * @return \WebDriver\Session
      */

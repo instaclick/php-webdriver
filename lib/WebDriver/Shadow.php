@@ -51,6 +51,6 @@ class Shadow extends Container
      */
     protected function getIdentifierPath($identifier)
     {
-        return preg_replace('~/shadow/' . preg_quote($this->id, '~') . '$~', "/element/$identifier", $this->url);
+        return preg_replace('~/shadow/' . preg_quote($this->id, '~') . '$~', '/element/' . $identifier, $this->url);
     }
 }
