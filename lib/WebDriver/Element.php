@@ -187,6 +187,6 @@ class Element extends Container
      */
     protected function getIdentifierPath($identifier)
     {
-        return preg_replace('~/' . preg_quote($this->id, '~') . '$~', $identifier, $this->url);
+        return preg_replace('~/' . preg_quote($this->id, '~') . '$~', '/' . $identifier, $this->url);
     }
 }
