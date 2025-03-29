@@ -14,10 +14,10 @@ namespace WebDriver\Exception;
 use WebDriver\Exception as BaseException;
 
 /**
- * WebDriver\Exception\ElementIsNotSelectable class
+ * WebDriver\Exception\ElementNotSelectable class
  *
  * @package WebDriver
  */
-final class ElementIsNotSelectable extends BaseException
+final class ElementNotSelectable extends BaseException
 {
 }
