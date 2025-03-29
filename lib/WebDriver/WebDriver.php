@@ -166,7 +166,7 @@ class WebDriver extends AbstractWebDriver implements WebDriverInterface
      */
     private function filter($capabilities)
     {
-        return $capabilities ? array_values(array_filter($capabilities, fn($capability) => self::$w3cCapabilities[$capability] ?? 0)) : null;
+        return $capabilities ? array_values(array_filter($capabilities, function ($capability) { return self::$w3cCapabilities[$capability] ?? 0; })) : null;
     }
 
     /**
