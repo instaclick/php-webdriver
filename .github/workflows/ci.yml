@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         selenium: [ '3.141.59' ]
-        php: [ '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3' ]
+        php: [ '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5' ]
         include:
           - selenium: '2.53.1'
             php: 'latest'
@@ -51,9 +51,7 @@ jobs:
       - name: Run Mink tests
         run: |
           sed -i "s~vendor/~../../../vendor/~" vendor/behat/mink-selenium2-driver/phpunit.xml.dist
-          # remove test excludes once https://github.com/minkphp/MinkSelenium2Driver/pull/354 Selenium 3 issues are fixed
-          if [ "${{ matrix.selenium }}" = "3.141.59" ]; then
-              vendor/bin/phpunit --exclude-group none --no-coverage -v -c vendor/behat/mink-selenium2-driver --filter '^(?!Behat\\Mink\\Tests\\Driver\\(?:Basic\\IFrameTest::testIFrame|Js\\ChangeEventTest::testSetValueChangeEvent.*|Js\\WindowTest::(?:testWindow|testResizeWindow)|Custom\\TimeoutTest::testInvalidTimeoutSettingThrowsException|Js\\EventsTest::(?:testKeyboardEvents|testRightClick))$)'
-          else
-              vendor/bin/phpunit --exclude-group none --no-coverage -v -c vendor/behat/mink-selenium2-driver
-          fi
+          vendor/bin/phpunit --exclude-group none --no-coverage -v -c vendor/behat/mink-selenium2-driver
+        env:
+          SELENIUM_VERSION: ${{ matrix.selenium }}
+          WEB_FIXTURES_BROWSER: firefox
