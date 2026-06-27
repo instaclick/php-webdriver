@@ -271,7 +271,13 @@ class WebDriverFilterTest extends TestCase
         $filtered = $firstMatch[0];
 
         // Keys must be string capability names, not numeric indices
-        $this->assertIsString(array_key_first($filtered));
+        $firstKey = null;
+        
+        foreach ($filtered as $firstKey => $dontcare) {
+            break;
+        }
+        
+        $this->assertIsString($firstKey);
         $this->assertSame('chrome', $filtered[Capability::BROWSER_NAME]);
         $this->assertSame('linux', $filtered[Capability::PLATFORM_NAME]);
     }
